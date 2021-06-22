@@ -19,6 +19,7 @@ window.addEventListener('load', () => {
     canvasEl.style.position = 'fixed';
     canvasEl.style.left = 0;
     canvasEl.style.top = 0;
+    canvasEl.style.pointerEvents = "none";
     canvasEl.getContext("2d").scale(2, 2)
   }, 500);
 
