@@ -13,9 +13,7 @@
 <p><strong>举例：</strong></p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.css</span> &#123;</span><br><span class="line">   <span class="attribute">display</span>: block;</span><br><span class="line">   <span class="attribute">position</span>: relative;</span><br><span class="line">   <span class="attribute">float</span>: left;</span><br><span class="line">   <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">   <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">   <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span><br><span class="line">   <span class="attribute">padding</span>: <span class="number">20px</span> <span class="number">0</span>;</span><br><span class="line">   <span class="attribute">font-family</span>: Arial, <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, sans-serif;</span><br><span class="line">   <span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line">   <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,.<span class="number">5</span>);</span><br><span class="line">   <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
 
-
-
-
+<span id="more"></span>
 
 <h2 id="一-选择器"><a href="#一-选择器" class="headerlink" title="一.选择器"></a>一.选择器</h2><table>
 <thead>
@@ -286,10 +284,6 @@
 <td>用于匹配输入值为非法的元素</td>
 </tr>
 </tbody></table>
-<span id="more"></span>
-
-
-
 <h2 id="三-css的显示模式"><a href="#三-css的显示模式" class="headerlink" title="三.css的显示模式"></a>三.css的显示模式</h2><h3 id="1-块元素"><a href="#1-块元素" class="headerlink" title="1.块元素"></a>1.块元素</h3><ul>
 <li>比较霸道，自己独占一行。</li>
 <li>高度，宽度、外边距以及内边距都可以控制。</li>
