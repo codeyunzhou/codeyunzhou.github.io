@@ -1624,7 +1624,7 @@
 </ul>
 <h3 id="4、单行文字垂直居中的代码"><a href="#4、单行文字垂直居中的代码" class="headerlink" title="4、单行文字垂直居中的代码"></a>4、单行文字垂直居中的代码</h3><p><strong>解决方案</strong>:    </p>
 <p>​        让文字的行高等于盒子的高度  就可以让文字在当前盒子内垂直居中</p>
-<p><img data-src="../../images/css/1.png" alt="1"></p>
+<p><img data-src="http://www.qiyunzhou.top/images/css/1.png" alt="1"></p>
 <p><img data-src="../../images/css/2.png" alt="2"></p>
 <h2 id="四-css的背景"><a href="#四-css的背景" class="headerlink" title="四.css的背景"></a>四.css的背景</h2><p>通过 CSS 背景属性，可以给页面元素添加背景样式。<br>背景属性可以设置背景颜色、背景图片、背景平铺、背景图片位置、背景图像固定等。</p>
 <h3 id="1、背景颜色"><a href="#1、背景颜色" class="headerlink" title="1、背景颜色"></a>1、背景颜色</h3><p><strong>样式名称</strong>：</p>
