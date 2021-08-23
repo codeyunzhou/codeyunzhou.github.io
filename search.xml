@@ -1,6 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>docker</title>
+    <url>/post/2/</url>
+    <content><![CDATA[<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><p><img data-src="0.png"></p>
+<p><strong>Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。</strong>它是目前最流行的 Linux 容器解决方案。</p>
+<p>Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。</p>
+<p>总体来说，Docker 的接口相当简单，用户可以方便地创建和使用容器，把自己的应用放入容器。容器还可以进行版本管理、复制、分享、修改，就像管理普通的代码一样。</p>
+<span id="more"></span>
+
+<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1、yum 包更新到最新</span> </span><br><span class="line">yum update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</span> </span><br><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3、 设置yum源</span></span><br><span class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4、 安装docker，出现输入的界面都按 y</span> </span><br><span class="line">yum install -y docker-ce</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5、 查看docker版本，验证是否验证成功</span></span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<h2 id="卸载Docker"><a href="#卸载Docker" class="headerlink" title="卸载Docker"></a>卸载Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum remove docker-ce docker-ce-cli containerd.io</span><br><span class="line"></span><br><span class="line">rm -rf /var/lib/docker#docker默认工作路径</span><br></pre></td></tr></table></figure>
+
+<p>阿里云配置Docker镜像加速</p>
+<p><img data-src="1.png"></p>
+<h2 id="Docker基本组成"><a href="#Docker基本组成" class="headerlink" title="Docker基本组成"></a>Docker基本组成</h2><p><img data-src="2.png"></p>
+<p><strong>镜像(image):</strong></p>
+<p>docker镜像好比一个模板,可以通过这个模板来创建容器服务,tomcat镜像===&gt;run ==&gt;tomcat01容器(提供服务器)</p>
+<p>通过这个镜像可以创建多个容器(最终服务运行或者项目运行就是在容器中的)</p>
+<p><strong>容器(container):</strong></p>
+<p>Docker利用容器技术,独立运行一个或者一个组应用,通过镜像来创建的</p>
+<p>启动,停止,删除,基本命令!</p>
+<p><strong>仓库(repository):</strong></p>
+<p>仓库就是存放镜像的地方!</p>
+<p>仓库分为共有仓库和私有仓库</p>
+<p>Docker Hub(默认是国外的)</p>
+<p>阿里云… 都有容器服务器(配置镜像加速)</p>
+<h2 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h2><h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">docker版本</span> </span><br><span class="line">docker version </span><br><span class="line"><span class="meta">#</span><span class="bash">显示docker的系统信息,包括镜像和容器的数量</span></span><br><span class="line">docker info </span><br><span class="line"><span class="meta">#</span><span class="bash">查看某个具体的命令</span></span><br><span class="line">docker [命令] --help  </span><br></pre></td></tr></table></figure>
+
+<h3 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看下载的所有镜像</span></span><br><span class="line">docker docker </span><br><span class="line"><span class="meta">#</span><span class="bash">搜索镜像</span></span><br><span class="line">docker search</span><br><span class="line"><span class="meta">#</span><span class="bash">下载镜像</span></span><br><span class="line">docker pull </span><br><span class="line"><span class="meta">#</span><span class="bash">删除镜像</span></span><br><span class="line">docker rmi </span><br></pre></td></tr></table></figure>
+
+<h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><p>说明 : 有了镜像才可以创建容器</p>
+<h4 id="容器常用命令"><a href="#容器常用命令" class="headerlink" title="容器常用命令"></a>容器常用命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull #下载镜像 docker image pull</span><br><span class="line"></span><br><span class="line">docker rmi #删除镜像 docker image rm</span><br><span class="line"></span><br><span class="line">docker docker</span><br><span class="line"></span><br><span class="line">docker docker -a  #列出所有镜像详细信息</span><br><span class="line">docker docker -aq #列出所有镜像的id</span><br><span class="line">docker search mysql #查询网上的mysql的镜像 </span><br><span class="line"><span class="meta">#</span><span class="bash">  --filter=STARS=3000 <span class="comment">#过滤，搜索出来的镜像收藏STARS数量大于3000的</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">等价于</span></span><br><span class="line">docker pull tomcat:8</span><br><span class="line">docker pull docker.io/library/tomcat:8</span><br><span class="line"></span><br><span class="line">docker rmi -f 镜像id #删除指定id的镜像</span><br><span class="line">docker rmi -f $(docker docker -aq) #删除全部的镜像</span><br><span class="line">docker stop $(docker ps -a -q) #停止所有的容器</span><br><span class="line">docker pull centos        #docker中下载centos</span><br><span class="line">docker run 镜像id         #新建容器并启动</span><br><span class="line">docker container list -a  # 查看所有的容器</span><br><span class="line">docker ps -a              # 查看所有的容器</span><br><span class="line">docker rm 容器id          #删除指定容器</span><br><span class="line">docker start 容器id	      #启动容器</span><br><span class="line">docker restart 容器id     #重启容器</span><br><span class="line">docker stop 容器id	      #停止当前正在运行的容器</span><br><span class="line">docker kill 容器id	      #强制停止当前容器</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run [可选参数] image | docker container run [可选参数] image </span><br><span class="line"><span class="meta">#</span><span class="bash">参书说明</span></span><br><span class="line">--name=&quot;Name&quot;		#容器名字 tomcat01 tomcat02 用来区分容器</span><br><span class="line">-d					#后台方式运行</span><br><span class="line">-it 				#使用交互方式运行，进入容器查看内容</span><br><span class="line">-p					#指定容器的端口 -p 8080(宿主机):8080(容器)</span><br><span class="line">		-p ip:主机端口:容器端口</span><br><span class="line">		-p 主机端口:容器端口(常用)</span><br><span class="line">		-p 容器端口</span><br><span class="line">		容器端口</span><br><span class="line">-P(大写) 				随机指定端口</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it centos /bin/bash # 测试、启动并进入容器</span><br><span class="line"></span><br><span class="line">exit #从容器退回主机</span><br><span class="line"></span><br><span class="line">docker ps 命令  		#列出当前正在运行的容器 还没退出的（exit）</span><br><span class="line">  -a, --all     	 #列出当前正在运行的容器 + 带出历史运行过的容器</span><br><span class="line">  -n=?, --last int   #列出最近创建的?个容器 ?为1则只列出最近创建的一个容器,为2则列出2个</span><br><span class="line">  -q, --quiet        #只列出容器的编号</span><br></pre></td></tr></table></figure>
+
+<h4 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">exit 		#容器直接退出</span><br><span class="line">ctrl +P +Q  #容器不停止退出 	---注意：这个很有用的操作</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm 容器id   				#删除指定的容器，不能删除正在运行的容器，如果要强制删除 rm -rf</span><br><span class="line">docker rm -f $(docker ps -aq)  	 #删除所有的容器</span><br><span class="line">docker ps -a -q|xargs docker rm  #删除所有的容器</span><br></pre></td></tr></table></figure>
+
+<h4 id="后台启动命令"><a href="#后台启动命令" class="headerlink" title="后台启动命令"></a>后台启动命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d centos #这都是看不到信息的</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 问题docker ps. 发现centos 停止了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 常见的坑，docker容器使用后台运行，就必须要有要一个前台进程，docker发现没有应用，就会自动停止</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> nginx，容器启动后，发现自己没有提供服务，就会立刻停止，就是没有程序了</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker logs --help</span><br><span class="line">Options:</span><br><span class="line">      --details        Show extra details provided to logs </span><br><span class="line">*  -f, --follow         Follow log output</span><br><span class="line">      --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">*      --tail string    Number of lines to show from the end of the logs (default &quot;all&quot;)</span><br><span class="line">*  -t, --timestamps     Show timestamps</span><br><span class="line">      --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">➜  ~ docker run -d centos /bin/sh -c &quot;while true;do echo 6666;sleep 1;done&quot; #模拟日志      </span><br><span class="line"><span class="meta">#</span><span class="bash">显示日志</span></span><br><span class="line">-tf		#显示日志信息（一直更新）</span><br><span class="line">--tail number #需要显示日志条数</span><br><span class="line">docker logs -t --tail n 容器id #查看n行日志</span><br><span class="line">docker logs -ft 容器id #跟着日志</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看容器进程信息"><a href="#查看容器进程信息" class="headerlink" title="查看容器进程信息"></a>查看容器进程信息</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看容器中进程信息ps</span></span><br><span class="line">docker top 容器id</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看镜像的元数据"><a href="#查看镜像的元数据" class="headerlink" title="查看镜像的元数据"></a>查看镜像的元数据</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect 容器id</span><br><span class="line">docker inspect 镜像id</span><br></pre></td></tr></table></figure>
+
+<h4 id="进入当前正在运行的容器"><a href="#进入当前正在运行的容器" class="headerlink" title="进入当前正在运行的容器"></a>进入当前正在运行的容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方式一</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 进入当前正在运行的容器</span></span><br><span class="line">docker exec -it 容器id bashshell</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方式二</span></span><br><span class="line">docker attach 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">测试</span></span><br><span class="line">docker attach 55321bcae33d </span><br><span class="line">正在执行当前的代码...</span><br><span class="line">区别</span><br><span class="line"><span class="meta">#</span><span class="bash">docker <span class="built_in">exec</span> <span class="comment">#进入当前容器后开启一个新的终端，可以在里面操作。（常用）</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">docker attach <span class="comment"># 进入容器正在执行的终端</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="从容器内拷贝内容到主机上"><a href="#从容器内拷贝内容到主机上" class="headerlink" title="从容器内拷贝内容到主机上"></a>从容器内拷贝内容到主机上</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">先进入到容器中</span></span><br><span class="line">docker exec -it 56a5583b25b4 /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">再创建一个新文件</span></span><br><span class="line">echo &quot;hello&quot; &gt; hello.java # &quot;hello&quot;是内容 hello.java是文件名（souce命令用不了）</span><br><span class="line"><span class="meta">#</span><span class="bash">测试文件是否存在了</span></span><br><span class="line">cat hello.java </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">将容器中的文件拷贝到主机上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker cp 容器名:容器内文件 主机上的路径</span></span><br><span class="line">docker cp 9035020356a4:/java.java /home</span><br></pre></td></tr></table></figure>
+
+<h4 id="命令大全"><a href="#命令大全" class="headerlink" title="命令大全"></a>命令大全</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">attach      Attach local standard input, output, and error streams to a running container</span><br><span class="line"><span class="meta">#</span><span class="bash">当前shell下 attach连接指定运行的镜像</span></span><br><span class="line">build       Build an image from a Dockerfile # 通过Dockerfile定制镜像</span><br><span class="line">commit      Create a new image from a container&#x27;s changes #提交当前容器为新的镜像</span><br><span class="line">cp          Copy files/folders between a container and the local filesystem #拷贝文件</span><br><span class="line">create      Create a new container #创建一个新的容器</span><br><span class="line">diff        Inspect changes to files or directories on a container&#x27;s filesystem #查看docker容器的变化</span><br><span class="line">events      Get real time events from the server # 从服务获取容器实时时间</span><br><span class="line">exec        Run a command in a running container # 在运行中的容器上运行命令</span><br><span class="line">export      Export a container&#x27;s filesystem as a tar archive #导出容器文件系统作为一个tar归档文件[对应import]</span><br><span class="line">history     Show the history of an image # 展示一个镜像形成历史</span><br><span class="line">docker      List docker #列出系统当前的镜像</span><br><span class="line">import      Import the contents from a tarball to create a filesystem image #从tar包中导入内容创建一个文件系统镜像</span><br><span class="line">info        Display system-wide information # 显示全系统信息</span><br><span class="line">inspect     Return low-level information on Docker objects #查看容器详细信息</span><br><span class="line">kill        Kill one or more running containers # kill指定docker容器</span><br><span class="line">load        Load an image from a tar archive or STDIN #从一个tar包或标准输入中加载一个镜像[对应save]</span><br><span class="line">login       Log in to a Docker registry #</span><br><span class="line">logout      Log out from a Docker registry</span><br><span class="line">logs        Fetch the logs of a container</span><br><span class="line">pause       Pause all processes within one or more containers</span><br><span class="line">port        List port mappings or a specific mapping for the container</span><br><span class="line">ps          List containers</span><br><span class="line">pull        Pull an image or a repository from a registry</span><br><span class="line">push        Push an image or a repository to a registry</span><br><span class="line">rename      Rename a container</span><br><span class="line">restart     Restart one or more containers</span><br><span class="line">rm          Remove one or more containers</span><br><span class="line">rmi         Remove one or more docker</span><br><span class="line">run         Run a command in a new container</span><br><span class="line">save        Save one or more docker to a tar archive (streamed to STDOUT by default)</span><br><span class="line">search      Search the Docker Hub for docker</span><br><span class="line">start       Start one or more stopped containers</span><br><span class="line">stats       Display a live stream of container(s) resource usage statistics</span><br><span class="line">stop        Stop one or more running containers</span><br><span class="line">tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</span><br><span class="line">top         Display the running processes of a container</span><br><span class="line">unpause     Unpause all processes within one or more containers</span><br><span class="line">update      Update configuration of one or more containers</span><br><span class="line">version     Show the Docker version information</span><br><span class="line">wait        Block until one or more containers stop, then print their exit codes</span><br></pre></td></tr></table></figure>
+
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p><img data-src="8.png"></p>
+<h2 id="Docker镜像讲解"><a href="#Docker镜像讲解" class="headerlink" title="Docker镜像讲解"></a>Docker镜像讲解</h2><h3 id="镜像是什么"><a href="#镜像是什么" class="headerlink" title="镜像是什么"></a><strong>镜像是什么</strong></h3><p>镜像是一种轻量级、可执行的独立软件保，用来打包软件运行环境和基于运行环境开发的软件，他包含运行某个软件所需的所有内容，包括代码、运行时库、环境变量和配置文件</p>
+<h2 id="Docker镜像加载原理"><a href="#Docker镜像加载原理" class="headerlink" title="Docker镜像加载原理"></a><strong>Docker镜像加载原理</strong></h2><h3 id="UnionFs-（联合文件系统）"><a href="#UnionFs-（联合文件系统）" class="headerlink" title="UnionFs （联合文件系统）"></a>UnionFs （联合文件系统）</h3><p>UnionFs（联合文件系统）：Union文件系统（UnionFs）是一种分层、轻量级并且高性能的文件系统，他支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下（ unite several directories into a single virtual filesystem)。Union文件系统是 Docker镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像<br>特性：一次同时加载多个文件系统，但从外面看起来，只能看到一个文件系统，联合加载会把各层文件系统叠加起来，这样最终的文件系统会包含所有底层的文件和目录</p>
+<h3 id="Docker镜像加载原理-1"><a href="#Docker镜像加载原理-1" class="headerlink" title="Docker镜像加载原理"></a>Docker镜像加载原理</h3><p>docker的镜像实际上由一层一层的文件系统组成，这种层级的文件系统UnionFS。<br>boots(boot file system）主要包含 bootloader和 Kernel, bootloader主要是引导加 kernel, Linux刚启动时会加bootfs文件系统，在 Docker镜像的最底层是 boots。这一层与我们典型的Linux/Unix系统是一样的，包含boot加載器和内核。当boot加载完成之后整个内核就都在内存中了，此时内存的使用权已由 bootfs转交给内核，此时系统也会卸载bootfs。<br>rootfs（root file system),在 bootfs之上。包含的就是典型 Linux系统中的/dev,/proc,/bin,/etc等标准目录和文件。 rootfs就是各种不同的操作系统发行版，比如 Ubuntu, Centos等等。<br><img data-src="3.png"></p>
+<h3 id="分层的镜像"><a href="#分层的镜像" class="headerlink" title="分层的镜像"></a>分层的镜像</h3><p>我们可以去下载一个镜像，注意观察下载的日志输出，可以看到是一层层的在下载</p>
+<p>最大的好处，我觉得莫过于资源共享了！比如有多个镜像都从相同的Base镜像构建而来，那么宿主机只需在磁盘上保留一份base镜像，同时内存中也只需要加载一份base镜像，这样就可以为所有的容器服务了，而且镜像的每一层都可以被共享。</p>
+<p>查看镜像分层的方式可以通过<code>docker image inspect</code> 命令</p>
+<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h3 id="什么是容器数据卷"><a href="#什么是容器数据卷" class="headerlink" title="什么是容器数据卷"></a>什么是容器数据卷</h3><p>当我们在使用docker容器的时候，会产生一系列的数据文件，这些数据文件在我们关闭docker容器时是会消失的，但是其中产生的部分内容我们是希望能够把它给保存起来另作用途的，Docker将应用与运行环境打包成容器发布，我们希望在运行过程钟产生的部分数据是可以持久化的的，而且容器之间我们希望能够实现数据共享。</p>
+<p>通俗地来说，docker容器数据卷可以看成使我们生活中常用的u盘，它存在于一个或多个的容器中，由docker挂载到容器，但不属于联合文件系统，Docker不会在容器删除时删除其挂载的数据卷。</p>
+<h3 id="使用数据卷"><a href="#使用数据卷" class="headerlink" title="使用数据卷"></a>使用数据卷</h3><p>添加数据卷的方式有两种</p>
+<ul>
+<li>第一种是直接通过命令行挂载，<code>-v, --volume list                    Bind mount a volume</code></li>
+<li>第二种是通过dockerFile添加</li>
+</ul>
+<blockquote>
+<p>通过命令挂载</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it -v  /宿主机绝对路径目录:  /容器内目录  -p 主机端口:容器内端口</span><br><span class="line">docker run -it -v /home/ceshi:/home centos /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">通过 docker inspect 容器id 查看</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="具名和匿名挂载"><a href="#具名和匿名挂载" class="headerlink" title="具名和匿名挂载"></a>具名和匿名挂载</h3><h4 id="1-匿名挂载"><a href="#1-匿名挂载" class="headerlink" title="1. 匿名挂载"></a>1. 匿名挂载</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx01 -v /etc/nginx nginx</span></span><br><span class="line"> </span><br><span class="line">//端口映射-p(小写)、-P(大写)区别</span><br><span class="line">-p指定要映射的端口，一个指定端口上只可以绑定一个容器</span><br><span class="line">-P将容器内部开放的网络端口随机映射到宿主机的一个端口上</span><br></pre></td></tr></table></figure>
+
+<p>查看所有volume情况，-v 只写了容器内的路径，没有写容器的路径</p>
+<img data-src="4.png" style="zoom: 80%;" />
+
+<h4 id="2-具名挂载"><a href="#2-具名挂载" class="headerlink" title="2. 具名挂载"></a>2. 具名挂载</h4><p>具名挂载：就是挂载的卷定义一个自己的名字，可以方便的查找</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx02 -v Bertram:/etc/nginx nginx</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker volume ls</span></span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">.....</span><br><span class="line">local               Bertram</span><br></pre></td></tr></table></figure>
+
+<p>查看卷所对应的路径</p>
+<img data-src="5.png" style="zoom: 80%;" />
+
+<p>所有的docker容器内的卷，没有指定目录的情况下都是在 <strong>/data/volumes</strong>目录下</p>
+<h4 id="3-设置权限"><a href="#3-设置权限" class="headerlink" title="3.  设置权限"></a>3.  设置权限</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 通过 -v 容器内路径，ro rw改变读写权限</span></span><br><span class="line">ro readonly  #只读</span><br><span class="line">rw readwrite #可读可写</span><br><span class="line"><span class="meta"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 一旦这个设置了容器权限，容器对我们挂载出来的内容就有了限定</span></span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:ro nginx</span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:rw nginx</span><br><span class="line"><span class="meta">#</span><span class="bash"> 只要看到ro就说明这个路径只能通过宿主机来操作，容器内无法操作。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>Dockerfile 就是用来构建docker镜像的构建文件！命令脚本</p>
+<h3 id="构建步骤："><a href="#构建步骤：" class="headerlink" title="构建步骤："></a>构建步骤：</h3><ul>
+<li><p>编写一个dockerfile文件</p>
+</li>
+<li><p>docker build 构建称为一个镜像</p>
+</li>
+<li><p>docker run运行镜像</p>
+</li>
+<li><p>docker push发布镜像（DockerHub 、阿里云仓库)</p>
+</li>
+</ul>
+<h3 id="DockerFile构建过程"><a href="#DockerFile构建过程" class="headerlink" title="DockerFile构建过程"></a>DockerFile构建过程</h3><p><strong>基础知识：</strong></p>
+<p>1、每个保留关键字(指令）都是必须是大写字母</p>
+<p>2、执行从上到下顺序</p>
+<p>3、#表示注释</p>
+<p>4、每一个指令都会创建提交一个新的镜像层，并提交！</p>
+<p><img data-src="6.png"></p>
+<h3 id="DockerFile的指令"><a href="#DockerFile的指令" class="headerlink" title="DockerFile的指令"></a>DockerFile的指令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FROM				# 基础镜像，一切从这里开始构建</span><br><span class="line">MAINTAINER			# 镜像是谁写的， 姓名+邮箱</span><br><span class="line">RUN					# 镜像构建的时候需要运行的命令</span><br><span class="line">ADD					# 步骤，tomcat镜像，这个tomcat压缩包！添加内容 添加同目录</span><br><span class="line">WORKDIR				# 镜像的工作目录</span><br><span class="line">VOLUME				# 挂载的目录</span><br><span class="line">EXPOSE				# 保留端口配置</span><br><span class="line">CMD					# 指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代。</span><br><span class="line">ENTRYPOINT			# 指定这个容器启动的时候要运行的命令，可以追加命令</span><br><span class="line">ONBUILD				# 当构建一个被继承 DockerFile 这个时候就会运行ONBUILD的指令，触发指令。</span><br><span class="line">COPY				# 类似ADD，将我们文件拷贝到镜像中</span><br><span class="line">ENV					# 构建的时候设置环境变量！</span><br></pre></td></tr></table></figure>
+
+<h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><blockquote>
+<p>创建一个自己的centos</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.编写Dockerfile文件</span></span><br><span class="line">vim mydockerfile-centos</span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER qyz&lt;15086314018@163.com&gt;</span><br><span class="line"></span><br><span class="line">ENV MYPATH /usr/local</span><br><span class="line">WORKDIR $MYPATH</span><br><span class="line"></span><br><span class="line">RUN yum -y install vim</span><br><span class="line">RUN yum -y install net-tools</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">CMD echo $MYPATH</span><br><span class="line">CMD echo &quot;-----end----&quot;</span><br><span class="line">CMD /bin/bash</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 2、通过这个文件构建镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令 docker build -f 文件路径 -t 镜像名:[tag] .</span></span><br><span class="line">docker build -f mydockerfile-centos -t mycentos:0.1 .</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试运行</strong></p>
+<p><img data-src="7.png"></p>
+<h3 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h3><table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM</td>
+<td>指定父镜像</td>
+<td>指定dockerfile基于那个image构建</td>
+</tr>
+<tr>
+<td>MAINTAINER</td>
+<td>作者信息</td>
+<td>用来标明这个dockerfile谁写的</td>
+</tr>
+<tr>
+<td>LABEL</td>
+<td>标签</td>
+<td>用来标明dockerfile的标签 可以使用Label代替Maintainer 最终都是在docker image基本信息中可以查看</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>执行命令</td>
+<td>执行一段命令 默认是/bin/sh 格式: RUN command 或者 RUN [“command” , “param1”,”param2”]</td>
+</tr>
+<tr>
+<td>CMD</td>
+<td>容器启动命令</td>
+<td>提供启动容器时候的默认命令 和ENTRYPOINT配合使用.格式 CMD command param1 param2 或者 CMD [“command” , “param1”,”param2”]</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>入口</td>
+<td>一般在制作一些执行就关闭的容器中会使用</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>复制文件</td>
+<td>build的时候复制文件到image中</td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>添加文件</td>
+<td>build的时候添加文件到image中 不仅仅局限于当前build上下文 可以来源于远程服务</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td>环境变量</td>
+<td>指定build时候的环境变量 可以在启动的容器的时候 通过-e覆盖 格式ENV name=value</td>
+</tr>
+<tr>
+<td>ARG</td>
+<td>构建参数</td>
+<td>构建参数 只在构建的时候使用的参数 如果有ENV 那么ENV的相同名字的值始终覆盖arg的参数</td>
+</tr>
+<tr>
+<td>VOLUME</td>
+<td>定义外部可以挂载的数据卷</td>
+<td>指定build的image那些目录可以启动的时候挂载到文件系统中 启动容器的时候使用 -v 绑定 格式 VOLUME [“目录”]</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td>暴露端口</td>
+<td>定义容器运行的时候监听的端口 启动容器的使用-p来绑定暴露端口 格式: EXPOSE 8080 或者 EXPOSE 8080/udp</td>
+</tr>
+<tr>
+<td>WORKDIR</td>
+<td>工作目录</td>
+<td>指定容器内部的工作目录 如果没有创建则自动创建 如果指定/ 使用的是绝对地址 如果不是/开头那么是在上一条workdir的路径的相对路径</td>
+</tr>
+<tr>
+<td>USER</td>
+<td>指定执行用户</td>
+<td>指定build或者启动的时候 用户 在RUN CMD ENTRYPONT执行的时候的用户</td>
+</tr>
+<tr>
+<td>HEALTHCHECK</td>
+<td>健康检查</td>
+<td>指定监测当前容器的健康监测的命令 基本上没用 因为很多时候 应用本身有健康监测机制</td>
+</tr>
+<tr>
+<td>ONBUILD</td>
+<td>触发器</td>
+<td>当存在ONBUILD关键字的镜像作为基础镜像的时候 当执行FROM完成之后 会执行 ONBUILD的命令 但是不影响当前镜像 用处也不怎么大</td>
+</tr>
+<tr>
+<td>STOPSIGNAL</td>
+<td>发送信号量到宿主机</td>
+<td>该STOPSIGNAL指令设置将发送到容器的系统调用信号以退出。</td>
+</tr>
+<tr>
+<td>SHELL</td>
+<td>指定执行脚本的shell</td>
+<td>指定RUN CMD ENTRYPOINT 执行命令的时候 使用的shell</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>容器</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>linux常用命令</title>
     <url>/post/1/</url>
     <content><![CDATA[<h2 id="关机-重启-注销"><a href="#关机-重启-注销" class="headerlink" title="关机/重启/注销"></a>关机/重启/注销</h2><table>
@@ -1094,232 +1320,6 @@
       </tags>
   </entry>
   <entry>
-    <title>docker</title>
-    <url>/post/2/</url>
-    <content><![CDATA[<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><p><img data-src="docker/0.png"></p>
-<p><strong>Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。</strong>它是目前最流行的 Linux 容器解决方案。</p>
-<p>Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。</p>
-<p>总体来说，Docker 的接口相当简单，用户可以方便地创建和使用容器，把自己的应用放入容器。容器还可以进行版本管理、复制、分享、修改，就像管理普通的代码一样。</p>
-<span id="more"></span>
-
-<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1、yum 包更新到最新</span> </span><br><span class="line">yum update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</span> </span><br><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3、 设置yum源</span></span><br><span class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4、 安装docker，出现输入的界面都按 y</span> </span><br><span class="line">yum install -y docker-ce</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5、 查看docker版本，验证是否验证成功</span></span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
-
-<h2 id="卸载Docker"><a href="#卸载Docker" class="headerlink" title="卸载Docker"></a>卸载Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum remove docker-ce docker-ce-cli containerd.io</span><br><span class="line"></span><br><span class="line">rm -rf /var/lib/docker#docker默认工作路径</span><br></pre></td></tr></table></figure>
-
-<p>阿里云配置Docker镜像加速</p>
-<p><img data-src="docker/1.png"></p>
-<h2 id="Docker基本组成"><a href="#Docker基本组成" class="headerlink" title="Docker基本组成"></a>Docker基本组成</h2><p><img data-src="docker/2.png"></p>
-<p><strong>镜像(image):</strong></p>
-<p>docker镜像好比一个模板,可以通过这个模板来创建容器服务,tomcat镜像===&gt;run ==&gt;tomcat01容器(提供服务器)</p>
-<p>通过这个镜像可以创建多个容器(最终服务运行或者项目运行就是在容器中的)</p>
-<p><strong>容器(container):</strong></p>
-<p>Docker利用容器技术,独立运行一个或者一个组应用,通过镜像来创建的</p>
-<p>启动,停止,删除,基本命令!</p>
-<p><strong>仓库(repository):</strong></p>
-<p>仓库就是存放镜像的地方!</p>
-<p>仓库分为共有仓库和私有仓库</p>
-<p>Docker Hub(默认是国外的)</p>
-<p>阿里云… 都有容器服务器(配置镜像加速)</p>
-<h2 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h2><h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">docker版本</span> </span><br><span class="line">docker version </span><br><span class="line"><span class="meta">#</span><span class="bash">显示docker的系统信息,包括镜像和容器的数量</span></span><br><span class="line">docker info </span><br><span class="line"><span class="meta">#</span><span class="bash">查看某个具体的命令</span></span><br><span class="line">docker [命令] --help  </span><br></pre></td></tr></table></figure>
-
-<h3 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看下载的所有镜像</span></span><br><span class="line">docker docker </span><br><span class="line"><span class="meta">#</span><span class="bash">搜索镜像</span></span><br><span class="line">docker search</span><br><span class="line"><span class="meta">#</span><span class="bash">下载镜像</span></span><br><span class="line">docker pull </span><br><span class="line"><span class="meta">#</span><span class="bash">删除镜像</span></span><br><span class="line">docker rmi </span><br></pre></td></tr></table></figure>
-
-<h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><p>说明 : 有了镜像才可以创建容器</p>
-<h4 id="容器常用命令"><a href="#容器常用命令" class="headerlink" title="容器常用命令"></a>容器常用命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull #下载镜像 docker image pull</span><br><span class="line"></span><br><span class="line">docker rmi #删除镜像 docker image rm</span><br><span class="line"></span><br><span class="line">docker docker</span><br><span class="line"></span><br><span class="line">docker docker -a  #列出所有镜像详细信息</span><br><span class="line">docker docker -aq #列出所有镜像的id</span><br><span class="line">docker search mysql #查询网上的mysql的镜像 </span><br><span class="line"><span class="meta">#</span><span class="bash">  --filter=STARS=3000 <span class="comment">#过滤，搜索出来的镜像收藏STARS数量大于3000的</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">等价于</span></span><br><span class="line">docker pull tomcat:8</span><br><span class="line">docker pull docker.io/library/tomcat:8</span><br><span class="line"></span><br><span class="line">docker rmi -f 镜像id #删除指定id的镜像</span><br><span class="line">docker rmi -f $(docker docker -aq) #删除全部的镜像</span><br><span class="line">docker stop $(docker ps -a -q) #停止所有的容器</span><br><span class="line">docker pull centos        #docker中下载centos</span><br><span class="line">docker run 镜像id         #新建容器并启动</span><br><span class="line">docker container list -a  # 查看所有的容器</span><br><span class="line">docker ps -a              # 查看所有的容器</span><br><span class="line">docker rm 容器id          #删除指定容器</span><br><span class="line">docker start 容器id	      #启动容器</span><br><span class="line">docker restart 容器id     #重启容器</span><br><span class="line">docker stop 容器id	      #停止当前正在运行的容器</span><br><span class="line">docker kill 容器id	      #强制停止当前容器</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run [可选参数] image | docker container run [可选参数] image </span><br><span class="line"><span class="meta">#</span><span class="bash">参书说明</span></span><br><span class="line">--name=&quot;Name&quot;		#容器名字 tomcat01 tomcat02 用来区分容器</span><br><span class="line">-d					#后台方式运行</span><br><span class="line">-it 				#使用交互方式运行，进入容器查看内容</span><br><span class="line">-p					#指定容器的端口 -p 8080(宿主机):8080(容器)</span><br><span class="line">		-p ip:主机端口:容器端口</span><br><span class="line">		-p 主机端口:容器端口(常用)</span><br><span class="line">		-p 容器端口</span><br><span class="line">		容器端口</span><br><span class="line">-P(大写) 				随机指定端口</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it centos /bin/bash # 测试、启动并进入容器</span><br><span class="line"></span><br><span class="line">exit #从容器退回主机</span><br><span class="line"></span><br><span class="line">docker ps 命令  		#列出当前正在运行的容器 还没退出的（exit）</span><br><span class="line">  -a, --all     	 #列出当前正在运行的容器 + 带出历史运行过的容器</span><br><span class="line">  -n=?, --last int   #列出最近创建的?个容器 ?为1则只列出最近创建的一个容器,为2则列出2个</span><br><span class="line">  -q, --quiet        #只列出容器的编号</span><br></pre></td></tr></table></figure>
-
-<h4 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">exit 		#容器直接退出</span><br><span class="line">ctrl +P +Q  #容器不停止退出 	---注意：这个很有用的操作</span><br></pre></td></tr></table></figure>
-
-<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm 容器id   				#删除指定的容器，不能删除正在运行的容器，如果要强制删除 rm -rf</span><br><span class="line">docker rm -f $(docker ps -aq)  	 #删除所有的容器</span><br><span class="line">docker ps -a -q|xargs docker rm  #删除所有的容器</span><br></pre></td></tr></table></figure>
-
-<h4 id="后台启动命令"><a href="#后台启动命令" class="headerlink" title="后台启动命令"></a>后台启动命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d centos #这都是看不到信息的</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 问题docker ps. 发现centos 停止了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 常见的坑，docker容器使用后台运行，就必须要有要一个前台进程，docker发现没有应用，就会自动停止</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> nginx，容器启动后，发现自己没有提供服务，就会立刻停止，就是没有程序了</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker logs --help</span><br><span class="line">Options:</span><br><span class="line">      --details        Show extra details provided to logs </span><br><span class="line">*  -f, --follow         Follow log output</span><br><span class="line">      --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">*      --tail string    Number of lines to show from the end of the logs (default &quot;all&quot;)</span><br><span class="line">*  -t, --timestamps     Show timestamps</span><br><span class="line">      --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">➜  ~ docker run -d centos /bin/sh -c &quot;while true;do echo 6666;sleep 1;done&quot; #模拟日志      </span><br><span class="line"><span class="meta">#</span><span class="bash">显示日志</span></span><br><span class="line">-tf		#显示日志信息（一直更新）</span><br><span class="line">--tail number #需要显示日志条数</span><br><span class="line">docker logs -t --tail n 容器id #查看n行日志</span><br><span class="line">docker logs -ft 容器id #跟着日志</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看容器进程信息"><a href="#查看容器进程信息" class="headerlink" title="查看容器进程信息"></a>查看容器进程信息</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看容器中进程信息ps</span></span><br><span class="line">docker top 容器id</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看镜像的元数据"><a href="#查看镜像的元数据" class="headerlink" title="查看镜像的元数据"></a>查看镜像的元数据</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect 容器id</span><br><span class="line">docker inspect 镜像id</span><br></pre></td></tr></table></figure>
-
-<h4 id="进入当前正在运行的容器"><a href="#进入当前正在运行的容器" class="headerlink" title="进入当前正在运行的容器"></a>进入当前正在运行的容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方式一</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 进入当前正在运行的容器</span></span><br><span class="line">docker exec -it 容器id bashshell</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方式二</span></span><br><span class="line">docker attach 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">测试</span></span><br><span class="line">docker attach 55321bcae33d </span><br><span class="line">正在执行当前的代码...</span><br><span class="line">区别</span><br><span class="line"><span class="meta">#</span><span class="bash">docker <span class="built_in">exec</span> <span class="comment">#进入当前容器后开启一个新的终端，可以在里面操作。（常用）</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">docker attach <span class="comment"># 进入容器正在执行的终端</span></span></span><br></pre></td></tr></table></figure>
-
-<h4 id="从容器内拷贝内容到主机上"><a href="#从容器内拷贝内容到主机上" class="headerlink" title="从容器内拷贝内容到主机上"></a>从容器内拷贝内容到主机上</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">先进入到容器中</span></span><br><span class="line">docker exec -it 56a5583b25b4 /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">再创建一个新文件</span></span><br><span class="line">echo &quot;hello&quot; &gt; hello.java # &quot;hello&quot;是内容 hello.java是文件名（souce命令用不了）</span><br><span class="line"><span class="meta">#</span><span class="bash">测试文件是否存在了</span></span><br><span class="line">cat hello.java </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">将容器中的文件拷贝到主机上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker cp 容器名:容器内文件 主机上的路径</span></span><br><span class="line">docker cp 9035020356a4:/java.java /home</span><br></pre></td></tr></table></figure>
-
-<h4 id="命令大全"><a href="#命令大全" class="headerlink" title="命令大全"></a>命令大全</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">attach      Attach local standard input, output, and error streams to a running container</span><br><span class="line"><span class="meta">#</span><span class="bash">当前shell下 attach连接指定运行的镜像</span></span><br><span class="line">build       Build an image from a Dockerfile # 通过Dockerfile定制镜像</span><br><span class="line">commit      Create a new image from a container&#x27;s changes #提交当前容器为新的镜像</span><br><span class="line">cp          Copy files/folders between a container and the local filesystem #拷贝文件</span><br><span class="line">create      Create a new container #创建一个新的容器</span><br><span class="line">diff        Inspect changes to files or directories on a container&#x27;s filesystem #查看docker容器的变化</span><br><span class="line">events      Get real time events from the server # 从服务获取容器实时时间</span><br><span class="line">exec        Run a command in a running container # 在运行中的容器上运行命令</span><br><span class="line">export      Export a container&#x27;s filesystem as a tar archive #导出容器文件系统作为一个tar归档文件[对应import]</span><br><span class="line">history     Show the history of an image # 展示一个镜像形成历史</span><br><span class="line">docker      List docker #列出系统当前的镜像</span><br><span class="line">import      Import the contents from a tarball to create a filesystem image #从tar包中导入内容创建一个文件系统镜像</span><br><span class="line">info        Display system-wide information # 显示全系统信息</span><br><span class="line">inspect     Return low-level information on Docker objects #查看容器详细信息</span><br><span class="line">kill        Kill one or more running containers # kill指定docker容器</span><br><span class="line">load        Load an image from a tar archive or STDIN #从一个tar包或标准输入中加载一个镜像[对应save]</span><br><span class="line">login       Log in to a Docker registry #</span><br><span class="line">logout      Log out from a Docker registry</span><br><span class="line">logs        Fetch the logs of a container</span><br><span class="line">pause       Pause all processes within one or more containers</span><br><span class="line">port        List port mappings or a specific mapping for the container</span><br><span class="line">ps          List containers</span><br><span class="line">pull        Pull an image or a repository from a registry</span><br><span class="line">push        Push an image or a repository to a registry</span><br><span class="line">rename      Rename a container</span><br><span class="line">restart     Restart one or more containers</span><br><span class="line">rm          Remove one or more containers</span><br><span class="line">rmi         Remove one or more docker</span><br><span class="line">run         Run a command in a new container</span><br><span class="line">save        Save one or more docker to a tar archive (streamed to STDOUT by default)</span><br><span class="line">search      Search the Docker Hub for docker</span><br><span class="line">start       Start one or more stopped containers</span><br><span class="line">stats       Display a live stream of container(s) resource usage statistics</span><br><span class="line">stop        Stop one or more running containers</span><br><span class="line">tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</span><br><span class="line">top         Display the running processes of a container</span><br><span class="line">unpause     Unpause all processes within one or more containers</span><br><span class="line">update      Update configuration of one or more containers</span><br><span class="line">version     Show the Docker version information</span><br><span class="line">wait        Block until one or more containers stop, then print their exit codes</span><br></pre></td></tr></table></figure>
-
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p><img data-src="docker/8.png"></p>
-<h2 id="Docker镜像讲解"><a href="#Docker镜像讲解" class="headerlink" title="Docker镜像讲解"></a>Docker镜像讲解</h2><h3 id="镜像是什么"><a href="#镜像是什么" class="headerlink" title="镜像是什么"></a><strong>镜像是什么</strong></h3><p>镜像是一种轻量级、可执行的独立软件保，用来打包软件运行环境和基于运行环境开发的软件，他包含运行某个软件所需的所有内容，包括代码、运行时库、环境变量和配置文件</p>
-<h2 id="Docker镜像加载原理"><a href="#Docker镜像加载原理" class="headerlink" title="Docker镜像加载原理"></a><strong>Docker镜像加载原理</strong></h2><h3 id="UnionFs-（联合文件系统）"><a href="#UnionFs-（联合文件系统）" class="headerlink" title="UnionFs （联合文件系统）"></a>UnionFs （联合文件系统）</h3><p>UnionFs（联合文件系统）：Union文件系统（UnionFs）是一种分层、轻量级并且高性能的文件系统，他支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下（ unite several directories into a single virtual filesystem)。Union文件系统是 Docker镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像<br>特性：一次同时加载多个文件系统，但从外面看起来，只能看到一个文件系统，联合加载会把各层文件系统叠加起来，这样最终的文件系统会包含所有底层的文件和目录</p>
-<h3 id="Docker镜像加载原理-1"><a href="#Docker镜像加载原理-1" class="headerlink" title="Docker镜像加载原理"></a>Docker镜像加载原理</h3><p>docker的镜像实际上由一层一层的文件系统组成，这种层级的文件系统UnionFS。<br>boots(boot file system）主要包含 bootloader和 Kernel, bootloader主要是引导加 kernel, Linux刚启动时会加bootfs文件系统，在 Docker镜像的最底层是 boots。这一层与我们典型的Linux/Unix系统是一样的，包含boot加載器和内核。当boot加载完成之后整个内核就都在内存中了，此时内存的使用权已由 bootfs转交给内核，此时系统也会卸载bootfs。<br>rootfs（root file system),在 bootfs之上。包含的就是典型 Linux系统中的/dev,/proc,/bin,/etc等标准目录和文件。 rootfs就是各种不同的操作系统发行版，比如 Ubuntu, Centos等等。<br><img data-src="docker/3.png"></p>
-<h3 id="分层的镜像"><a href="#分层的镜像" class="headerlink" title="分层的镜像"></a>分层的镜像</h3><p>我们可以去下载一个镜像，注意观察下载的日志输出，可以看到是一层层的在下载</p>
-<p>最大的好处，我觉得莫过于资源共享了！比如有多个镜像都从相同的Base镜像构建而来，那么宿主机只需在磁盘上保留一份base镜像，同时内存中也只需要加载一份base镜像，这样就可以为所有的容器服务了，而且镜像的每一层都可以被共享。</p>
-<p>查看镜像分层的方式可以通过<code>docker image inspect</code> 命令</p>
-<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h3 id="什么是容器数据卷"><a href="#什么是容器数据卷" class="headerlink" title="什么是容器数据卷"></a>什么是容器数据卷</h3><p>当我们在使用docker容器的时候，会产生一系列的数据文件，这些数据文件在我们关闭docker容器时是会消失的，但是其中产生的部分内容我们是希望能够把它给保存起来另作用途的，Docker将应用与运行环境打包成容器发布，我们希望在运行过程钟产生的部分数据是可以持久化的的，而且容器之间我们希望能够实现数据共享。</p>
-<p>通俗地来说，docker容器数据卷可以看成使我们生活中常用的u盘，它存在于一个或多个的容器中，由docker挂载到容器，但不属于联合文件系统，Docker不会在容器删除时删除其挂载的数据卷。</p>
-<h3 id="使用数据卷"><a href="#使用数据卷" class="headerlink" title="使用数据卷"></a>使用数据卷</h3><p>添加数据卷的方式有两种</p>
-<ul>
-<li>第一种是直接通过命令行挂载，<code>-v, --volume list                    Bind mount a volume</code></li>
-<li>第二种是通过dockerFile添加</li>
-</ul>
-<blockquote>
-<p>通过命令挂载</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it -v  /宿主机绝对路径目录:  /容器内目录  -p 主机端口:容器内端口</span><br><span class="line">docker run -it -v /home/ceshi:/home centos /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">通过 docker inspect 容器id 查看</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="具名和匿名挂载"><a href="#具名和匿名挂载" class="headerlink" title="具名和匿名挂载"></a>具名和匿名挂载</h3><h4 id="1-匿名挂载"><a href="#1-匿名挂载" class="headerlink" title="1. 匿名挂载"></a>1. 匿名挂载</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx01 -v /etc/nginx nginx</span></span><br><span class="line"> </span><br><span class="line">//端口映射-p(小写)、-P(大写)区别</span><br><span class="line">-p指定要映射的端口，一个指定端口上只可以绑定一个容器</span><br><span class="line">-P将容器内部开放的网络端口随机映射到宿主机的一个端口上</span><br></pre></td></tr></table></figure>
-
-<p>查看所有volume情况，-v 只写了容器内的路径，没有写容器的路径</p>
-<img data-src="docker/4.png" style="zoom: 80%;">
-
-<h4 id="2-具名挂载"><a href="#2-具名挂载" class="headerlink" title="2. 具名挂载"></a>2. 具名挂载</h4><p>具名挂载：就是挂载的卷定义一个自己的名字，可以方便的查找</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx02 -v Bertram:/etc/nginx nginx</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker volume ls</span></span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">.....</span><br><span class="line">local               Bertram</span><br></pre></td></tr></table></figure>
-
-<p>查看卷所对应的路径</p>
-<img data-src="docker/5.png" style="zoom: 80%;">
-
-<p>所有的docker容器内的卷，没有指定目录的情况下都是在 <strong>/data/docker/volumes</strong>目录下</p>
-<h4 id="3-设置权限"><a href="#3-设置权限" class="headerlink" title="3.  设置权限"></a>3.  设置权限</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 通过 -v 容器内路径，ro rw改变读写权限</span></span><br><span class="line">ro readonly  #只读</span><br><span class="line">rw readwrite #可读可写</span><br><span class="line"><span class="meta"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 一旦这个设置了容器权限，容器对我们挂载出来的内容就有了限定</span></span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:ro nginx</span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:rw nginx</span><br><span class="line"><span class="meta">#</span><span class="bash"> 只要看到ro就说明这个路径只能通过宿主机来操作，容器内无法操作。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>Dockerfile 就是用来构建docker镜像的构建文件！命令脚本</p>
-<h3 id="构建步骤："><a href="#构建步骤：" class="headerlink" title="构建步骤："></a>构建步骤：</h3><ul>
-<li><p>编写一个dockerfile文件</p>
-</li>
-<li><p>docker build 构建称为一个镜像</p>
-</li>
-<li><p>docker run运行镜像</p>
-</li>
-<li><p>docker push发布镜像（DockerHub 、阿里云仓库)</p>
-</li>
-</ul>
-<h3 id="DockerFile构建过程"><a href="#DockerFile构建过程" class="headerlink" title="DockerFile构建过程"></a>DockerFile构建过程</h3><p><strong>基础知识：</strong></p>
-<p>1、每个保留关键字(指令）都是必须是大写字母</p>
-<p>2、执行从上到下顺序</p>
-<p>3、#表示注释</p>
-<p>4、每一个指令都会创建提交一个新的镜像层，并提交！</p>
-<p><img data-src="docker/6.png"></p>
-<h3 id="DockerFile的指令"><a href="#DockerFile的指令" class="headerlink" title="DockerFile的指令"></a>DockerFile的指令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FROM				# 基础镜像，一切从这里开始构建</span><br><span class="line">MAINTAINER			# 镜像是谁写的， 姓名+邮箱</span><br><span class="line">RUN					# 镜像构建的时候需要运行的命令</span><br><span class="line">ADD					# 步骤，tomcat镜像，这个tomcat压缩包！添加内容 添加同目录</span><br><span class="line">WORKDIR				# 镜像的工作目录</span><br><span class="line">VOLUME				# 挂载的目录</span><br><span class="line">EXPOSE				# 保留端口配置</span><br><span class="line">CMD					# 指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代。</span><br><span class="line">ENTRYPOINT			# 指定这个容器启动的时候要运行的命令，可以追加命令</span><br><span class="line">ONBUILD				# 当构建一个被继承 DockerFile 这个时候就会运行ONBUILD的指令，触发指令。</span><br><span class="line">COPY				# 类似ADD，将我们文件拷贝到镜像中</span><br><span class="line">ENV					# 构建的时候设置环境变量！</span><br></pre></td></tr></table></figure>
-
-<h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><blockquote>
-<p>创建一个自己的centos</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.编写Dockerfile文件</span></span><br><span class="line">vim mydockerfile-centos</span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER qyz&lt;15086314018@163.com&gt;</span><br><span class="line"></span><br><span class="line">ENV MYPATH /usr/local</span><br><span class="line">WORKDIR $MYPATH</span><br><span class="line"></span><br><span class="line">RUN yum -y install vim</span><br><span class="line">RUN yum -y install net-tools</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">CMD echo $MYPATH</span><br><span class="line">CMD echo &quot;-----end----&quot;</span><br><span class="line">CMD /bin/bash</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 2、通过这个文件构建镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令 docker build -f 文件路径 -t 镜像名:[tag] .</span></span><br><span class="line">docker build -f mydockerfile-centos -t mycentos:0.1 .</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试运行</strong></p>
-<p><img data-src="docker/7.png"></p>
-<h3 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h3><table>
-<thead>
-<tr>
-<th>关键字</th>
-<th>作用</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>FROM</td>
-<td>指定父镜像</td>
-<td>指定dockerfile基于那个image构建</td>
-</tr>
-<tr>
-<td>MAINTAINER</td>
-<td>作者信息</td>
-<td>用来标明这个dockerfile谁写的</td>
-</tr>
-<tr>
-<td>LABEL</td>
-<td>标签</td>
-<td>用来标明dockerfile的标签 可以使用Label代替Maintainer 最终都是在docker image基本信息中可以查看</td>
-</tr>
-<tr>
-<td>RUN</td>
-<td>执行命令</td>
-<td>执行一段命令 默认是/bin/sh 格式: RUN command 或者 RUN [“command” , “param1”,”param2”]</td>
-</tr>
-<tr>
-<td>CMD</td>
-<td>容器启动命令</td>
-<td>提供启动容器时候的默认命令 和ENTRYPOINT配合使用.格式 CMD command param1 param2 或者 CMD [“command” , “param1”,”param2”]</td>
-</tr>
-<tr>
-<td>ENTRYPOINT</td>
-<td>入口</td>
-<td>一般在制作一些执行就关闭的容器中会使用</td>
-</tr>
-<tr>
-<td>COPY</td>
-<td>复制文件</td>
-<td>build的时候复制文件到image中</td>
-</tr>
-<tr>
-<td>ADD</td>
-<td>添加文件</td>
-<td>build的时候添加文件到image中 不仅仅局限于当前build上下文 可以来源于远程服务</td>
-</tr>
-<tr>
-<td>ENV</td>
-<td>环境变量</td>
-<td>指定build时候的环境变量 可以在启动的容器的时候 通过-e覆盖 格式ENV name=value</td>
-</tr>
-<tr>
-<td>ARG</td>
-<td>构建参数</td>
-<td>构建参数 只在构建的时候使用的参数 如果有ENV 那么ENV的相同名字的值始终覆盖arg的参数</td>
-</tr>
-<tr>
-<td>VOLUME</td>
-<td>定义外部可以挂载的数据卷</td>
-<td>指定build的image那些目录可以启动的时候挂载到文件系统中 启动容器的时候使用 -v 绑定 格式 VOLUME [“目录”]</td>
-</tr>
-<tr>
-<td>EXPOSE</td>
-<td>暴露端口</td>
-<td>定义容器运行的时候监听的端口 启动容器的使用-p来绑定暴露端口 格式: EXPOSE 8080 或者 EXPOSE 8080/udp</td>
-</tr>
-<tr>
-<td>WORKDIR</td>
-<td>工作目录</td>
-<td>指定容器内部的工作目录 如果没有创建则自动创建 如果指定/ 使用的是绝对地址 如果不是/开头那么是在上一条workdir的路径的相对路径</td>
-</tr>
-<tr>
-<td>USER</td>
-<td>指定执行用户</td>
-<td>指定build或者启动的时候 用户 在RUN CMD ENTRYPONT执行的时候的用户</td>
-</tr>
-<tr>
-<td>HEALTHCHECK</td>
-<td>健康检查</td>
-<td>指定监测当前容器的健康监测的命令 基本上没用 因为很多时候 应用本身有健康监测机制</td>
-</tr>
-<tr>
-<td>ONBUILD</td>
-<td>触发器</td>
-<td>当存在ONBUILD关键字的镜像作为基础镜像的时候 当执行FROM完成之后 会执行 ONBUILD的命令 但是不影响当前镜像 用处也不怎么大</td>
-</tr>
-<tr>
-<td>STOPSIGNAL</td>
-<td>发送信号量到宿主机</td>
-<td>该STOPSIGNAL指令设置将发送到容器的系统调用信号以退出。</td>
-</tr>
-<tr>
-<td>SHELL</td>
-<td>指定执行脚本的shell</td>
-<td>指定RUN CMD ENTRYPOINT 执行命令的时候 使用的shell</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>容器</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>css</title>
     <url>/post/0/</url>
     <content><![CDATA[<h1 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h1><h2 id="CSS规范"><a href="#CSS规范" class="headerlink" title="CSS规范"></a>CSS规范</h2><h3 id="1-CSS属性书写顺序"><a href="#1-CSS属性书写顺序" class="headerlink" title="1.CSS属性书写顺序"></a>1.CSS属性书写顺序</h3><p>建议遵循以下顺序：</p>
@@ -1360,27 +1360,27 @@
 <tr>
 <td>element</td>
 <td>p</td>
-<td>选择所有<p>元素</p></td>
+<td>选择所有<p>元素</td>
 </tr>
 <tr>
 <td>element,element</td>
 <td>div,p</td>
-<td>选择所有<div>元素和<p>元素</p></div></td>
+<td>选择所有<div>元素和<p>元素</td>
 </tr>
 <tr>
 <td>element element</td>
 <td>div p</td>
-<td>选择<div>元素内的所有<p>元素</p></div></td>
+<td>选择<div>元素内的所有<p>元素</td>
 </tr>
 <tr>
 <td>element&gt;element</td>
 <td>div&gt;p</td>
-<td>选择所有父级是 <div> 元素的 <p> 元素</p></div></td>
+<td>选择所有父级是 <div> 元素的 <p> 元素</td>
 </tr>
 <tr>
 <td>element+element</td>
 <td>div+p</td>
-<td>选择所有紧接着<div>元素之后的<p>元素</p></div></td>
+<td>选择所有紧接着<div>元素之后的<p>元素</td>
 </tr>
 <tr>
 <td>[attribute]</td>
@@ -1430,32 +1430,32 @@
 <tr>
 <td>:first-letter</td>
 <td>p:first-letter</td>
-<td>选择每一个<p>元素的第一个字母</p></td>
+<td>选择每一个<p>元素的第一个字母</td>
 </tr>
 <tr>
 <td>:first-line</td>
 <td>p:first-line</td>
-<td>选择每一个<p>元素的第一行</p></td>
+<td>选择每一个<p>元素的第一行</td>
 </tr>
 <tr>
 <td>:first-child</td>
 <td>p:first-child</td>
-<td>指定只有当<p>元素是其父级的第一个子级的样式。</p></td>
+<td>指定只有当<p>元素是其父级的第一个子级的样式。</td>
 </tr>
 <tr>
 <td>:before</td>
 <td>p:before</td>
-<td>在每个<p>元素之前插入内容</p></td>
+<td>在每个<p>元素之前插入内容</td>
 </tr>
 <tr>
 <td>:after</td>
 <td>p:after</td>
-<td>在每个<p>元素之后插入内容</p></td>
+<td>在每个<p>元素之后插入内容</td>
 </tr>
 <tr>
 <td>:lang(language)</td>
 <td>p:lang(it)</td>
-<td>选择一个lang属性的起始值=”it”的所有<p>元素</p></td>
+<td>选择一个lang属性的起始值=”it”的所有<p>元素</td>
 </tr>
 <tr>
 <td>element1~element2</td>
@@ -1615,7 +1615,7 @@
 <li>默认宽度就是它本身内容的宽度。</li>
 <li>行内元素只能容纳文本或其他行内元素。</li>
 </ul>
-<p><font color="red">注意：</font><br>        链接里面不能再放链接<br>        特殊情况链接 <a> 里面可以放块级元素，但是给 <a> 转换一下块级模式最安全</a></a></p>
+<p><font color='red'>注意：</font><br>        链接里面不能再放链接<br>        特殊情况链接 <a> 里面可以放块级元素，但是给 <a> 转换一下块级模式最安全</p>
 <h3 id="3-行内块元素"><a href="#3-行内块元素" class="headerlink" title="3.行内块元素"></a>3.行内块元素</h3><ul>
 <li>和相邻行内元素（行内块）在一行上，但是他们之间会有空白缝隙。</li>
 <li>一行可以显示多个（行内元素特点）。</li>
@@ -1624,35 +1624,35 @@
 </ul>
 <h3 id="4、单行文字垂直居中的代码"><a href="#4、单行文字垂直居中的代码" class="headerlink" title="4、单行文字垂直居中的代码"></a>4、单行文字垂直居中的代码</h3><p><strong>解决方案</strong>:    </p>
 <p>​        让文字的行高等于盒子的高度  就可以让文字在当前盒子内垂直居中</p>
-<p><img data-src="../images/Css/1.png" alt="1"></p>
-<p><img data-src="../images/Css/2.png" alt="2"></p>
+<p><img data-src="1.png" alt="1"></p>
+<p><img data-src="2.png" alt="2"></p>
 <h2 id="四-css的背景"><a href="#四-css的背景" class="headerlink" title="四.css的背景"></a>四.css的背景</h2><p>通过 CSS 背景属性，可以给页面元素添加背景样式。<br>背景属性可以设置背景颜色、背景图片、背景平铺、背景图片位置、背景图像固定等。</p>
 <h3 id="1、背景颜色"><a href="#1、背景颜色" class="headerlink" title="1、背景颜色"></a>1、背景颜色</h3><p><strong>样式名称</strong>：</p>
 <p>​        background-color 定义元素的背景颜色</p>
 <p><strong>使用方式</strong>：</p>
-<p><img data-src="../images/Css/1570886137899.png" alt="1570886137899"></p>
+<p><img data-src="1570886137899.png" alt="1570886137899"></p>
 <p><strong>其他说明</strong>：</p>
 <p>​        元素背景颜色默认值是 transparent（透明）</p>
-<p><img data-src="../images/Css/1570886176292.png" alt="1570886176292"></p>
+<p><img data-src="1570886176292.png" alt="1570886176292"></p>
 <h3 id="2、背景图片"><a href="#2、背景图片" class="headerlink" title="2、背景图片"></a>2、背景图片</h3><p><strong>样式名称</strong>：</p>
 <p>​        background-image  定义元素的背景图片</p>
 <p><strong>使用方式</strong>：</p>
-<p><img data-src="../images/Css/1570886322557.png" alt="1570886322557"></p>
-<p><img data-src="../images/Css/1570886362813.png" alt="1570886362813"></p>
+<p><img data-src="1570886322557.png" alt="1570886322557"></p>
+<p><img data-src="1570886362813.png" alt="1570886362813"></p>
 <p><strong>其他说明</strong>：</p>
 <p>​        实际开发常见于 logo 或者一些装饰性的小图片或者是超大的背景图片, 优点是非常便于控制位置. (精灵图也是一种运用场景)</p>
 <p>​        注意：背景图片后面的地址，千万不要忘记加 URL， 同时里面的路径<strong>不要加引号</strong>。</p>
 <h3 id="3、背景平铺"><a href="#3、背景平铺" class="headerlink" title="3、背景平铺"></a>3、背景平铺</h3><p><strong>样式名称：</strong></p>
 <p>​        background-repeat 设置元素背景图像的平铺 </p>
 <p><strong>使用方式：</strong></p>
-<p><img data-src="../images/Css/1570886648887.png" alt="1570886648887"></p>
-<p><img data-src="../images/Css/1570886688306.png" alt="1570886688306"></p>
+<p><img data-src="1570886648887.png" alt="1570886648887"></p>
+<p><img data-src="1570886688306.png" alt="1570886688306"></p>
 <h3 id="4、背景图片位置"><a href="#4、背景图片位置" class="headerlink" title="4、背景图片位置"></a>4、背景图片位置</h3><p><strong>样式名称：</strong></p>
 <p>​        background-position 属性可以改变图片在背景中的位置</p>
 <p><strong>使用方式：</strong></p>
-<p>​        <img data-src="../images/Css/1570886973530.png" alt="1570886973530"></p>
+<p>​        <img data-src="1570886973530.png" alt="1570886973530"></p>
 <p>​        参数代表的意思是：x 坐标和 y 坐标。 可以使用 方位名词 或者 精确单位</p>
-<p><img data-src="../images/Css/1570887034135.png" alt="1570887034135"></p>
+<p><img data-src="1570887034135.png" alt="1570887034135"></p>
 <p><strong>其他说明：</strong></p>
 <p>1、参数是方位名词</p>
 <p>​        如果指定的两个值都是方位名词，则两个值前后顺序无关，比如 left  top 和 top  left 效果一致</p>
@@ -1665,17 +1665,17 @@
 <h3 id="5、背景图片固定"><a href="#5、背景图片固定" class="headerlink" title="5、背景图片固定"></a>5、背景图片固定</h3><p><strong>样式名称：</strong></p>
 <p>​        background-attachment 属性设置背景图像是否固定或者随着页面的其余部分滚动。</p>
 <p><strong>使用方式：</strong></p>
-<p>​        <img data-src="../images/Css/1570887652404.png" alt="1570887652404"></p>
-<p><img data-src="../images/Css/1570887699177.png" alt="1570887699177"></p>
+<p>​        <img data-src="1570887652404.png" alt="1570887652404"></p>
+<p><img data-src="1570887699177.png" alt="1570887699177"></p>
 <p><strong>其他说明：</strong></p>
 <p>​        background-attachment 后期可以制作视差滚动的效果。</p>
 <h3 id="6、背景样式合写"><a href="#6、背景样式合写" class="headerlink" title="6、背景样式合写"></a>6、背景样式合写</h3><p><strong>背景合写样式：</strong></p>
 <p>​        background: 背景颜色 背景图片地址 背景平铺 背景图像滚动 背景图片位置;</p>
 <p><strong>使用方式：</strong></p>
-<p><img data-src="../images/Css/1570887809455.png" alt="1570887809455"></p>
+<p><img data-src="1570887809455.png" alt="1570887809455"></p>
 <h3 id="7、背景色半透明"><a href="#7、背景色半透明" class="headerlink" title="7、背景色半透明"></a>7、背景色半透明</h3><p>CSS3 提供了背景颜色半透明的效果。 </p>
 <p><strong>使用方式：</strong></p>
-<p><img data-src="../images/Css/1570887978061.png" alt="1570887978061"></p>
+<p><img data-src="1570887978061.png" alt="1570887978061"></p>
 <ul>
 <li>最后一个参数是 alpha 透明度，取值范围在 0~1之间</li>
 <li>我们习惯把 0.3 的 0 省略掉，写为 background: rgba(0, 0, 0, .3);</li>
@@ -1685,7 +1685,7 @@
 <li>背景半透明是指盒子背景半透明，盒子里面的内容不受影响</li>
 <li>CSS3 新增属性，是 IE9+ 版本浏览器才支持的，但是现在实际开发,我们不太关注兼容性写法了,可以放心使用</li>
 </ul>
-<h3 id="8、背景总结"><a href="#8、背景总结" class="headerlink" title="8、背景总结"></a>8、背景总结</h3><p><img data-src="../images/Css/3.png" alt="3"></p>
+<h3 id="8、背景总结"><a href="#8、背景总结" class="headerlink" title="8、背景总结"></a>8、背景总结</h3><p><img data-src="3.png" alt="3"></p>
 <h3 id="9-背景渐变色"><a href="#9-背景渐变色" class="headerlink" title="9.背景渐变色"></a>9.背景渐变色</h3><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 背景渐变必须添加浏览器私有前缀 */</span></span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">-webkit-linear-gradient</span>(起始方向, 颜色<span class="number">1</span>,颜色<span class="number">2</span>);</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">-webkit-linear-gradient</span>(left, red, blue);</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">-webkit-linear-gradient</span>(left top, red, blue);</span><br></pre></td></tr></table></figure>
 
 <p>背景渐变必须添加浏览器私有前缀</p>
@@ -1714,7 +1714,7 @@
 <li>选择器不同，则根据选择器权重执行</li>
 </ul>
 <p>选择器优先级计算表格：</p>
-<p><img data-src="../images/Css/1571490129794.png" alt="1571490129794"></p>
+<p><img data-src="1571490129794.png" alt="1571490129794"></p>
 <p>优先级注意点:</p>
 <ol>
 <li><p>权重是有4组数字组成,但是不会有进位。</p>
@@ -1744,12 +1744,12 @@
 </ol>
 <h3 id="2、盒子模型（Box-Model）组成"><a href="#2、盒子模型（Box-Model）组成" class="headerlink" title="2、盒子模型（Box Model）组成"></a>2、盒子模型（Box Model）组成</h3><p>盒子模型：把 HTML 页面中的布局元素看作是一个矩形的盒子，也就是一个盛装内容的容器。</p>
 <p>CSS 盒子模型本质上是一个盒子，封装周围的 HTML 元素，它包括：<strong>边框</strong>、<strong>外边距</strong>、<strong>内边距</strong>、和 <strong>实际内容</strong></p>
-<p><img data-src="../images/Css/1571492536942.png" alt="1571492536942"></p>
+<p><img data-src="1571492536942.png" alt="1571492536942"></p>
 <h3 id="3、边框（border）"><a href="#3、边框（border）" class="headerlink" title="3、边框（border）"></a>3、边框（border）</h3><h4 id="3-1、边框的使用"><a href="#3-1、边框的使用" class="headerlink" title="3.1、边框的使用"></a>3.1、边框的使用</h4><p>1、border可以设置元素的边框。边框有三部分组成：边框宽度(粗细) 边框样式  边框颜色；</p>
 <p>2、语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">border</span> : border-width || border-style || border-color;   </span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/1571492659260.png" alt="1571492659260"></p>
+<p><img data-src="1571492659260.png" alt="1571492659260"></p>
 <p>边框样式 border-style 可以设置如下值：</p>
 <ul>
 <li>none：没有边框即忽略所有边框的宽度（默认值）</li>
@@ -1778,7 +1778,7 @@
 <h3 id="4、内边距（padding）"><a href="#4、内边距（padding）" class="headerlink" title="4、内边距（padding）"></a>4、内边距（padding）</h3><h4 id="4-1、内边距的使用方式"><a href="#4-1、内边距的使用方式" class="headerlink" title="4.1、内边距的使用方式"></a>4.1、内边距的使用方式</h4><p>1、padding 属性用于设置内边距，即边框与内容之间的距离。</p>
 <p>2、语法：</p>
 <p>合写属性：</p>
-<p><img data-src="../images/Css/1571493298248.png" alt="1571493298248"></p>
+<p><img data-src="1571493298248.png" alt="1571493298248"></p>
 <p>分写属性：</p>
 <h4 id="4-2、内边距会影响盒子实际大小"><a href="#4-2、内边距会影响盒子实际大小" class="headerlink" title="4.2、内边距会影响盒子实际大小"></a>4.2、内边距会影响盒子实际大小</h4><p>1、当我们给盒子指定 padding 值之后，发生了 2 件事情：</p>
 <ol>
@@ -1793,7 +1793,7 @@
 <p>3、解决方案：</p>
 <p>​        如果保证盒子跟效果图大小保持一致，则让 width/height 减去多出来的内边距大小即可。</p>
 <h3 id="5、外边距（margin）"><a href="#5、外边距（margin）" class="headerlink" title="5、外边距（margin）"></a>5、外边距（margin）</h3><h4 id="5-1、外边距的使用方式"><a href="#5-1、外边距的使用方式" class="headerlink" title="5.1、外边距的使用方式"></a>5.1、外边距的使用方式</h4><p>margin 属性用于设置外边距，即控制盒子和盒子之间的距离。</p>
-<p><img data-src="../images/Css/1571493260536.png" alt="1571493260536"></p>
+<p><img data-src="1571493260536.png" alt="1571493260536"></p>
 <h4 id="5-2、外边距典型应用"><a href="#5-2、外边距典型应用" class="headerlink" title="5.2、外边距典型应用"></a>5.2、外边距典型应用</h4><p>外边距可以让块级盒子水平居中的两个条件：</p>
 <ul>
 <li>盒子必须指定了宽度（width）。</li>
@@ -1802,16 +1802,16 @@
 <p>常见的写法，以下三种都可以：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">margin-left</span>: auto;   <span class="attribute">margin-right</span>: auto;</span><br><span class="line"><span class="attribute">margin</span>: auto;</span><br><span class="line"><span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br></pre></td></tr></table></figure>
 
-<p><font color="red">注意：</font>以上方法是让块级元素水平居中，行内元素或者行内块元素水平居中给其父元素添加 text-align:center 即可。</p>
+<p><font color='red'>注意：</font>以上方法是让块级元素水平居中，行内元素或者行内块元素水平居中给其父元素添加 text-align:center 即可。</p>
 <h4 id="5-3、外边距合并"><a href="#5-3、外边距合并" class="headerlink" title="5.3、外边距合并"></a>5.3、外边距合并</h4><p>使用 margin 定义块元素的垂直外边距时，可能会出现外边距的合并。</p>
 <p>主要有两种情况:</p>
 <p>1、相邻块元素垂直外边距的合并</p>
 <p>​        当上下相邻的两个块元素（兄弟关系）相遇时，如果上面的元素有下外边距 margin-bottom，下面的元素有上外边距 margin-top ，则他们之间的垂直间距不是 margin-bottom 与 margin-top 之和。取两个值中的较大者这种现象被称为相邻块元素垂直外边距的合并。</p>
-<p><img data-src="../images/Css/1571494239103.png" alt="1571494239103"></p>
+<p><img data-src="1571494239103.png" alt="1571494239103"></p>
 <p>解决方案：<br>        尽量只给一个盒子添加 margin 值。</p>
 <p>2、嵌套块元素垂直外边距的塌陷</p>
 <p>​        对于两个嵌套关系（父子关系）的块元素，父元素有上外边距同时子元素也有上外边距，此时父元素会塌陷较大的外边距值。</p>
-<p><img data-src="../images/Css/1571494373778.png" alt="1571494373778"></p>
+<p><img data-src="1571494373778.png" alt="1571494373778"></p>
 <p>解决方案：</p>
 <ul>
 <li>可以为父元素定义上边框。</li>
@@ -1837,11 +1837,11 @@
 <h3 id="2、盒子阴影"><a href="#2、盒子阴影" class="headerlink" title="2、盒子阴影"></a>2、盒子阴影</h3><p>CSS3 中新增了盒子阴影，我们可以使用 box-shadow 属性为盒子添加阴影。<br>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">box-shadow</span>: h-shadow v-shadow blur spread color inset; </span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/1571541874805.png" alt="1571541874805"></p>
+<p><img data-src="1571541874805.png" alt="1571541874805"></p>
 <h3 id="3、文字阴影"><a href="#3、文字阴影" class="headerlink" title="3、文字阴影"></a>3、文字阴影</h3><p>在 CSS3 中，我们可以使用 text-shadow 属性将阴影应用于文本。<br>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">text-shadow</span>: h-shadow v-shadow blur color;</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/1571541954222.png" alt="1571541954222"></p>
+<p><img data-src="1571541954222.png" alt="1571541954222"></p>
 <h2 id="八-浮动"><a href="#八-浮动" class="headerlink" title="八.浮动"></a>八.浮动</h2><h3 id="1、传统网页布局的三种方式"><a href="#1、传统网页布局的三种方式" class="headerlink" title="1、传统网页布局的三种方式"></a>1、传统网页布局的三种方式</h3><p>​    CSS 提供了三种传统布局方式(简单说,就是盒子如何进行排列顺序)：</p>
 <ul>
 <li><p>普通流（标准流）</p>
@@ -1866,26 +1866,26 @@
 <p>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line">选择器 &#123; <span class="attribute">float</span>: 属性值; &#125;</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/1571543209934.png" alt="1571543209934"></p>
+<p><img data-src="1571543209934.png" alt="1571543209934"></p>
 <h3 id="5、浮动特性"><a href="#5、浮动特性" class="headerlink" title="5、浮动特性"></a>5、浮动特性</h3><p>加了浮动之后的元素,会具有很多特性,需要我们掌握的.</p>
 <p>1、浮动元素会脱离标准流(脱标：浮动的盒子不再保留原先的位置)</p>
-<p><img data-src="../images/Css/1571544664994.png" alt="1571544664994"></p>
+<p><img data-src="1571544664994.png" alt="1571544664994"></p>
 <p>2、浮动的元素会一行内显示并且元素顶部对齐</p>
-<p><font color="red">注意：</font> </p>
+<p><font color='red'>注意：</font> </p>
 <p>​        浮动的元素是互相贴靠在一起的（不会有缝隙），如果父级宽度装不下这些浮动的盒子，多出的盒子会另起一行对齐。</p>
 <p>3、浮动的元素会具有行内块元素的特性</p>
 <p>​        浮动元素的大小根据内容来决定</p>
 <p>​        浮动的盒子中间是没有缝隙的</p>
 <h3 id="6、浮动元素经常和标准流父级搭配使用"><a href="#6、浮动元素经常和标准流父级搭配使用" class="headerlink" title="6、浮动元素经常和标准流父级搭配使用"></a>6、浮动元素经常和标准流父级搭配使用</h3><p>为了约束浮动元素位置, 我们网页布局一般采取的策略是:</p>
 <p>​        先用标准流父元素排列上下位置, 之后内部子元素采取浮动排列左右位置.  符合网页布局第一准侧</p>
-<p><img data-src="../images/Css/1571544991989.png" alt="1571544991989"></p>
+<p><img data-src="1571544991989.png" alt="1571544991989"></p>
 <h3 id="7、浮动布局注意点"><a href="#7、浮动布局注意点" class="headerlink" title="7、浮动布局注意点"></a>7、浮动布局注意点</h3><p>1、浮动和标准流的父盒子搭配。</p>
 <p>先用标准流的父元素排列上下位置, 之后内部子元素采取浮动排列左右位置</p>
 <p>2、一个元素浮动了，理论上其余的兄弟元素也要浮动。</p>
 <p>一个盒子里面有多个子盒子，如果其中一个盒子浮动了，其他兄弟也应该浮动，以防止引起问题。</p>
 <p>浮动的盒子只会影响浮动盒子后面的标准流,不会影响前面的标准流</p>
 <h2 id="九-清除浮动"><a href="#九-清除浮动" class="headerlink" title="九.清除浮动"></a>九.清除浮动</h2><h3 id="1、为什么需要清除浮动？"><a href="#1、为什么需要清除浮动？" class="headerlink" title="1、为什么需要清除浮动？"></a>1、为什么需要清除浮动？</h3><p>​        由于父级盒子很多情况下，不方便给高度，但是子盒子浮动又不占有位置，最后父级盒子高度为 0 时，就会影响下面的标准流盒子。</p>
-<p><img data-src="../images/Css/1571555883628.png" alt="1571555883628"></p>
+<p><img data-src="1571555883628.png" alt="1571555883628"></p>
 <h3 id="2、清除浮动本质"><a href="#2、清除浮动本质" class="headerlink" title="2、清除浮动本质"></a>2、清除浮动本质</h3><p>清除浮动的本质是清除浮动元素造成的影响：浮动的子标签无法撑开父盒子的高度</p>
 <p>注意：</p>
 <ul>
@@ -1896,7 +1896,7 @@
 <h3 id="3、清除浮动样式"><a href="#3、清除浮动样式" class="headerlink" title="3、清除浮动样式"></a>3、清除浮动样式</h3><p>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line">选择器&#123;<span class="attribute">clear</span>:属性值;&#125; </span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/1571555980419.png" alt="1571555980419"></p>
+<p><img data-src="1571555980419.png" alt="1571555980419"></p>
 <p>我们实际工作中， 几乎只用 clear: both;</p>
 <p>清除浮动的策略是:  闭合浮动. </p>
 <h3 id="4、清除浮动的多种方式"><a href="#4、清除浮动的多种方式" class="headerlink" title="4、清除浮动的多种方式"></a>4、清除浮动的多种方式</h3><h4 id="4-1、额外标签法"><a href="#4-1、额外标签法" class="headerlink" title="4.1、额外标签法"></a>4.1、额外标签法</h4><p>额外标签法也称为隔墙法，是 W3C 推荐的做法。</p>
@@ -1941,17 +1941,17 @@
 <li>子盒子浮动了。</li>
 <li>影响下面布局了，我们就应该清除浮动了。</li>
 </ol>
-<p><img data-src="../images/Css/1571556500074.png" alt="1571556500074"></p>
+<p><img data-src="1571556500074.png" alt="1571556500074"></p>
 <h2 id="十-定位"><a href="#十-定位" class="headerlink" title="十.定位"></a>十.定位</h2><h3 id="1-1-为什么使用定位"><a href="#1-1-为什么使用定位" class="headerlink" title="1.1 为什么使用定位"></a>1.1 为什么使用定位</h3><blockquote>
 <p>我们先来看一个效果，同时思考一下<strong>用标准流或浮动能否实现类似的效果</strong>？</p>
 </blockquote>
 <p><strong>场景1</strong>： 某个元素可以自由的在一个盒子内移动位置，并且压住其他盒子.</p>
-<img data-src="images/01_定位示例1.gif">
+<img data-src="images/01_定位示例1.gif" />
 
 
 
 <p><strong>场景2</strong>：当我们滚动窗口的时候，盒子是固定屏幕某个位置的。</p>
-<img data-src="images/ding.png">
+<img data-src="images/ding.png" />
 
 
 
@@ -2027,7 +2027,7 @@
 <td align="center"><strong>固定</strong>定位</td>
 </tr>
 </tbody></table>
- <img data-src="./images/26定位的概念.png">
+ <img data-src='./images/26定位的概念.png'>
 
 <h3 id="1-3-定位模式介绍"><a href="#1-3-定位模式介绍" class="headerlink" title="1.3 定位模式介绍"></a>1.3 定位模式介绍</h3><h4 id="1-3-1-静态定位-static-了解"><a href="#1-3-1-静态定位-static-了解" class="headerlink" title="1.3.1.  静态定位(static) - 了解"></a>1.3.1.  静态定位(static) - 了解</h4><ul>
 <li><p><strong>静态定位</strong>是元素的<strong>默认</strong>定位方式，<strong>无定位的意思</strong>。它相当于 border 里面的none，静态定位static，不要定位的时候用。</p>
@@ -2069,14 +2069,14 @@
 <li><p><strong>完全脱标</strong> —— 完全不占位置；  </p>
 </li>
 <li><p><strong>父元素没有定位</strong>，则以<strong>浏览器</strong>为准定位（Document 文档）。</p>
-<img data-src="./images/05_绝对定位_父级无定位.png" width="600"></li>
+<img data-src="./images/05_绝对定位_父级无定位.png" width="600" /></li>
 <li><p><strong>父元素要有定位</strong></p>
 <ul>
 <li>元素将依据最近的已经定位（绝对、固定或相对定位）的父元素（祖先）进行定位。</li>
 </ul>
 </li>
 </ol>
-<img data-src="./images/06_绝对定位_父级有定位.png" width="600">
+<img data-src="./images/06_绝对定位_父级有定位.png" width="600" />
 
 
 
@@ -2108,7 +2108,7 @@
 <p><strong>疑问</strong>：为什么在布局时，<strong>子级元素</strong>使用<strong>绝对定位</strong>时，<strong>父级元素</strong>就要用<strong>相对定位</strong>呢？</p>
 <p>观察下图，思考一下在布局时，<strong>左右两个方向的箭头图片</strong>以及<strong>父级盒子</strong>的定位方式。</p>
 <p><img data-src="./images/07_%E5%AD%90%E7%BB%9D%E7%88%B6%E7%9B%B8%E6%88%AA%E5%9B%BE.png" alt="子绝父相截图"></p>
-<img data-src="./images/27子绝父相.png">
+<img data-src='./images/27子绝父相.png'>
 
 <p><strong>分析</strong>：</p>
 <ol>
@@ -2209,16 +2209,16 @@
 <li><code>top</code> 和 <code>bottom</code> 不要同时使用；</li>
 <li><code>left</code> 和 <code>right</code> 不要同时使用。</li>
 <li>如果一个盒子既有left，又有right，则默认执行left属性，同理top和bottom会执行top。先左后右，先上后下。</li>
-<li><font color="red">浮动的元素不会压住下面标准流的文字；绝对（固定）定位会压住下面标准流所有的内容</font></li>
+<li><font color='red'>浮动的元素不会压住下面标准流的文字；绝对（固定）定位会压住下面标准流所有的内容</font></li>
 </ol>
-<h2 id="十一-精灵图（重点）"><a href="#十一-精灵图（重点）" class="headerlink" title="十一. 精灵图（重点）"></a>十一. 精灵图（重点）</h2><h3 id="1-1-为什么需要精灵图"><a href="#1-1-为什么需要精灵图" class="headerlink" title="1.1 为什么需要精灵图"></a>1.1 为什么需要精灵图</h3><p><img data-src="../images/Css/1571482435259.png" alt="1571482435259"></p>
+<h2 id="十一-精灵图（重点）"><a href="#十一-精灵图（重点）" class="headerlink" title="十一. 精灵图（重点）"></a>十一. 精灵图（重点）</h2><h3 id="1-1-为什么需要精灵图"><a href="#1-1-为什么需要精灵图" class="headerlink" title="1.1 为什么需要精灵图"></a>1.1 为什么需要精灵图</h3><p><img data-src="1571482435259.png" alt="1571482435259"></p>
 <p>一个网页中往往会应用很多小的背景图像作为修饰，当网页中的图像过多时，服务器就会频繁地接收和发送请求图片，造成服务器请求压力过大，这将大大降低页面的加载速度。</p>
 <p><strong>为什么使用精灵图（目的）：</strong></p>
 <p>​    <strong>为了有效地减少服务器接收和发送请求的次数</strong>，<strong>提高</strong>页面的<strong>加载速度</strong>，出现了 <strong>CSS 精灵技术</strong>（也称 CSS Sprites、CSS 雪碧）。</p>
 <p><strong>核心原理</strong>：</p>
 <p>​    将网页中的一些小背景图像整合到一张大图中 ，这样服务器只需要一次请求就可以了。</p>
 <p><strong>精灵图举例</strong>:</p>
-<p><img data-src="../images/Css/1571519067073.png" alt="1571519067073"></p>
+<p><img data-src="1571519067073.png" alt="1571519067073"></p>
 <h3 id="1-2-精灵图（sprites）的使用"><a href="#1-2-精灵图（sprites）的使用" class="headerlink" title="1.2 精灵图（sprites）的使用"></a>1.2 精灵图（sprites）的使用</h3><p>使用精灵图核心：</p>
 <ol>
 <li>精灵技术主要针对于背景图片使用。就是把多个小背景图片整合到一张大图片中。</li>
@@ -2237,7 +2237,7 @@
 <li><p>一般情况下精灵图都是<strong>负值</strong>。（千万注意网页中的坐标： x轴右边走是正值，左边走是负值， y轴同理。）</p>
 </li>
 </ol>
-<h3 id="1-3-案例：拼出自己名字"><a href="#1-3-案例：拼出自己名字" class="headerlink" title="1.3 案例：拼出自己名字"></a>1.3 案例：拼出自己名字</h3><h4 id="1-3-1-案例效果"><a href="#1-3-1-案例效果" class="headerlink" title="1.3.1 案例效果"></a>1.3.1 案例效果</h4><p><img data-src="../images/Css/1571519368229.png" alt="1571519368229"></p>
+<h3 id="1-3-案例：拼出自己名字"><a href="#1-3-案例：拼出自己名字" class="headerlink" title="1.3 案例：拼出自己名字"></a>1.3 案例：拼出自己名字</h3><h4 id="1-3-1-案例效果"><a href="#1-3-1-案例效果" class="headerlink" title="1.3.1 案例效果"></a>1.3.1 案例效果</h4><p><img data-src="1571519368229.png" alt="1571519368229"></p>
 <h4 id="1-3-2-代码参考"><a href="#1-3-2-代码参考" class="headerlink" title="1.3.2 代码参考"></a>1.3.2 代码参考</h4><p>结构</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;p&quot;</span>&gt;</span>p<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;i&quot;</span>&gt;</span>i<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;n&quot;</span>&gt;</span>n<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;k&quot;</span>&gt;</span>k<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -2259,9 +2259,9 @@
 <li>注意： 字体图标不能替代精灵技术，只是对工作中图标部分技术的提升和优化。</li>
 </ul>
 <p><strong>总结：</strong></p>
-<p>1.如果遇到一些结构和样式比较简单的小图标，就用字体图标。<img data-src="../images/Css/1571519724473.png" alt="1571519724473"></p>
+<p>1.如果遇到一些结构和样式比较简单的小图标，就用字体图标。<img data-src="1571519724473.png" alt="1571519724473"></p>
 <p>2.如果遇到一些结构和样式复杂一点的小图片，就用精灵图。</p>
-<p><img data-src="../images/Css/1571519739775.png" alt="1571519739775"></p>
+<p><img data-src="1571519739775.png" alt="1571519739775"></p>
 <p><strong>使用步骤</strong></p>
 <p>字体图标是一些网页常见的小图标，我们直接网上下载即可。 因此使用可以分为：</p>
 <p>1.字体图标的下载 </p>
@@ -2276,7 +2276,7 @@
 <li><strong>阿里</strong> <strong>iconfont</strong> <strong>字库</strong>   <a href="http://www.iconfont.cn/">http://www.iconfont.cn/</a>   推荐指数   <strong>★★★★★</strong> </li>
 </ul>
 <p>这个是阿里妈妈 M2UX 的一个 iconfont 字体图标字库，包含了淘宝图标库和阿里妈妈图标库。可以使用 AI制作图标上传生成。 重点是，免费！</p>
-<p><font color="red">tips：阿里巴巴矢量图标库全选技巧  打开控制台，运行下列代码</font></p>
+<p><font color='red'>tips：阿里巴巴矢量图标库全选技巧  打开控制台，运行下列代码</font></p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> span = <span class="built_in">document</span>.querySelectorAll(<span class="string">&#x27;.icon-cover&#x27;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = span.length; i &lt; len; i++) &#123;</span><br><span class="line">     <span class="built_in">console</span>.log(span[i].querySelector(<span class="string">&#x27;span&#x27;</span>).click());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -2285,7 +2285,7 @@
 <ol>
 <li>把下载包里面的 <strong>fonts</strong> 文件夹放入页面根目录下</li>
 </ol>
-<p><img data-src="../images/Css/1571520092646.png" alt="1571520092646"></p>
+<p><img data-src="1571520092646.png" alt="1571520092646"></p>
 <ul>
 <li><strong>字体文件格式</strong></li>
 </ul>
@@ -2303,21 +2303,21 @@
 <ol start="3">
 <li>html 标签内添加小图标。</li>
 </ol>
-<p><img data-src="../images/Css/1571520411345.png" alt="1571520411345"></p>
+<p><img data-src="1571520411345.png" alt="1571520411345"></p>
 <ol start="4">
 <li>给标签定义字体。</li>
 </ol>
   <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">span &#123;</span><br><span class="line">  font-family: &quot;icomoon&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>  注意：务必保证 这个字体和上面@font-face里面的字体保持一致 </p>
-<p>  <img data-src="../images/Css/1571520485350.png" alt="1571520485350"></p>
+<p>  <img data-src="1571520485350.png" alt="1571520485350"></p>
 <h3 id="1-5-字体图标的追加"><a href="#1-5-字体图标的追加" class="headerlink" title="1.5 字体图标的追加"></a>1.5 字体图标的追加</h3><p>如果工作中，原来的字体图标不够用了，我们需要添加新的字体图标到原来的字体文件中。</p>
 <p>把压缩包里面的 <strong>selection.json</strong> 从新上传，然后选中自己想要新的图标，从新下载压缩包，并替换原来的文件即可。</p>
-<p><img data-src="../images/Css/1571520554317.png" alt="1571520554317"></p>
-<h3 id="1-6-字体图标加载的原理："><a href="#1-6-字体图标加载的原理：" class="headerlink" title="1.6 字体图标加载的原理："></a>1.6 字体图标加载的原理：</h3><p><img data-src="../images/Css/%E5%AD%97%E4%BD%93%E5%9B%BE%E6%A0%87%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%8E%9F%E7%90%86.gif" alt="1571520617270"></p>
+<p><img data-src="1571520554317.png" alt="1571520554317"></p>
+<h3 id="1-6-字体图标加载的原理："><a href="#1-6-字体图标加载的原理：" class="headerlink" title="1.6 字体图标加载的原理："></a>1.6 字体图标加载的原理：</h3><p><img data-src="%E5%AD%97%E4%BD%93%E5%9B%BE%E6%A0%87%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%8E%9F%E7%90%86.gif" alt="1571520617270"></p>
 <h2 id="十三-CSS-三角"><a href="#十三-CSS-三角" class="headerlink" title="十三. CSS 三角"></a>十三. CSS 三角</h2><h3 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1 介绍"></a>1.1 介绍</h3><p>网页中常见一些三角形，使用 CSS 直接画出来就可以，不必做成图片或者字体图标。</p>
 <p>一张图， 你就知道 CSS 三角是怎么来的了, 做法如下：</p>
-<p><img data-src="../images/Css/1571520965966.png" alt="1571520965966"></p>
+<p><img data-src="1571520965966.png" alt="1571520965966"></p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">0</span>; </span><br><span class="line">   <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">   <span class="attribute">border</span>: <span class="number">50px</span> solid transparent;</span><br><span class="line"><span class="attribute">border-color</span>: red green blue black;</span><br><span class="line"><span class="attribute">line-height</span>:<span class="number">0</span>;</span><br><span class="line">   <span class="attribute">font-size</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ol>
@@ -2326,7 +2326,7 @@
 <li>我们4个边框都要写， 只保留需要的边框颜色，其余的不能省略，都改为 transparent 透明就好了</li>
 <li>为了照顾兼容性 低版本的浏览器，加上 font-size: 0;  line-height: 0;</li>
 </ol>
-<h3 id="1-2-案例：京东三角"><a href="#1-2-案例：京东三角" class="headerlink" title="1.2 案例：京东三角"></a>1.2 案例：京东三角</h3><h4 id="1-2-1效果图"><a href="#1-2-1效果图" class="headerlink" title="1.2.1效果图"></a>1.2.1效果图</h4><p><img data-src="../images/Css/1571521183026.png" alt="1571521183026"></p>
+<h3 id="1-2-案例：京东三角"><a href="#1-2-案例：京东三角" class="headerlink" title="1.2 案例：京东三角"></a>1.2 案例：京东三角</h3><h4 id="1-2-1效果图"><a href="#1-2-1效果图" class="headerlink" title="1.2.1效果图"></a>1.2.1效果图</h4><p><img data-src="1571521183026.png" alt="1571521183026"></p>
 <h4 id="1-2-2-代码参考"><a href="#1-2-2-代码参考" class="headerlink" title="1.2.2 代码参考"></a>1.2.2 代码参考</h4><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;ie=edge&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS 三角制作<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">        <span class="selector-class">.box1</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">width</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">height</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="comment">/* border: 10px solid pink; */</span></span></span><br><span class="line"><span class="css">            <span class="attribute">border-top</span>: <span class="number">10px</span> solid pink;</span></span><br><span class="line"><span class="css">            <span class="attribute">border-right</span>: <span class="number">10px</span> solid red;</span></span><br><span class="line"><span class="css">            <span class="attribute">border-bottom</span>: <span class="number">10px</span> solid blue;</span></span><br><span class="line"><span class="css">            <span class="attribute">border-left</span>: <span class="number">10px</span> solid green;</span></span><br><span class="line"><span class="css">        &#125;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.box2</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">width</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">height</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">border</span>: <span class="number">50px</span> solid transparent;</span></span><br><span class="line"><span class="css">            <span class="attribute">border-left-color</span>: pink;</span></span><br><span class="line"><span class="css">            <span class="attribute">margin</span>: <span class="number">100px</span> auto;</span></span><br><span class="line"><span class="css">        &#125;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.jd</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">position</span>: relative;</span></span><br><span class="line"><span class="css">            <span class="attribute">width</span>: <span class="number">120px</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">height</span>: <span class="number">249px</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">background-color</span>: pink;</span></span><br><span class="line"><span class="css">        &#125;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.jd</span> <span class="selector-tag">span</span> &#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="css">            <span class="attribute">right</span>: <span class="number">15px</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">top</span>: -<span class="number">10px</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">width</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">height</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="comment">/* 为了照顾兼容性 */</span></span></span><br><span class="line"><span class="css">            <span class="attribute">line-height</span>: <span class="number">0</span>;  </span></span><br><span class="line"><span class="css">            <span class="attribute">font-size</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">border</span>: <span class="number">5px</span> solid transparent;</span></span><br><span class="line"><span class="css">            <span class="attribute">border-bottom-color</span>: pink;</span></span><br><span class="line"><span class="css">        &#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box2&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;jd&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
@@ -2341,7 +2341,7 @@
 <h3 id="1-1-鼠标样式-cursor"><a href="#1-1-鼠标样式-cursor" class="headerlink" title="1.1 鼠标样式 cursor"></a>1.1 鼠标样式 cursor</h3><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">li</span> &#123;</span><br><span class="line">	<span class="attribute">cursor</span>: pointer; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>设置或检索在对象上移动的鼠标指针采用何种系统预定义的光标形状。</p>
-<p><img data-src="../images/Css/1571521805183.png" alt="1571521805183"></p>
+<p><img data-src="1571521805183.png" alt="1571521805183"></p>
 <h3 id="1-2-轮廓线-outline"><a href="#1-2-轮廓线-outline" class="headerlink" title="1.2 轮廓线 outline"></a>1.2 轮廓线 outline</h3><p>给表单添加 outline: 0;   或者  outline: none; 样式之后，就可以去掉默认的蓝色边框。</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">input</span> &#123;</span><br><span class="line">	<span class="attribute">outline</span>: none; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -2354,23 +2354,23 @@
 <p>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">vertical-align</span> : baseline | top | middle | bottom </span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/1571522023413.png" alt="1571522023413"></p>
-<p><img data-src="../images/Css/1571522040645.png" alt="1571522040645"></p>
+<p><img data-src="1571522023413.png" alt="1571522023413"></p>
+<p><img data-src="1571522040645.png" alt="1571522040645"></p>
 <h3 id="1-1-图片、表单和文字对齐"><a href="#1-1-图片、表单和文字对齐" class="headerlink" title="1.1 图片、表单和文字对齐"></a><strong>1.1</strong> <strong>图片、表单和文字对齐</strong></h3><p>图片、表单都属于行内块元素，默认的 vertical-align 是基线对齐。</p>
-<p><img data-src="../images/Css/1571522093729.png" alt="1571522093729"></p>
+<p><img data-src="1571522093729.png" alt="1571522093729"></p>
 <p>此时可以给图片、表单这些行内块元素的 <strong>vertical-align 属性设置为 middle</strong> 就可以让文字和图片垂直居中对齐了。</p>
 <h3 id="1-2-解决图片底部默认空白缝隙问题"><a href="#1-2-解决图片底部默认空白缝隙问题" class="headerlink" title="1.2 解决图片底部默认空白缝隙问题"></a>1.2 解决图片底部默认空白缝隙问题</h3><p>bug：图片底侧会有一个空白缝隙，原因是行内块元素会和文字的基线对齐。</p>
 <p>主要解决方法有两种：</p>
 <p>1.<strong>给图片</strong>添加 <strong>vertical-align:middle | top| bottom</strong> 等。 （提倡使用的）</p>
 <p>2.把图片转换为块级元素  <strong>display: block</strong>; </p>
-<p><img data-src="../images/Css/1571522162225.png" alt="1571522162225"></p>
-<h2 id="十六-溢出的文字省略号显示"><a href="#十六-溢出的文字省略号显示" class="headerlink" title="十六. 溢出的文字省略号显示"></a>十六. 溢出的文字省略号显示</h2><h3 id="1-1-单行文本溢出显示省略号"><a href="#1-1-单行文本溢出显示省略号" class="headerlink" title="1.1 单行文本溢出显示省略号"></a>1.1 单行文本溢出显示省略号</h3><p><img data-src="../images/Css/1571522317809.png" alt="1571522317809"></p>
+<p><img data-src="1571522162225.png" alt="1571522162225"></p>
+<h2 id="十六-溢出的文字省略号显示"><a href="#十六-溢出的文字省略号显示" class="headerlink" title="十六. 溢出的文字省略号显示"></a>十六. 溢出的文字省略号显示</h2><h3 id="1-1-单行文本溢出显示省略号"><a href="#1-1-单行文本溢出显示省略号" class="headerlink" title="1.1 单行文本溢出显示省略号"></a>1.1 单行文本溢出显示省略号</h3><p><img data-src="1571522317809.png" alt="1571522317809"></p>
 <p>单行文本溢出显示省略号–必须满足三个条件：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line">  <span class="comment">/*1. 先强制一行内显示文本*/</span>   </span><br><span class="line"><span class="attribute">white-space</span>: nowrap;  （ 默认 <span class="attribute">normal</span> 自动换行）     </span><br><span class="line"><span class="comment">/*2. 超出的部分隐藏*/</span>   </span><br><span class="line"><span class="attribute">overflow</span>: hidden;     </span><br><span class="line"><span class="comment">/*3. 文字用省略号替代超出的部分*/</span>   </span><br><span class="line"><span class="attribute">text-overflow</span>: ellipsis;</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="1-2-多行文本溢出显示省略号（了解）"><a href="#1-2-多行文本溢出显示省略号（了解）" class="headerlink" title="1.2 多行文本溢出显示省略号（了解）"></a>1.2 多行文本溢出显示省略号（了解）</h3><p><img data-src="../images/Css/1571522334591.png" alt="1571522334591"></p>
+<h3 id="1-2-多行文本溢出显示省略号（了解）"><a href="#1-2-多行文本溢出显示省略号（了解）" class="headerlink" title="1.2 多行文本溢出显示省略号（了解）"></a>1.2 多行文本溢出显示省略号（了解）</h3><p><img data-src="1571522334591.png" alt="1571522334591"></p>
 <p>多行文本溢出显示省略号，<strong>有较大兼容性问题</strong>，适合于webKit浏览器或移动端（移动端大部分是webkit内核）</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*1. 超出的部分隐藏 */</span></span><br><span class="line"><span class="attribute">overflow</span>: hidden;</span><br><span class="line"><span class="comment">/*2. 文字用省略号替代超出的部分 */</span></span><br><span class="line"><span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line"><span class="comment">/* 3. 弹性伸缩盒子模型显示 */</span></span><br><span class="line"><span class="attribute">display</span>: -webkit-box;</span><br><span class="line"><span class="comment">/* 4. 限制在一个块元素显示的文本的行数 */</span></span><br><span class="line">-webkit-line-clamp: <span class="number">2</span>;</span><br><span class="line"><span class="comment">/* 5. 设置或检索伸缩盒对象的子元素的排列方式 */</span></span><br><span class="line">-webkit-box-orient: vertical;</span><br></pre></td></tr></table></figure>
 
@@ -2382,28 +2382,28 @@
 <li>行内块的巧妙运用</li>
 <li>CSS三角强化</li>
 </ol>
-<h3 id="1-1-margin负值运用"><a href="#1-1-margin负值运用" class="headerlink" title="1.1. margin负值运用"></a>1.1. margin负值运用</h3><p><img data-src="../images/Css/1571522666082.png" alt="1571522666082"></p>
-<p><img data-src="../images/Css/1571522683897.png" alt="1571522683897"></p>
+<h3 id="1-1-margin负值运用"><a href="#1-1-margin负值运用" class="headerlink" title="1.1. margin负值运用"></a>1.1. margin负值运用</h3><p><img data-src="1571522666082.png" alt="1571522666082"></p>
+<p><img data-src="1571522683897.png" alt="1571522683897"></p>
 <p>1.让每个盒子margin 往左侧移动 -1px 正好压住相邻盒子边框</p>
 <p>2.鼠标经过某个盒子的时候，提高当前盒子的层级即可（如果没有有定位，则加相对定位（保留位置），如果有定位，则加z-index）</p>
 <h3 id="1-2-文字围绕浮动元素"><a href="#1-2-文字围绕浮动元素" class="headerlink" title="1.2 文字围绕浮动元素"></a>1.2 文字围绕浮动元素</h3><p><strong>效果</strong></p>
-<p><img data-src="../images/Css/1571522777745.png" alt="1571522777745"></p>
+<p><img data-src="1571522777745.png" alt="1571522777745"></p>
 <p><strong>布局示意图</strong></p>
-<p><img data-src="../images/Css/1571522761996.png" alt="1571522761996"></p>
+<p><img data-src="1571522761996.png" alt="1571522761996"></p>
 <p><strong>巧妙运用浮动元素不会压住文字的特性</strong></p>
-<h3 id="1-3-行内块巧妙运用"><a href="#1-3-行内块巧妙运用" class="headerlink" title="1.3 行内块巧妙运用"></a>1.3 行内块巧妙运用</h3><p><img data-src="../images/Css/1571522898744.png" alt="1571522898744"></p>
+<h3 id="1-3-行内块巧妙运用"><a href="#1-3-行内块巧妙运用" class="headerlink" title="1.3 行内块巧妙运用"></a>1.3 行内块巧妙运用</h3><p><img data-src="1571522898744.png" alt="1571522898744"></p>
 <p>页码在页面中间显示:</p>
 <ol>
 <li>把这些链接盒子转换为行内块， 之后给父级指定  text-align:center;</li>
 <li>利用行内块元素中间有缝隙，并且给父级添加 text-align:center; 行内块元素会水平会居中</li>
 </ol>
-<p><img data-src="../images/Css/1571522910580.png" alt="1571522910580"></p>
-<h3 id="1-4-CSS-三角强化-案例"><a href="#1-4-CSS-三角强化-案例" class="headerlink" title="1.4. CSS 三角强化 案例"></a>1.4. CSS 三角强化 案例</h3><h4 id="1-4-1-原理"><a href="#1-4-1-原理" class="headerlink" title="1.4.1 原理"></a><strong>1.4.1 原理</strong></h4><p><img data-src="../images/Css/1571550959181.png" alt="1571550959181"></p>
-<p><img data-src="../images/Css/1571551000391.png" alt="1571551000391"></p>
-<p><img data-src="../images/Css/1571548058053.png" alt="1571548058053"></p>
+<p><img data-src="1571522910580.png" alt="1571522910580"></p>
+<h3 id="1-4-CSS-三角强化-案例"><a href="#1-4-CSS-三角强化-案例" class="headerlink" title="1.4. CSS 三角强化 案例"></a>1.4. CSS 三角强化 案例</h3><h4 id="1-4-1-原理"><a href="#1-4-1-原理" class="headerlink" title="1.4.1 原理"></a><strong>1.4.1 原理</strong></h4><p><img data-src="1571550959181.png" alt="1571550959181"></p>
+<p><img data-src="1571551000391.png" alt="1571551000391"></p>
+<p><img data-src="1571548058053.png" alt="1571548058053"></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">  <span class="selector-class">.box1</span> &#123;</span></span><br><span class="line"><span class="css">    <span class="attribute">width</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">    <span class="attribute">height</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">    <span class="comment">/* 把上边框宽度调大 */</span></span></span><br><span class="line"><span class="css">    <span class="comment">/* border-top: 100px solid transparent;        border-right: 50px solid skyblue; */</span></span></span><br><span class="line"><span class="css">    <span class="comment">/* 左边和下边的边框宽度设置为0 */</span></span></span><br><span class="line"><span class="css">    <span class="comment">/* border-bottom: 0 solid blue;        border-left: 0 solid green; */</span></span></span><br><span class="line"><span class="css">    <span class="comment">/* 1.只保留右边的边框有颜色 */</span></span></span><br><span class="line"><span class="css">    <span class="attribute">border-color</span>: transparent red transparent transparent;</span></span><br><span class="line"><span class="css">    <span class="comment">/* 2. 样式都是solid */</span></span></span><br><span class="line"><span class="css">    <span class="attribute">border-style</span>: solid;</span></span><br><span class="line"><span class="css">    <span class="comment">/* 3. 上边框宽度要大， 右边框 宽度稍小， 其余的边框该为 0 */</span></span></span><br><span class="line"><span class="css">    <span class="attribute">border-width</span>: <span class="number">100px</span> <span class="number">50px</span> <span class="number">0</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="css">  &#125;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box1&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="1-4-2-案例效果"><a href="#1-4-2-案例效果" class="headerlink" title="1.4.2 案例效果"></a>1.4.2 案例效果</h4><p><img data-src="../images/Css/1571548099631.png" alt="1571548099631"></p>
+<h4 id="1-4-2-案例效果"><a href="#1-4-2-案例效果" class="headerlink" title="1.4.2 案例效果"></a>1.4.2 案例效果</h4><p><img data-src="1571548099631.png" alt="1571548099631"></p>
 <h4 id="1-4-3-代码参考"><a href="#1-4-3-代码参考" class="headerlink" title="1**.4.3 代码参考**"></a>1**.4.3 代码参考**</h4><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;X-UA-Compatible&quot;</span> <span class="attr">content</span>=<span class="string">&quot;ie=edge&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>CSS三角强化的巧妙运用<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.price</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">160px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">height</span>: <span class="number">24px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">line-height</span>: <span class="number">24px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">border</span>: <span class="number">1px</span> solid red;</span></span><br><span class="line"><span class="css">      <span class="attribute">margin</span>: <span class="number">0</span> auto;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.miaosha</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">position</span>: relative;</span></span><br><span class="line"><span class="css">      <span class="attribute">float</span>: left;</span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">90px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">height</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">background-color</span>: red;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: <span class="number">#fff</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-weight</span>: <span class="number">700</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">margin-right</span>: <span class="number">8px</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.miaosha</span> <span class="selector-tag">i</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">position</span>: absolute;</span></span><br><span class="line"><span class="css">      <span class="attribute">right</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">top</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">height</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-color</span>: transparent <span class="number">#fff</span> transparent transparent;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-style</span>: solid;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-width</span>: <span class="number">24px</span> <span class="number">10px</span> <span class="number">0</span> <span class="number">0</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.origin</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">font-size</span>: <span class="number">12px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: gray;</span></span><br><span class="line"><span class="css">      <span class="attribute">text-decoration</span>: line-through;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;price&quot;</span>&gt;</span> <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;miaosha&quot;</span>&gt;</span> ¥1650 <span class="tag">&lt;<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span> <span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;origin&quot;</span>&gt;</span>¥5650<span class="tag">&lt;/<span class="name">span</span>&gt;</span> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="十八-CSS-初始化"><a href="#十八-CSS-初始化" class="headerlink" title="十八. CSS 初始化"></a>十八. CSS 初始化</h2><p>不同浏览器对有些标签的默认值是不同的，为了消除不同浏览器对HTML文本呈现的差异，照顾浏览器的兼容，我们需要对CSS 初始化</p>
@@ -2428,20 +2428,20 @@
 <li><code>&lt;aside&gt;</code> 侧边栏标签</li>
 <li><code>&lt;footer&gt;</code> 尾部标签</li>
 </ul>
-<p><img data-src="../images/Css/%E8%AF%AD%E4%B9%89%E5%8C%96%E6%A0%87%E7%AD%BE.png"></p>
+<p><img data-src="%E8%AF%AD%E4%B9%89%E5%8C%96%E6%A0%87%E7%AD%BE.png"></p>
 <h2 id="多媒体标签"><a href="#多媒体标签" class="headerlink" title="多媒体标签"></a>多媒体标签</h2><p>多媒体标签分为 音频 <strong>audio</strong> 和视频 <strong>video</strong> 两个标签 使用它们，我们可以很方便的在页面中嵌入音频和视频，而不再去使用落后的flash和其他浏览器插件了。</p>
 <p>因为多媒体标签的 属性、方法、事件比较多，因此我们需要什么功能的时候，就需要去查找相关的文档进行学习使用。</p>
-<p><img data-src="../images/Css/%E5%A4%9A%E5%AA%92%E4%BD%93%E6%A0%87%E7%AD%BE.png"></p>
-<h3 id="视频标签-video（★★★）"><a href="#视频标签-video（★★★）" class="headerlink" title="视频标签- video（★★★）"></a>视频标签- video（★★★）</h3><h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><p>当前 <strong><video></video></strong> 元素支持三种视频格式： 尽量使用 <strong>mp4格式</strong></p>
+<p><img data-src="%E5%A4%9A%E5%AA%92%E4%BD%93%E6%A0%87%E7%AD%BE.png"></p>
+<h3 id="视频标签-video（★★★）"><a href="#视频标签-video（★★★）" class="headerlink" title="视频标签- video（★★★）"></a>视频标签- video（★★★）</h3><h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><p>当前 <strong><video></strong> 元素支持三种视频格式： 尽量使用 <strong>mp4格式</strong></p>
 <p><strong>使用语法：</strong></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">src</span>=<span class="string">&quot;media/mi.mp4&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/video%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F.png"></p>
+<p><img data-src="video%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F.png"></p>
 <h4 id="兼容写法"><a href="#兼容写法" class="headerlink" title="兼容写法"></a>兼容写法</h4><p>由于各个浏览器的支持情况不同，所以我们会有一种兼容性的写法，这种写法了解一下即可</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span>  <span class="attr">controls</span>=<span class="string">&quot;controls&quot;</span>  <span class="attr">width</span>=<span class="string">&quot;300&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;move.ogg&quot;</span> <span class="attr">type</span>=<span class="string">&quot;video/ogg&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;move.mp4&quot;</span> <span class="attr">type</span>=<span class="string">&quot;video/mp4&quot;</span> &gt;</span></span><br><span class="line">    您的浏览器暂不支持 <span class="tag">&lt;<span class="name">video</span>&gt;</span> 标签播放视频</span><br><span class="line">&lt;/ video &gt;</span><br></pre></td></tr></table></figure>
 
 <p><strong>上面这种写法，浏览器会匹配video标签中的source，如果支持就播放，如果不支持往下匹配，直到没有匹配的格式，就提示文本</strong></p>
-<h4 id="video-常用属性"><a href="#video-常用属性" class="headerlink" title="video 常用属性"></a>video 常用属性</h4><p><img data-src="../images/Css/video%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7.png"></p>
+<h4 id="video-常用属性"><a href="#video-常用属性" class="headerlink" title="video 常用属性"></a>video 常用属性</h4><p><img data-src="video%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7.png"></p>
 <p><strong>属性很多，有一些属性需要大家重点掌握：</strong></p>
 <ul>
 <li><code>autoplay</code>  自动播放<ul>
@@ -2457,16 +2457,16 @@
 <p><strong>示例代码：</strong></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">src</span>=<span class="string">&quot;media/mi.mp4&quot;</span> <span class="attr">autoplay</span>=<span class="string">&quot;autoplay&quot;</span> <span class="attr">muted</span>=<span class="string">&quot;muted&quot;</span>  <span class="attr">loop</span>=<span class="string">&quot;loop&quot;</span> <span class="attr">poster</span>=<span class="string">&quot;media/mi9.jpg&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="音频标签-audio"><a href="#音频标签-audio" class="headerlink" title="音频标签- audio"></a>音频标签- audio</h3><h4 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h4><p>当前 <strong><audio></audio></strong> 元素支持三种视频格式： 尽量使用 <strong>mp3格式</strong></p>
+<h3 id="音频标签-audio"><a href="#音频标签-audio" class="headerlink" title="音频标签- audio"></a>音频标签- audio</h3><h4 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h4><p>当前 <strong><audio></strong> 元素支持三种视频格式： 尽量使用 <strong>mp3格式</strong></p>
 <p><strong>使用语法：</strong></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">src</span>=<span class="string">&quot;media/music.mp3&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">audio</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/audio%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F.png"></p>
+<p><img data-src="audio%E6%94%AF%E6%8C%81%E6%A0%BC%E5%BC%8F.png"></p>
 <h4 id="兼容写法-1"><a href="#兼容写法-1" class="headerlink" title="兼容写法"></a>兼容写法</h4><p>由于各个浏览器的支持情况不同，所以我们会有一种兼容性的写法，这种写法了解一下即可</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&lt; audio controls=&quot;controls&quot;  &gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;happy.mp3&quot;</span> <span class="attr">type</span>=<span class="string">&quot;audio/mpeg&quot;</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;happy.ogg&quot;</span> <span class="attr">type</span>=<span class="string">&quot;audio/ogg&quot;</span> &gt;</span></span><br><span class="line">    您的浏览器暂不支持 <span class="tag">&lt;<span class="name">audio</span>&gt;</span> 标签。</span><br><span class="line">&lt;/ audio&gt;</span><br></pre></td></tr></table></figure>
 
 <p><strong>上面这种写法，浏览器会匹配audio标签中的source，如果支持就播放，如果不支持往下匹配，直到没有匹配的格式，就提示文本</strong></p>
-<h4 id="audio-常用属性"><a href="#audio-常用属性" class="headerlink" title="audio 常用属性"></a>audio 常用属性</h4><p><img data-src="../images/Css/audio%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7.png"></p>
+<h4 id="audio-常用属性"><a href="#audio-常用属性" class="headerlink" title="audio 常用属性"></a>audio 常用属性</h4><p><img data-src="audio%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7.png"></p>
 <p><strong>示例代码：</strong></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">src</span>=<span class="string">&quot;media/music.mp3&quot;</span> <span class="attr">autoplay</span>=<span class="string">&quot;autoplay&quot;</span> <span class="attr">controls</span>=<span class="string">&quot;controls&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">audio</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -2479,7 +2479,7 @@
 </ul>
 <h2 id="新增的表单元素-（★★）"><a href="#新增的表单元素-（★★）" class="headerlink" title="新增的表单元素 （★★）"></a>新增的表单元素 （★★）</h2><p>在H5中，帮我们新增加了很多类型的表单，这样方便了程序员的开发</p>
 <p><strong>课堂案例：在这个案例中，熟练了新增表单的用法</strong></p>
-<p><img data-src="../images/Css/input%E6%A1%88%E4%BE%8B.png"></p>
+<p><img data-src="input%E6%A1%88%E4%BE%8B.png"></p>
 <p><strong>案例代码：</strong></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 我们验证的时候必须添加form表单域 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>邮箱: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;email&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>网址: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;url&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>日期: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;date&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>时间: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;time&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>数量: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>手机号码: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;tel&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>搜索: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;search&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>颜色: <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;color&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 当我们点击提交按钮就可以验证表单了 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span> <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -2487,7 +2487,7 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">text password radio checkbox button file hidden submit reset image</span><br></pre></td></tr></table></figure>
 
 <p><strong>新的输入类型</strong></p>
-<p><img data-src="../images/Css/%E6%96%B0%E5%A2%9Einput%E8%A1%A8%E5%8D%95.png"></p>
+<p><img data-src="%E6%96%B0%E5%A2%9Einput%E8%A1%A8%E5%8D%95.png"></p>
 <p>类型很多，我们现阶段<strong>重点记忆三个</strong>： <strong><code>number</code>   <code>tel</code>   <code>search</code></strong></p>
 <h2 id="二十-CSS3新特性"><a href="#二十-CSS3新特性" class="headerlink" title="二十.CSS3新特性"></a>二十.CSS3新特性</h2><h3 id="1-1-CSS3-的现状"><a href="#1-1-CSS3-的现状" class="headerlink" title="1.1 CSS3 的现状"></a>1.1 CSS3 的现状</h3><ul>
 <li>新增的CSS3特性有兼容性问题，ie9+才支持</li>
@@ -2503,7 +2503,7 @@
 <li>伪元素选择器</li>
 </ul>
 <h4 id="1-2-1-属性选择器（★★）"><a href="#1-2-1-属性选择器（★★）" class="headerlink" title="1.2.1 属性选择器（★★）"></a>1.2.1 属性选择器（★★）</h4><p>属性选择器，按照字面意思，都是根据标签中的属性来选择元素</p>
-<p><img data-src="../images/Css/%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9%E5%99%A8.png"></p>
+<p><img data-src="%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9%E5%99%A8.png"></p>
 <p><strong>示例代码：</strong></p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 只选择 type =text 文本框的input 选取出来 */</span></span><br><span class="line"><span class="selector-tag">input</span><span class="selector-attr">[type=text]</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: pink;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 选择首先是div 然后 具有class属性 并且属性值 必须是 icon开头的这些元素</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="selector-tag">div</span><span class="selector-attr">[class^=icon]</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 选择首先是section 然后 具有class属性 并且属性值 必须是 data结尾的这些元素 */</span></span><br><span class="line"><span class="selector-tag">section</span><span class="selector-attr">[class$=data]</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>:</span><br><span class="line">    blue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -2514,11 +2514,11 @@
 <li><strong>注意：</strong>类选择器、属性选择器、伪类选择器，权重为 10。</li>
 </ul>
 <h4 id="1-2-2-结构伪类选择器"><a href="#1-2-2-结构伪类选择器" class="headerlink" title="1.2.2 结构伪类选择器"></a>1.2.2 结构伪类选择器</h4><p>结构伪类选择器主要根据文档结构来选择器元素， 常用于根据父级选择器里面的子元素</p>
-<p><img data-src="../images/Css/%E7%BB%93%E6%9E%84%E4%BC%AA%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8-01.png"></p>
+<p><img data-src="%E7%BB%93%E6%9E%84%E4%BC%AA%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8-01.png"></p>
 <h4 id="1-2-3-E-first-child"><a href="#1-2-3-E-first-child" class="headerlink" title="1.2.3 E:first-child"></a>1.2.3 E:first-child</h4><p>匹配父元素的第一个子元素E</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css">    <span class="selector-tag">ul</span> <span class="selector-tag">li</span><span class="selector-pseudo">:first</span>-child&#123;      <span class="attribute">background-color</span>: red;    &#125;  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span>  <span class="tag">&lt;<span class="name">ul</span>&gt;</span>    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项一<span class="tag">&lt;/<span class="name">li</span>&gt;</span>    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项二<span class="tag">&lt;/<span class="name">li</span>&gt;</span>    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项三<span class="tag">&lt;/<span class="name">li</span>&gt;</span>    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项四<span class="tag">&lt;/<span class="name">li</span>&gt;</span>  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/first-child.png"></p>
+<p><img data-src="first-child.png"></p>
 <p><strong>E:last-child</strong>  则是选择到了最后一个li标签</p>
 <h4 id="E-nth-child-n-（★★★）"><a href="#E-nth-child-n-（★★★）" class="headerlink" title="E:nth-child(n)（★★★）"></a>E:nth-child(n)（★★★）</h4><p>匹配到父元素的第n个元素</p>
 <ul>
@@ -2546,12 +2546,12 @@
 </li>
 </ul>
 <p><strong>一些常用的公式： 公式不是死的，在这里列举出来让大家能够找寻到这个模式，能够理解代码，这样才能写出满足自己功能需求的代码</strong></p>
-<p><img data-src="../images/Css/nth-child%E5%85%AC%E5%BC%8F.png"></p>
+<p><img data-src="nth-child%E5%85%AC%E5%BC%8F.png"></p>
 <p><strong>常用的结构伪类选择器是：</strong> <code>nth-child(n) &#123;...&#125;</code></p>
 <h4 id="E-nth-child-与-E-nth-of-type-的区别"><a href="#E-nth-child-与-E-nth-of-type-的区别" class="headerlink" title="E:nth-child 与 E:nth-of-type 的区别"></a>E:nth-child 与 E:nth-of-type 的区别</h4><p>这里只讲明  <strong>E:nth-child(n)</strong>  和 <strong>E:nth-of-type(n)</strong>  的区别  剩下的 <strong>E:first-of-type</strong>     <strong>E:last-of-type</strong>  <strong>E:nth-last-of-type(n)</strong>   同理做推导即可</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-tag">ul</span> <span class="selector-tag">li</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>) &#123;</span></span><br><span class="line"><span class="css">      <span class="comment">/* 字体变成红色 */</span></span></span><br><span class="line"><span class="css">      <span class="attribute">color</span>: red;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-tag">ul</span> <span class="selector-tag">li</span><span class="selector-pseudo">:nth-of-type</span>(<span class="number">2</span>) &#123;</span></span><br><span class="line"><span class="css">      <span class="comment">/* 背景变成绿色 */</span></span></span><br><span class="line"><span class="css">      <span class="attribute">background-color</span>: green;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项一<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>乱来的p标签<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项二<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项三<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>列表项四<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/nth-child%E4%B8%8Enth-of-type%E5%8C%BA%E5%88%AB.png"></p>
+<p><img data-src="nth-child%E4%B8%8Enth-of-type%E5%8C%BA%E5%88%AB.png"></p>
 <p>也就是说：</p>
 <ul>
 <li><code>E:nth-child(n)</code>     匹配父元素的第n个子元素E，也就是说，nth-child 对父元素里面所有孩子排序选择（序号是固定的）  先找到第n个孩子，然后看看是否和E匹配</li>
@@ -2566,7 +2566,7 @@
 <li>类选择器、属性选择器、伪类选择器，权重为 10</li>
 </ul>
 <h4 id="1-2-4-伪元素选择器（★★★）"><a href="#1-2-4-伪元素选择器（★★★）" class="headerlink" title="1.2.4 伪元素选择器（★★★）"></a>1.2.4 伪元素选择器（★★★）</h4><p>伪元素选择器可以帮助我们利用CSS创建新标签元素，而不需要HTML标签，从而简化HTML结构</p>
-<p><img data-src="../images/Css/%E4%BC%AA%E5%85%83%E7%B4%A0.png"></p>
+<p><img data-src="%E4%BC%AA%E5%85%83%E7%B4%A0.png"></p>
 <p><strong>示例demo</strong></p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">  <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="css">    <span class="attribute">width</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">    <span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="css">    <span class="attribute">background-color</span>: pink;</span></span><br><span class="line"><span class="css">  &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">  <span class="comment">/* div::before 权重是2 */</span></span></span><br><span class="line"><span class="css">  <span class="selector-tag">div</span><span class="selector-pseudo">::before</span> &#123;</span></span><br><span class="line"><span class="css">    <span class="comment">/* 这个content是必须要写的 */</span></span></span><br><span class="line"><span class="css">    <span class="attribute">content</span>: <span class="string">&#x27;我&#x27;</span>;</span></span><br><span class="line"><span class="css">  &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">  <span class="selector-tag">div</span><span class="selector-pseudo">::after</span> &#123;</span></span><br><span class="line"><span class="css">    <span class="attribute">content</span>: <span class="string">&#x27;小猪佩奇&#x27;</span>;</span></span><br><span class="line"><span class="css">  &#125;</span></span><br><span class="line"><span class="css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span> 是 <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -2612,11 +2612,11 @@
 <li>父级添加双伪元素</li>
 </ul>
 <p><strong>额外标签法</strong>也称为隔墙法，是 W3C 推荐的做法</p>
-<p><img data-src="../images/Css/%E9%A2%9D%E5%A4%96%E6%A0%87%E7%AD%BE%E6%B3%95.png"></p>
+<p><img data-src="%E9%A2%9D%E5%A4%96%E6%A0%87%E7%AD%BE%E6%B3%95.png"></p>
 <p><strong>注意：</strong> 要求这个新的空标签必须是块级元素</p>
 <p>后面两种伪元素清除浮动算是第一种额外标签法的一个<strong>升级</strong>和<strong>优化</strong></p>
-<p><img data-src="../images/Css/%E5%8D%95%E4%BC%AA%E5%85%83%E7%B4%A0.png"></p>
-<p><img data-src="../images/Css/%E5%8F%8C%E4%BC%AA%E5%85%83%E7%B4%A0.png"></p>
+<p><img data-src="%E5%8D%95%E4%BC%AA%E5%85%83%E7%B4%A0.png"></p>
+<p><img data-src="%E5%8F%8C%E4%BC%AA%E5%85%83%E7%B4%A0.png"></p>
 <h3 id="1-3-盒子模型（★★★）"><a href="#1-3-盒子模型（★★★）" class="headerlink" title="1.3 盒子模型（★★★）"></a>1.3 盒子模型（★★★）</h3><p>CSS3 中可以通过 box-sizing 来指定盒模型，有2个值：即可指定为 content-box、border-box，这样我们计算盒子大小的方式就发生了改变</p>
 <p>可以分成两种情况：</p>
 <ul>
@@ -2628,13 +2628,13 @@
 <p>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">filter</span>:   函数(); --&gt;  例如： <span class="attribute">filter</span>: <span class="built_in">blur</span>(<span class="number">5px</span>);  --&gt;  blur模糊处理  数值越大越模糊</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="../images/Css/filter.png"></p>
+<p><img data-src="filter.png"></p>
 <h4 id="1-2-计算盒子宽度-–-calc-函数"><a href="#1-2-计算盒子宽度-–-calc-函数" class="headerlink" title="1.2 计算盒子宽度 – calc 函数"></a>1.2 计算盒子宽度 – calc 函数</h4><p>calc() 此CSS函数让你在声明CSS属性值时执行一些计算</p>
 <p>语法：</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">width</span>: <span class="built_in">calc</span>(<span class="number">100%</span> - <span class="number">80px</span>);</span><br></pre></td></tr></table></figure>
 
 <p>括号里面可以使用 + - *  / 来进行计算</p>
-<p><font color="red">注意：中间要有空格</font></p>
+<p><font color='red'>注意：中间要有空格</font></p>
 <h4 id="1-3-CSS3-过渡（★★★）"><a href="#1-3-CSS3-过渡（★★★）" class="headerlink" title="1.3 CSS3 过渡（★★★）"></a>1.3 CSS3 过渡（★★★）</h4><p>过渡（transition)是CSS3中具有颠覆性的特征之一，我们可以在不使用 Flash 动画或 JavaScript 的情况下，当元素从一种样式变换为另一种样式时为元素添加效果。</p>
 <p><strong>过渡动画：</strong> 是从一个状态 渐渐的过渡到另外一个状态</p>
 <p>可以让我们页面更好看，更动感十足，虽然 低版本浏览器不支持（ie9以下版本） 但是不会影响页面布局。</p>
@@ -2650,8 +2650,8 @@
 <li><strong>后面两个属性可以省略</strong></li>
 <li><strong>记住过渡的使用口诀： 谁做过渡给谁加</strong></li>
 </ul>
-<p><img data-src="../images/Css/%E8%BF%90%E5%8A%A8%E6%9B%B2%E7%BA%BF.png"></p>
-<h4 id="过渡练习"><a href="#过渡练习" class="headerlink" title="过渡练习"></a>过渡练习</h4><p><img data-src="../images/Css/%E8%BF%9B%E5%BA%A6%E6%9D%A1.png"></p>
+<p><img data-src="%E8%BF%90%E5%8A%A8%E6%9B%B2%E7%BA%BF.png"></p>
+<h4 id="过渡练习"><a href="#过渡练习" class="headerlink" title="过渡练习"></a>过渡练习</h4><p><img data-src="%E8%BF%9B%E5%BA%A6%E6%9D%A1.png"></p>
 <p>步骤：</p>
 <ul>
 <li>创建两个div的盒子，属于的嵌套关系，外层类名叫 bar，里层类名叫 bar_in</li>
@@ -2662,7 +2662,7 @@
 <p>代码：</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span> ... <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.bar</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">150px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">height</span>: <span class="number">15px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">border</span>: <span class="number">1px</span> solid red;</span></span><br><span class="line"><span class="css">      <span class="attribute">border-radius</span>: <span class="number">7px</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">padding</span>: <span class="number">1px</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.bar_in</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">50%</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">height</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="css">      <span class="attribute">background-color</span>: red;</span></span><br><span class="line"><span class="css">      <span class="comment">/* 谁做过渡给谁加 */</span></span></span><br><span class="line"><span class="css">      <span class="attribute">transition</span>: all .<span class="number">7s</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css"></span></span><br><span class="line"><span class="css">    <span class="selector-class">.bar</span><span class="selector-pseudo">:hover</span> <span class="selector-class">.bar_in</span> &#123;</span></span><br><span class="line"><span class="css">      <span class="attribute">width</span>: <span class="number">100%</span>;</span></span><br><span class="line"><span class="css">    &#125;</span></span><br><span class="line"><span class="css">  </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bar&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bar_in&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="广义H5说法-了解"><a href="#广义H5说法-了解" class="headerlink" title="广义H5说法 了解"></a>广义H5说法 了解</h3><h4 id="狭隘H5"><a href="#狭隘H5" class="headerlink" title="狭隘H5"></a>狭隘H5</h4><p><img data-src="../images/Css/%E5%B9%BF%E4%B9%89H5.png"></p>
+<h3 id="广义H5说法-了解"><a href="#广义H5说法-了解" class="headerlink" title="广义H5说法 了解"></a>广义H5说法 了解</h3><h4 id="狭隘H5"><a href="#狭隘H5" class="headerlink" title="狭隘H5"></a>狭隘H5</h4><p><img data-src="%E5%B9%BF%E4%B9%89H5.png"></p>
 <h4 id="广义H5"><a href="#广义H5" class="headerlink" title="广义H5"></a>广义H5</h4><ul>
 <li>广义的 HTML5 是 HTML5 本身 + CSS3 + JavaScript 。</li>
 <li>这个集合有时称为 HTML5 和朋友，通常缩写为 HTML5 。</li>
@@ -2741,7 +2741,7 @@
 <h3 id="1-6-动画"><a href="#1-6-动画" class="headerlink" title="1.6 动画"></a>1.6 动画</h3><h4 id="1-6-1-动画的基本使用"><a href="#1-6-1-动画的基本使用" class="headerlink" title="1.6.1  动画的基本使用"></a>1.6.1  动画的基本使用</h4><p>制作动画分为两步： 1.先定义动画     2.再使用（调用）动画</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 用keyframes 定义动画（类似定义类选择器） */</span></span><br><span class="line"><span class="keyword">@keyframes</span> 动画名称 &#123;</span><br><span class="line"> <span class="number">0%</span>&#123;</span><br><span class="line"> <span class="attribute">width</span>:<span class="number">100px</span>;</span><br><span class="line"> &#125; </span><br><span class="line"> <span class="number">100%</span>&#123;</span><br><span class="line"> <span class="attribute">width</span>:<span class="number">200px</span>;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="1-6-2-动画序列"><a href="#1-6-2-动画序列" class="headerlink" title="1.6.2 动画序列"></a>1.6.2 <strong><font color="red">动画序列</font></strong></h4><ul>
+<h4 id="1-6-2-动画序列"><a href="#1-6-2-动画序列" class="headerlink" title="1.6.2 动画序列"></a>1.6.2 <strong><font color='red'>动画序列</font></strong></h4><ul>
 <li>0% 是动画的开始，100% 是动画的完成。这样的规则就是动画序列。</li>
 <li>在 @keyframes 中规定某项 CSS 样式，就能创建由当前样式逐渐改为新样式的动画效果。</li>
 <li>动画是使元素从一种样式逐渐变化为另一种样式的效果。您可以改变任意多的样式任意多的次数。</li>
@@ -2860,7 +2860,7 @@
 <li>模拟人类的视觉位置，可认为安排一只眼睛去看 - 透视我们也称为视距：视距就是人的眼睛到屏幕的距离</li>
 <li>距离视觉点越近的在电脑平面成像越大，越远成像越小 - 透视的单位是像素</li>
 </ul>
-<p><font color="red"><strong>透视写在被观察元素的父盒子上面的</strong><br></font></p>
+<p><font color='red'><strong>透视写在被观察元素的父盒子上面的</strong><br></font></p>
 <p>d：就是视距，视距就是一个距离人的眼睛到屏幕的距离。 </p>
 <p>z：就是 z轴，物体距离屏幕的距离，z轴越大（正值） 我们看到的物体就越大。</p>
 <p><img data-src="images/3d-3.png"></p>
@@ -3026,7 +3026,7 @@
 </tbody></table>
 <p><img data-src="images/flex3.png"></p>
 <h4 id="2-3-justify-content-设置主轴上的子元素排列方式"><a href="#2-3-justify-content-设置主轴上的子元素排列方式" class="headerlink" title="2.3 justify-content 设置主轴上的子元素排列方式"></a>2.3 justify-content 设置主轴上的子元素排列方式</h4><p>justify-content 属性定义了项目在主轴上的对齐方式 </p>
-<p><font color="red">注意： 使用这个属性之前一定要确定好主轴是哪个</font></p>
+<p><font color='red'>注意： 使用这个属性之前一定要确定好主轴是哪个</font></p>
 <table>
 <thead>
 <tr>
@@ -3292,7 +3292,7 @@
 <h4 id="5-Less-运算"><a href="#5-Less-运算" class="headerlink" title="5.Less 运算"></a>5.Less 运算</h4><p>任何数字、颜色或者变量都可以参与运算。就是Less提供了加（+）、减（-）、乘（*）、除（/）算术运算</p>
 <figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*Less 里面写*/</span></span><br><span class="line"><span class="keyword">@witdh</span>: <span class="number">10px</span> + <span class="number">5</span>;</span><br><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line"> <span class="attribute">border</span>: @witdh solid red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*生成的css*/</span></span><br><span class="line"><span class="selector-tag">div</span> &#123;</span><br><span class="line"> <span class="attribute">border</span>: <span class="number">15px</span> solid red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*Less 甚至还可以这样 */</span></span><br><span class="line"><span class="attribute">width</span>: (@width + <span class="number">5</span>) * <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
 
-<p><font color="red"><strong>注意：</strong></font></p>
+<p><font color='red'><strong>注意：</strong></font></p>
 <ul>
 <li>乘号（*）和除号（/）的写法</li>
 <li>运算符中间左右有个空格隔开 1px + 5</li>
