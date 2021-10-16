@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>long类型的id属性传到前端会精度丢失的解决方案</title>
+    <url>/post/6/</url>
+    <content><![CDATA[<h1 id="long类型的id属性传到前端会精度丢失的解决方案"><a href="#long类型的id属性传到前端会精度丢失的解决方案" class="headerlink" title="long类型的id属性传到前端会精度丢失的解决方案"></a>long类型的id属性传到前端会精度丢失的解决方案</h1><p>数据库id由varchar类型改为number后，使用mybatis-plus雪花算法生成id，从数据库查询出来都是正常的，但是传给前端的时候发生了失真。<strong>JSON字符串转JS对象，JSON中的数字会转为 number 类型， number 类型的精度是16位，但是雪花算法生成的id长度有19位，so后面的几位精度就丢失了</strong>。如果想要前端不丢失精度，JSON中的id就不能是long类型，改为String类型就好了。</p>
+<p>一、在实体类的id属性上面加上注解 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@JsonSerialize(using = ToStringSerializer.class)</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>二、添加全局配置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JacksonConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="meta">@Primary</span></span><br><span class="line">  <span class="meta">@ConditionalOnMissingBean(ObjectMapper.class)</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> ObjectMapper <span class="title">jacksonObjectMapper</span><span class="params">(Jackson2ObjectMapperBuilder builder)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 若若POJO对象的属性值为null，序列化时不进行显示</span></span><br><span class="line">    builder.serializationInclusion(JsonInclude.Include.NON_NULL);</span><br><span class="line">    <span class="comment">// Include.NON_EMPTY,若POJO对象的属性值为&quot;&quot;，序列化时不进行显示</span></span><br><span class="line">    builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);</span><br><span class="line">    <span class="comment">//DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES相当于配置，JSON串含有未知字段时，反序列化依旧可以成功</span></span><br><span class="line">    builder.failOnUnknownProperties(<span class="keyword">false</span>);</span><br><span class="line">    <span class="comment">//序列化时的命名策略——驼峰命名法</span></span><br><span class="line">    builder.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);</span><br><span class="line">    <span class="comment">//针对于Date类型，文本格式化</span></span><br><span class="line">    builder.simpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//针对于JDK新时间类。序列化时带有T的问题，自定义格式化字符串</span></span><br><span class="line">    JavaTimeModule javaTimeModule = <span class="keyword">new</span> JavaTimeModule();</span><br><span class="line">    javaTimeModule.addSerializer(LocalDateTime.class, <span class="keyword">new</span> LocalDateTimeSerializer(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)));</span><br><span class="line">    javaTimeModule.addDeserializer(LocalDateTime.class, <span class="keyword">new</span> LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)));</span><br><span class="line">    builder.modules(javaTimeModule);</span><br><span class="line"></span><br><span class="line">    ObjectMapper objectMapper = builder.createXmlMapper(<span class="keyword">false</span>).build();</span><br><span class="line">    <span class="comment">// 全局配置序列化返回 JSON 处理</span></span><br><span class="line">    SimpleModule simpleModule = <span class="keyword">new</span> SimpleModule();</span><br><span class="line">    <span class="comment">//JSON Long ==&gt; String</span></span><br><span class="line">    simpleModule.addSerializer(Long.class, ToStringSerializer.instance);</span><br><span class="line">    <span class="comment">// BigDecimal ==&gt; String</span></span><br><span class="line">    simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);</span><br><span class="line">    objectMapper.registerModule(simpleModule);</span><br><span class="line">    <span class="keyword">return</span> objectMapper;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三、在application.yml中加上以下配置，这个办法会将所有数字都变成字符串，包括<code>long</code> 和<code>int</code> 类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  jackson:</span><br><span class="line">    generator:</span><br><span class="line">      writeNumbersAsStrings: <span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Bug</category>
+      </categories>
+      <tags>
+        <tag>Bug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mybatis-plus lambda链式调用</title>
+    <url>/post/5/</url>
+    <content><![CDATA[<p>mybatis plus  lambda 链式调用 </p>
+<h3 id="一、LambdaQueryWrapper-lt-gt"><a href="#一、LambdaQueryWrapper-lt-gt" class="headerlink" title="一、LambdaQueryWrapper&lt;&gt;"></a>一、LambdaQueryWrapper&lt;&gt;</h3><h3 id="二、QueryWrapper-lambda"><a href="#二、QueryWrapper-lambda" class="headerlink" title="二、QueryWrapper().lambda()"></a>二、QueryWrapper<T>().lambda()</h3><h3 id="三、Wrappers-lambdaQuery"><a href="#三、Wrappers-lambdaQuery" class="headerlink" title="三、Wrappers.lambdaQuery()"></a>三、Wrappers.<T>lambdaQuery()</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 生成的sql语句 SELECT * FROM user WHERE name LIKE ? AND age &lt; ?</span></span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda = <span class="keyword">new</span> QueryWrapper&lt;User&gt;().lambda();</span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda2 = <span class="keyword">new</span> LambdaQueryWrapper&lt;&gt;();</span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">        lambda3.like(User::getName, <span class="string">&quot;雨&quot;</span>)</span><br><span class="line">            .lt(User::getAge, <span class="number">40</span>);</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectList(lambda3);</span><br><span class="line">        users.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// name like &#x27;王%&#x27; and (age &lt;40 or email in not null)</span></span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">        lambda3.likeRight(User::getName, <span class="string">&quot;王&quot;</span>)</span><br><span class="line">                .and(qw -&gt; qw.lt(User::getAge, <span class="number">40</span>).or().isNotNull(User::getEmail));</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectList(lambda3);</span><br><span class="line">        users.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义sql"><a href="#自定义sql" class="headerlink" title="自定义sql"></a>自定义sql</h4><ul>
+<li>DAO</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 自定义sql 使用</span></span><br><span class="line"><span class="comment">    * Dao层  代码：</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Select</span>(&quot;select * from $&#123;ew.customSqlSegment&#125;&quot;)</span></span><br><span class="line"><span class="comment">    * List&lt;User&gt; selectAll(<span class="doctag">@Param</span>(Constants.WRAPPER)Wrapper&lt;User&gt; wrapper);</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectLambda4my</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">       lambda3.likeRight(User::getName, <span class="string">&quot;王&quot;</span>)</span><br><span class="line">               .and(qw -&gt; qw.lt(User::getAge, <span class="number">40</span>).or().isNotNull(User::getEmail));</span><br><span class="line">       List&lt;User&gt; users = userMapper.selectAll(lambda3);</span><br><span class="line">       users.forEach(System.out::println);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Mapper</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;User&gt; <span class="title">selectAll</span><span class="params">(<span class="meta">@Param(Constants.WRAPPER)</span> Wrapper&lt;User&gt; wrapper)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">        <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">        <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.mp.dao.UserMapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAll&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">        select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">        select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="四、LambdaQueryChainWrapper-xxxxMapper"><a href="#四、LambdaQueryChainWrapper-xxxxMapper" class="headerlink" title="四、LambdaQueryChainWrapper(xxxxMapper)"></a>四、LambdaQueryChainWrapper<T>(xxxxMapper)</h3><p><em>MP 3.0.7 新增的方式</em></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 生成的sql语句 SELECT * FROM user WHERE name LIKE ? AND age &gt;= ?</span></span><br><span class="line">List&lt;User&gt; users = <span class="keyword">new</span> LambdaQueryChainWrapper&lt;User&gt;(userMapper)</span><br><span class="line">                .like(User::getName, <span class="string">&quot;雨&quot;</span>)</span><br><span class="line">                .ge(User::getAge, <span class="number">20</span>)</span><br><span class="line">                .list();</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、lambda在分页中的应用"><a href="#五、lambda在分页中的应用" class="headerlink" title="五、lambda在分页中的应用"></a>五、lambda在分页中的应用</h3><ul>
+<li>配置类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MybatisPlusConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MybatisPlusInterceptor <span class="title">mybatisPlusInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        MybatisPlusInterceptor interceptor = <span class="keyword">new</span> MybatisPlusInterceptor();</span><br><span class="line">        <span class="comment">// 格式化sql语句</span></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;format&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;optimizeJoin&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> PaginationInnerInterceptor(DbType.MYSQL));</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Mapper</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">IPage&lt;User&gt; <span class="title">selectUserPage</span><span class="params">(Page&lt;User&gt; page,<span class="meta">@Param(Constants.WRAPPER)</span>Wrapper&lt;User&gt; wrapper)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">    select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>demo</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">QueryWrapper&lt;User&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;User&gt;();</span><br><span class="line">        queryWrapper.ge(<span class="string">&quot;age&quot;</span>, <span class="number">26</span>);</span><br><span class="line">        <span class="comment">//后面参数false  表示不查询总记录数</span></span><br><span class="line">        Page&lt;User&gt; userPage = <span class="keyword">new</span> Page&lt;&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="keyword">false</span>);</span><br><span class="line">        IPage&lt;User&gt; iPage = userMapper.selectUserPage(userPage, queryWrapper);</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>后台</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Oracle</title>
     <url>/post/3/</url>
     <content><![CDATA[<h1 id="oracle"><a href="#oracle" class="headerlink" title="oracle"></a>oracle</h1><p><a href="https://blog.csdn.net/u011955534/article/details/14168913">常用函数</a></p>
