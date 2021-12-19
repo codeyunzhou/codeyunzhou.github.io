@@ -1,627 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>quartz</title>
-    <url>/post/6fe218f0/</url>
-    <content><![CDATA[<h1 id="Quartz"><a href="#Quartz" class="headerlink" title="Quartz"></a>Quartz</h1><p>[官网](<a href="http://www.quartz-scheduler.org/">Quartz Enterprise Job Scheduler (quartz-scheduler.org)</a>)</p>
-<h2 id="一-依赖"><a href="#一-依赖" class="headerlink" title="一. 依赖"></a>一. 依赖</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;!-- quartz --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-quartz&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p><img data-src="quartz.assets/1-16394964071901.png"></p>
-<p>一个调度器scheduler可以调用多个触发器trigger，一个trigger只能关联一个jobDetail，而一个jobDetail可以被多个trigger引用；一个job又可以被多个jobDetail引用。</p>
-<p><strong>CoreTrigger</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CalendarIntervalTriggerImpl (org.quartz.impl.triggers)</span><br><span class="line">SimpleTriggerImpl (org.quartz.impl.triggers)</span><br><span class="line">DailyTimeIntervalTriggerImpl (org.quartz.impl.triggers)</span><br><span class="line">CronTriggerImpl (org.quartz.impl.triggers)</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二-Cron表达式"><a href="#二-Cron表达式" class="headerlink" title="二.Cron表达式"></a>二.Cron表达式</h2><h3 id="1-结构"><a href="#1-结构" class="headerlink" title="1.结构"></a>1.结构</h3><p>corn从左到右（用空格隔开）：秒 分 小时 月份中的日期 月份 星期中的日期 年份</p>
-<h3 id="2-各字段的含义"><a href="#2-各字段的含义" class="headerlink" title="2. 各字段的含义"></a>2. 各字段的含义</h3><img data-src="quartz.assets/2.png" style="zoom:80%;" />
-
-
-
-<p>“*“字符用于指定所有值。例如，分钟字段中的”*”表示”每分钟”。<br>“?”在日和星期字段允许使用。它用于指定”无特定值”。<br>“-“字符用于指定范围。例如，小时字段中的”10-12”表示”小时10、11和12”。<br>“,”字符用于指定其他值。例如，”星期几”字段中的”MON, WED, FRI”表示”星期一，星期三和星期五的日子”；<br>        “/“字符用于指定增量。例如，秒字段中的”0/15”表示”秒0、15、30和45”;秒字段中的”5/15”表示”秒5、20、35和50”。<br>        在”/“之前指定”*“等同于指定0为开头的值。本质上，对于表达式中的每个字段，都有一组可以打开或关闭的数字。<br>        对于秒和分钟，数字范围为0到59。对于小时0到23,对于每月的0到31,以及对于月0到11 （JAN至DEC）。<br>        “/“字符可以帮助您打开给定集合中的每个”第n个”值。因此，”月”字段中的”7/6”仅打开”7”月，并不意味着每6个月一次。</p>
-<p>“月”和”周”字段中允许使用”L”字符。该字符是”last”的简写，但在两个字段中每个都有不同的含义。<br>        例如，”月”字段中的值” L表示”月的最后一天、即非润年的1月31日，2月28日。<br>        如果单独在”星期几”字段中使用，则仅表示”7”或”SAT”（周六）。<br>        但是，如果在星期几字段中使用另一个值，则表示”该月的最后一个xxx天”一例如，”6L表示”该月的最后一个星期五”。<br>        还可以指定与该月最后一天的偏移量，例如”L-3”,这表示日历月的倒数第三天。<br>        使用”L”选项时，不要指定列表或值的范围很重要，因为这样会导致混淆/意外结果。</p>
-<p>“日”字段中允许使用”W”字符。此字符用于指定最接近给定日期的工作日（星期一至星期五）。<br>        例如，如果要指定”15W”作为”月日”字段的值，则含义是:离月15日最近的工作日”。<br>        因此，如果15号是星期六，那么触发器将在14号星期五触发。<br>        如果15日是星期日，则触发器将在16日星期一触发。如果15号是星期二，那么它将在15号星期二触发。<br>        但是，如果将”1W”指定为月份的值，而1号是星期六，则触发器将在第3天，星期一触发，因为它不会”跳过”一个月日的边界。<br>        仅当月份中的某天是一天，而不是范围或天数列表时，才可以指定”W”字符。</p>
-<p>还可将”L”和”W”字符组合为一个月中的一天的表达式，以产生”LW”,这表示”该月的最后一个工作日”。<br>“星期几”字段允许使用”#”字符。此字符用于指定月份的”第n个”XXX天。<br>        例如，”星期几”字段中的”6#3”的值表示该月的第三个星期五（第6天=星期五，”#3”=该月的第三个星期五）。<br>        其他示例：”2#1”=该月的第一个星期一，”4#5”=该月的第五个星期三。<br>        请注意，如果您指定”#5”，并且该月的指定星期几中没有5个，则该月将不会触发。<br>        如果使用”#”字符，则”星期几”字段中只能有一个表达式（”3#1,6#3”无效，因为有两个表达式）。</p>
-<p>法定字符以及月份和星期几的名称不区分大小写。<br>笔记：<br>支持同时指定星期几和每月某天的值还不完整（您需要在这些字段之一中使用”?”字符）。<br>支持溢出范围-也就是说，左侧的数字大于右侧的数字。您可能会在晚上10点到凌晨2点做22-2,以赶上晚上10点，或者您可能有NOV-FEB。<br>        非常重要的一点是要注意，溢出范国的过度使用会创建没有意义的范围，并且不能确定CronExpression选择哪种解释。<br>        例如”0 0 14-6? * FRI-MON”。</p>
-<h2 id="三-Sample-Application"><a href="#三-Sample-Application" class="headerlink" title="三. Sample Application"></a>三. Sample Application</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Grab the Scheduler instance from the Factory</span></span><br><span class="line">    Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// and start it off</span></span><br><span class="line">    scheduler.start();</span><br><span class="line">    <span class="comment">// define the job and tie it to our HelloJob class</span></span><br><span class="line">    JobDetail job = JobBuilder.newJob(HelloJob.class)</span><br><span class="line">        .withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Trigger the job to run now, and then repeat every 40 seconds</span></span><br><span class="line">    Trigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">        .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">        .startNow()</span><br><span class="line">        .withSchedule(simpleSchedule()</span><br><span class="line">                      .withIntervalInSeconds(<span class="number">40</span>)</span><br><span class="line">                      .repeatForever())</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Tell quartz to schedule the job using our trigger</span></span><br><span class="line">    scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">60</span>);</span><br><span class="line">    scheduler.shutdown();</span><br><span class="line">&#125; <span class="keyword">catch</span> (SchedulerException se) &#123;</span><br><span class="line">    se.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-JobDetail-requestRecovery"><a href="#1-JobDetail-requestRecovery" class="headerlink" title="1.JobDetail#requestRecovery"></a>1.JobDetail#requestRecovery</h3><p>当任务宕掉的时候，是否需要重新执行job，默认为true，需要持久化</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job&quot;</span> + count, <span class="string">&quot;group_1&quot;</span>).requestRecovery().build() </span><br></pre></td></tr></table></figure>
-
-<h3 id="2-Trigger-withPriority"><a href="#2-Trigger-withPriority" class="headerlink" title="2.Trigger#withPriority"></a>2.Trigger#withPriority</h3><p>任务的优先级，默认5，数字越大优先级越大，优先级相同，则比较trigger的key</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Trigger trigger1 = newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;Priority1Trigger5SecondRepeat&quot;</span>)</span><br><span class="line">    .startAt(startTime)</span><br><span class="line">  	 .withSchedule(simpleSchedule().withRepeatCount(<span class="number">1</span>).withIntervalInSeconds(<span class="number">5</span>))</span><br><span class="line">    .withPriority(<span class="number">1</span>)</span><br><span class="line">    .forJob(job)</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="四-SimpleTrigger"><a href="#四-SimpleTrigger" class="headerlink" title="四.SimpleTrigger"></a>四.SimpleTrigger</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(HelloJob.class).withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;group1&quot;</span>).build();</span><br><span class="line"></span><br><span class="line"><span class="comment">// startNow 立即执行一次</span></span><br><span class="line">SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startNow()</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// withIntervalInSeconds withRepeatCount 每隔5s执行一次，重复6次</span></span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger2&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(startTime)</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">5</span>).withRepeatCount(<span class="number">5</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// futureDate 5s后执行一次</span></span><br><span class="line">SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger3&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(DateBuilder.futureDate(<span class="number">5</span>, DateBuilder.IntervalUnit.SECOND))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// repeatForever 每5s执行一次</span></span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger4&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(startTime)</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">5</span>).repeatForever())</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// storeDurably triggerJob 不需要trigger，触发一次</span></span><br><span class="line">JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job6&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .storeDurably()</span><br><span class="line">    .build();</span><br><span class="line">scheduler.addJob(job, <span class="keyword">true</span>);</span><br><span class="line">scheduler.triggerJob(JobKey.jobKey(<span class="string">&quot;job6&quot;</span>, <span class="string">&quot;group1&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// rescheduleJob 使用另一个trigger执行</span></span><br><span class="line"><span class="comment">// 每隔5s执行一次，重复4次</span></span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger5&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startNow()</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">5</span>).withRepeatCount(<span class="number">3</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line">System.out.println(job.getKey() + <span class="string">&quot; will run at: &quot;</span> + DateUtil.format(ft) + <span class="string">&quot; and repeat: &quot;</span> + trigger.getRepeatCount() + <span class="string">&quot; times, every &quot;</span></span><br><span class="line">                   + trigger.getRepeatInterval() / <span class="number">1000</span> + <span class="string">&quot; seconds&quot;</span>);</span><br><span class="line"><span class="comment">// 上一个trigger只会执行 3次</span></span><br><span class="line">TimeUnit.SECONDS.sleep(<span class="number">10</span>);</span><br><span class="line"><span class="comment">// rescheduleJob重新执行trigger调度器</span></span><br><span class="line">trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger5&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startNow()</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">1</span>).withRepeatCount(<span class="number">4</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.rescheduleJob(trigger.getKey(), trigger);</span><br></pre></td></tr></table></figure>
-
-<h2 id="五-CronTrigger"><a href="#五-CronTrigger" class="headerlink" title="五.CronTrigger"></a>五.CronTrigger</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job1&quot;</span>,<span class="string">&quot;group1&quot;</span>).build();</span><br><span class="line"><span class="comment">// CronScheduleBuilder 每隔20s执行一次</span></span><br><span class="line">CronTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .withSchedule(CronScheduleBuilder.cronSchedule(<span class="string">&quot;0/20 * * * * ?&quot;</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-常用cron表达式"><a href="#1-常用cron表达式" class="headerlink" title="1.常用cron表达式"></a>1.常用cron表达式</h3><table>
-<thead>
-<tr>
-<th>表达式</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0 0 10,14,16 * * ?</td>
-<td>每天上午10点，下午2点，4点</td>
-</tr>
-<tr>
-<td>0 0 10,14,16 * * ?</td>
-<td>每天上午10点，下午2点，4点</td>
-</tr>
-<tr>
-<td>0 0/30 9-17 * * ?</td>
-<td>朝九晚五工作时间内每半小时</td>
-</tr>
-<tr>
-<td>0 0 12 ? * WED</td>
-<td>表示每个星期三中午12点</td>
-</tr>
-<tr>
-<td>0 0 12 * * ?</td>
-<td>每天中午12点触发</td>
-</tr>
-<tr>
-<td>0 15 10 ? * *</td>
-<td>每天上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 * * ?</td>
-<td>每天上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 * * ? *</td>
-<td>每天上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 * * ? 2005</td>
-<td>2005年的每天上午10:15触发</td>
-</tr>
-<tr>
-<td>0 * 14 * * ?</td>
-<td>在每天下午2点到下午2:59期间的每1分钟触发</td>
-</tr>
-<tr>
-<td>0 0/5 14 * * ?</td>
-<td>在每天下午2点到下午2:55期间的每5分钟触发</td>
-</tr>
-<tr>
-<td>0 0/5 14,18 * * ?</td>
-<td>在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发</td>
-</tr>
-<tr>
-<td>0 0-5 14 * * ?</td>
-<td>在每天下午2点到下午2:05期间的每1分钟触发</td>
-</tr>
-<tr>
-<td>0 10,44 14 ? 3 WED</td>
-<td>每年三月的星期三的下午2:10和2:44触发</td>
-</tr>
-<tr>
-<td>0 15 10 ? * MON-FRI</td>
-<td>周一至周五的上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 15 * ?</td>
-<td>每月15日上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 L * ?</td>
-<td>每月最后一日的上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 ? * 6L</td>
-<td>每月的最后一个星期五上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 ? * 6L</td>
-<td>2002-2005 2002年至2005年的每月的最后一个星期五上午10:15触发</td>
-</tr>
-<tr>
-<td>0 15 10 ? * 6#3</td>
-<td>每月的第三个星期五上午10:15触发</td>
-</tr>
-</tbody></table>
-<h2 id="六-Job的状态"><a href="#六-Job的状态" class="headerlink" title="六.Job的状态"></a>六.Job的状态</h2><p>1、每次任务被触发，Job都会是一个新的实例<br>2、默认情况下，相同的任务可以被并发执行<br>      @DisallowConcurrentExecution 可以禁止相同任务的并发行为<br>      若JobKey相同，则Quartz认为是同一个任务<br>3、如果任务 需要修改 dataMap，并且下次被触发时 需要用到上次修改的 dataMap<br>      可以使用@PersistlobDataAfterExecution<br>      当使用了@PersistJobDataAfterExecution，还应<br>认真考虑是否要使用@DisallowConcurrentExecution<br><img data-src="quartz.assets/3.png"></p>
-<h2 id="七-Spring配置Quartz"><a href="#七-Spring配置Quartz" class="headerlink" title="七.Spring配置Quartz"></a>七.Spring配置Quartz</h2><p>spring集成了quartz框架，只需继承<strong>QuartzJobBean</strong>，编写自己的Job即可</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringJob1</span> <span class="keyword">extends</span> <span class="title">QuartzJobBean</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> HelloService helloService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">executeInternal</span><span class="params">(JobExecutionContext context)</span> <span class="keyword">throws</span> JobExecutionException </span>&#123;</span><br><span class="line">        StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">&quot; &quot;</span>)</span><br><span class="line">                .add(<span class="string">&quot;SpringJob1&quot;</span>)</span><br><span class="line">                .add(helloService.hello())</span><br><span class="line">                .add(Thread.currentThread().getName());</span><br><span class="line">        System.out.println(stringJoiner);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>配置job</p>
-<p>方式一：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobInit</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Scheduler scheduler;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> SchedulerException </span>&#123;</span><br><span class="line">        JobDetail jobDetail = JobBuilder.newJob(SpringJob1.class)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        Trigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">                .startNow()</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        scheduler.scheduleJob(jobDetail, trigger);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>方式二：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> JobDetail <span class="title">springJobDetail</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> JobBuilder.newJob(SpringJob1.class)</span><br><span class="line">                .withIdentity(<span class="string">&quot;springJobDetail&quot;</span>)</span><br><span class="line">                .storeDurably()</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Trigger <span class="title">springTrigger</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> TriggerBuilder.newTrigger()</span><br><span class="line">                .forJob(<span class="string">&quot;springJobDetail&quot;</span>)</span><br><span class="line">                .startNow()</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="八-quartz持久化"><a href="#八-quartz持久化" class="headerlink" title="八.quartz持久化"></a>八.quartz持久化</h2><p>Quartz框架有两种任务存储方式。一种是<strong>RAMJobStore</strong>存储方式，也是默认的存储方式。RAMJobStore将quartz定时的任务信息存储在服务器的内存中，这种方式的优点是可以提供最好的性能，因为任务信息都存储在内存中访问获取数据速度快。缺点是当服务器突然崩溃了再次重启后你的定时任务也就没有了。另一种是<strong>JDBC任务</strong>（作业）存储方式，这种方式是将任务信息存储在数据库中，当服务器突然崩溃了再次重启后你的任务还是会接着上次继续执行的，不过需要配置一个quartz.propertity的配置文件</p>
-<h3 id="1-quartz-properties配置文件"><a href="#1-quartz-properties配置文件" class="headerlink" title="1.quartz.properties配置文件"></a>1.quartz.properties配置文件</h3><figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实例化ThreadPool时，使用的线程类为SimpleThreadPool</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.class</span> = <span class="string">org.quartz.simpl.SimpleThreadPool</span></span><br><span class="line"><span class="comment"># threadCount和threadPriority将以setter的形式注入ThreadPool实例</span></span><br><span class="line"><span class="comment"># 并发个数</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadCount</span> = <span class="string">5</span></span><br><span class="line"><span class="comment"># 优先级</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadPriority</span> = <span class="string">5</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread</span> = <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.misfireThreshold</span> = <span class="string">5000</span></span><br><span class="line"><span class="comment">#持久化使用的类</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.class</span> = <span class="string">org.quartz.impl.jdbcjobstore.JobStoreTX</span></span><br><span class="line"><span class="comment">#数据库中表的前缀</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.tablePrefix</span> = <span class="string">QRTZ_</span></span><br><span class="line"><span class="comment">#数据源命名</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.dataSource</span> = <span class="string">qzDS</span></span><br><span class="line"><span class="comment">#qzDS 数据源</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.driver</span> = <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.URL</span> = <span class="string">jdbc:mysql://localhost:3306/quartz?useUnicode=true&amp;characterEncoding=UTF-8</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.user</span> = <span class="string">root</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.password</span> = <span class="string">root</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.maxConnections</span> = <span class="string">10</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-spring配置quartz持久化"><a href="#2-spring配置quartz持久化" class="headerlink" title="2.spring配置quartz持久化"></a>2.spring配置quartz持久化</h3><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># quartz相关配置</span></span><br><span class="line">  <span class="attr">quartz:</span></span><br><span class="line">  <span class="comment"># 默认情况下，使用内存中的JobStore。但是，如果应用程序中有DataSource bean，并且spring.quartz可用，则可以配置基于jdbc的存储。配置Job-store-type属性</span></span><br><span class="line">    <span class="attr">job-store-type:</span> <span class="string">jdbc</span></span><br><span class="line">    <span class="comment"># 初始化项目不重新创建quartz相关表</span></span><br><span class="line">    <span class="attr">jdbc:</span></span><br><span class="line">      <span class="attr">initialize-schema:</span> <span class="string">never</span></span><br><span class="line">    <span class="comment"># spring中设置quartz配置，有如下两种方式  </span></span><br><span class="line"><span class="comment">#    properties:</span></span><br><span class="line"><span class="comment">#      org.quartz.threadPool.threadCount: 5</span></span><br><span class="line">    <span class="attr">properties:</span></span><br><span class="line">      <span class="attr">org:</span></span><br><span class="line">        <span class="attr">quartz:</span></span><br><span class="line">          <span class="attr">threadPool:</span></span><br><span class="line">            <span class="string">threadCount:5</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-持久化生成的表"><a href="#3-持久化生成的表" class="headerlink" title="3.持久化生成的表"></a>3.持久化生成的表</h3><table>
-<thead>
-<tr>
-<th>序号</th>
-<th>表名</th>
-<th>表说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>qrtz_calendars</td>
-<td>以 Blob 类型存储 Quartz 的 Calendar 信息</td>
-</tr>
-<tr>
-<td>2</td>
-<td>qrtz_cron_triggers</td>
-<td>存储 Cron Trigger，包括 Cron 表达式和时区信息</td>
-</tr>
-<tr>
-<td>3</td>
-<td>qrtz_fired_triggers</td>
-<td>存储与已触发的 Trigger 相关的状态信息，以及相联 Job 的执行信息</td>
-</tr>
-<tr>
-<td>4</td>
-<td>qrtz_paused_trigger_grps</td>
-<td>存储已暂停的 Trigger 组的信息</td>
-</tr>
-<tr>
-<td>5</td>
-<td>qrtz_scheduler_state</td>
-<td>存储少量的有关调度器 (Scheduler) 的状态，和别的 调度器 (Scheduler)实例(假如是用于一个集群中)</td>
-</tr>
-<tr>
-<td>6</td>
-<td>qrtz_locks</td>
-<td>存储程序的悲观锁的信息(假如使用了悲观锁)</td>
-</tr>
-<tr>
-<td>7</td>
-<td>qrtz_job_details</td>
-<td>存储每一个已配置的 Job 的详细信息(jobDetail)</td>
-</tr>
-<tr>
-<td>8</td>
-<td>qrtz_simple_triggers</td>
-<td>存储简单的 Trigger，包括重复次数，间隔，以及已触的次数</td>
-</tr>
-<tr>
-<td>9</td>
-<td>qrtz_blob_triggers</td>
-<td>以 Blob 类型存储的Trigger (用于 Quartz 用户用 JDBC 创建他们自己定制的 Trigger 类型，JobStore 并不知道如何存储实例的时候)</td>
-</tr>
-<tr>
-<td>10</td>
-<td>qrtz_triggers</td>
-<td>存储已配置的 触发器 (Trigger) 的信息</td>
-</tr>
-<tr>
-<td>11</td>
-<td>qrtz_simprop_triggers</td>
-<td>存储CalendarIntervalTrigger和DailyTimeIntervalTrigger两种类型的触发器</td>
-</tr>
-</tbody></table>
-<h2 id="九-Misfire"><a href="#九-Misfire" class="headerlink" title="九.Misfire"></a>九.Misfire</h2><p>misfire，中文意思是“失火”。在 quartz 中的含义是：到了任务触发时间，但是任务却没有被触发<br>失火的原因可能是：</p>
-<ul>
-<li>使用了 @DisallowConcurrentExecution 注解，而且任务的执行时间 &gt; 任务间隔</li>
-<li>线程池满了，没有资源执行任务</li>
-<li>机器宕机或者人为停止，过段时间恢复运行</li>
-</ul>
-<p><img data-src="quartz.assets/4.png"></p>
-<h3 id="1-只执行一次的job"><a href="#1-只执行一次的job" class="headerlink" title="1.只执行一次的job"></a>1.只执行一次的job</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(MisfireJob.class)</span><br><span class="line">            .withIdentity(<span class="string">&quot;job&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">            .build();</span><br><span class="line">    Date next = DateUtils.addSeconds(<span class="keyword">new</span> Date(), -<span class="number">10</span>);</span><br><span class="line">    SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">            .withIdentity(<span class="string">&quot;trigger&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">            .startAt(next)</span><br><span class="line">            .withSchedule(SimpleScheduleBuilder.simpleSchedule()</span><br><span class="line">                    .withMisfireHandlingInstructionFireNow()<span class="comment">/*可以指定为任意一个可用的misfire策略*/</span>)</span><br><span class="line">            .build();</span><br><span class="line">    scheduler.scheduleJob(job, trigger);</span><br></pre></td></tr></table></figure>
-
-<p> 假设job设定的执行时间是8点00分00秒，而当前时间是8点00分10秒，由于misfireThreshold设置为1秒，则发生了misfire。各misfire策略如下:</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MISFIRE_INSTRUCTION_SMART_POLICY–default</td>
-<td>默认策略等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
-</tr>
-<tr>
-<td>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</td>
-<td>Quartz不会判断job发生misfire，但是当Quartz有可用资源的时候，会尽可能早的执行所有发生misfire的任务，结果等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionFireNow MISFIRE_INSTRUCTION_FIRE_NOW</td>
-<td>立即执行job，即在8点00分10秒发现了misfire以后立即执行job。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNowWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
-<td>等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNowWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</td>
-<td>等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNextWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</td>
-<td>不会执行job。此命令会等待下一次执行时间来执行job，但是只执行一次的job，在发生misfire以后没有下次的执行时间，因此使用此命令不会再执行job。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNextWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</td>
-<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT。</td>
-</tr>
-</tbody></table>
-<h3 id="2-固定次数执行的job"><a href="#2-固定次数执行的job" class="headerlink" title="2.固定次数执行的job"></a>2.固定次数执行的job</h3><p>设置job开始执行时间是早上8点，执行间隔是1小时，执行次数是5次，那么job总的执行次数是6次（开始执行的一次以及后面执行的5次），则计划的执行时间是8:00，9:00,10:00,11:00,12:00,13:00</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = newJob(MisfireJob.class)</span><br><span class="line">                .withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">SimpleTrigger trigger = newTrigger()</span><br><span class="line">                .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">                .startAt(nextOne)</span><br><span class="line">                .withSchedule(simpleSchedule()</span><br><span class="line">                        .withIntervalInHours(<span class="number">1</span>)</span><br><span class="line">                        .withRepeatCount(<span class="number">5</span>)</span><br><span class="line">                        .withMisfireHandlingInstructionNowWithRemainingCount()<span class="comment">/*可以指定为任意可用的策略*/</span>)</span><br><span class="line">                .build();</span><br></pre></td></tr></table></figure>
-
-<p>假设8:00的任务执行了，但是由于某些原因，scheduler没有执行9:00和10:00的任务，在10:15分的时候scheduler发现job有两次没有执行，这两次的延迟执行时间分别是1小时15分和15分，都大于设置的misfireThreshold=1秒，因此发生了两次misfire。各misfire策略如下：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MISFIRE_INSTRUCTION_SMART_POLICY–default</td>
-<td>默认执行策略，在固定次数执行的情况下，等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
-</tr>
-<tr>
-<td>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</td>
-<td>Quartz不会判断发生misfire，在Quartz资源可用时会尽可能早的执行所有发生misfire的任务。<br/>例如：Quartz会在10:15执行9:00和10:00的任务，然后按照原计划继续执行剩下的任务。最后任务执行完成时间还是13:00。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionFireNow MISFIRE_INSTRUCTION_FIRE_NOW</td>
-<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNowWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
-<td>立即执行第一个发生misfire的任务，并且修改startTime为当前时间，然后按照设定的间隔时间执行下一次任务，直到所有的任务执行完成，此命令不会遗漏任务的执行次数。<br/>例如：10:15会立即执行9:00的任务，startTime修改为10:15，然后后续的任务执行时间为,11:15,12:15,13:15,14:15，也就是说任务完成时间延迟到了14:15，但是任务的执行次数还是总共的6次。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNowWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</td>
-<td>立即执行第一个发生misfire的任务，并且修改startTime为当前时间，然后按照设定的间隔时间执行下一个任务，直到所有剩余任务执行完成，此命令会忽略已经发生misfire的任务（第一个misfire任务除外，因为会被立即执行），继续执行剩余的正常任务。<br/>例如：10:15会立即执行9:00的任务，并且修改startTime为10:15，然后Quartz会忽略10:00发生的misfire的任务，然后后续的执行时间为：11:15,12:15,13:15，由于10:00的任务被忽略了，因此总的执行次数实际上是5次。<br/></td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNextWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</td>
-<td>不会立即执行任务，会等到下一次的计划执行时间开始执行，然后按照设定的间隔时间执行直到执行到计划的任务结束时间。<br/>这个地方需要注意一下，不要被命令的名字所迷惑，第一眼印象可能觉得这个命令会把已经misfire的任务也执行了，而且好多博文也是这么讲解的，实际上并没有，我也是在自己测试的时候发现的，其实这个命令在发现存在misfire以后，后续并没有再执行发生misfire的任务，而是继续执行剩下的任务，直到结束时间，因此此命令与MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT的执行结果相同，至于原因后面会讲。<br/>例如：10:15发现9:00和10:00发生了misfire，并不会立即执行，由于原计划的下一次执行时间是11:00，因此Quartz会等到11:00执行任务，然后在原计划的13:00执行最后一个任务结束，因此实际上总的执行次数是4次。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNextWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</td>
-<td>不会立即执行任务，会等到下一次计划执行时间开始执行，忽略已经发生了misfire的任务，然后按照设定的间隔时间执行直到计划的任务结束时间。<br/>例如：10:15发现9:00和10:00发生了misfire，并不会立即执行，忽略掉发生misfire的9:00和10:00的任务，按照计划在11:00执行任务，直到13:00执行最后一个任务结束，因此总的执行次数是4次。</td>
-</tr>
-</tbody></table>
-<h3 id="3-无限次数执行的job"><a href="#3-无限次数执行的job" class="headerlink" title="3.无限次数执行的job"></a>3.无限次数执行的job</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(MisfireJob.class)</span><br><span class="line">                .withIdentity(<span class="string">&quot;job&quot;</span>, <span class="string">&quot;g&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger&quot;</span>, <span class="string">&quot;g&quot;</span>)</span><br><span class="line">    .startAt(next)</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule()</span><br><span class="line">                  .withIntervalInHours(<span class="number">1</span>)</span><br><span class="line">                  .repeatForever())</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
-
-<p>假设8:00的任务执行了，但是由于某些原因，scheduler没有执行9:00和10:00的任务，在10:15分的时候scheduler发现job有两次没有执行，这两次的延迟执行时间分别是1小时15分和15分，都大于设置的misfireThreshold=1秒，因此发生了两次misfire。各misfire策略如下：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>MISFIRE_INSTRUCTION_SMART_POLICY–default</td>
-<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT。</td>
-</tr>
-<tr>
-<td>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</td>
-<td>Quartz不会判断发生misfire，在Quartz资源可用时会尽可能早的执行所有发生misfire的任务。<br/>例如：Quartz会在10:15执行9:00和10:00的任务，然后按照原计划继续执行下去。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionFireNow MISFIRE_INSTRUCTION_FIRE_NOW</td>
-<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNowWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
-<td>因为执行次数为无限次，所以等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNowWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</td>
-<td>立即执行第一个发生misfire的任务，并且修改startTime为当前时间，然后按照设定的间隔时间执行下一个任务，一直执行下去，执行次数是无限的，但是计划的执行时间会被改变，因为此策略会修改startTime。<br/>例如：10:15会立即执行9:00的任务，并且修改startTime为10:15，后续的执行时间被修改为了11:15，12:15，13:15以此类推。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNextWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</td>
-<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT。</td>
-</tr>
-<tr>
-<td>withMisfireHandlingInstructionNextWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</td>
-<td>不会立即执行任务，会等到下一次计划执行时间开始执行，忽略已经发生了misfire的任务，然后按照原计划执行时间继续执行下去。实际上就相当于不管有没有发生misfire，就按照原计划继续执行下去。<br/>例如：10:15发现9:00和10:00发生了misfire，并不会立即执行，忽略掉发生misfire的9:00和10:00的任务，按照计划在11:00执行任务，然后一直按照原计划执行下去。</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p><a href="https://blog.csdn.net/chen888999/article/details/78575492"> Quartz misfire详解_自在小丁的博客-CSDN博客_misfire quartz</a></p>
-</blockquote>
-<h2 id="十-异常与中断处理"><a href="#十-异常与中断处理" class="headerlink" title="十.异常与中断处理"></a>十.异常与中断处理</h2><h3 id="1-作业异常"><a href="#1-作业异常" class="headerlink" title="1.作业异常"></a>1.作业异常</h3><h4 id="1-1-捕获并解决异常，立即重新执行作业"><a href="#1-1-捕获并解决异常，立即重新执行作业" class="headerlink" title="1.1 捕获并解决异常，立即重新执行作业"></a>1.1 捕获并解决异常，立即重新执行作业</h4><p>在我们捕获异常并解决异常后，可以调用 <code>JobExecutionException#setRefireImmediately(true)</code> 立即重新执行作业。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 一个异常例子，假设第一次传入的 denominator 为 0，那么将会抛出异常</span></span><br><span class="line">    calculation = <span class="number">4815</span> / denominator;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    JobExecutionException e2 = <span class="keyword">new</span> JobExecutionException(e);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在第一次异常后，修改 denominator 参数为 1，那么后面的执行就不会出错了</span></span><br><span class="line">    dataMap.put(<span class="string">&quot;denominator&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// true 表示立即重新执行作业</span></span><br><span class="line">    e2.setRefireImmediately(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">throw</span> e2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>： 为了共享在同一个 JobDetail 中的 JobDataMap，我们需要在上面这个 job 实现类上加入 <code>@PersistJobDataAfterExecution</code> 和 <code>@DisallowConcurrentExecution</code> 注解</p>
-<h4 id="1-2-捕获异常，取消所有触发器"><a href="#1-2-捕获异常，取消所有触发器" class="headerlink" title="1.2 捕获异常，取消所有触发器"></a>1.2 捕获异常，取消所有触发器</h4><p>在我们捕获异常时，可以调用 <code>JobExecutionException#setUnscheduleAllTriggers(true)</code> 取消所有与这个作业有关的触发器。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 一个异常例子</span></span><br><span class="line">    <span class="keyword">int</span> zero = <span class="number">0</span>;</span><br><span class="line">    calculation = <span class="number">4815</span> / zero;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    JobExecutionException e2 = <span class="keyword">new</span> JobExecutionException(e);</span><br><span class="line">    <span class="comment">// true 表示 Quartz 会自动取消所有与这个 job 有关的 trigger，从而避免再次运行 job</span></span><br><span class="line">    e2.setUnscheduleAllTriggers(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">throw</span> e2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-作业中断"><a href="#2-作业中断" class="headerlink" title="2. 作业中断"></a>2. 作业中断</h3><p><code>org.quartz.InterruptableJob</code> 接口提供了一种中断机制，这个接口只有一个方法 <code>interrupt()</code>，这个方法会在用户发出中断请求到 Scheduler（调度器）时触发（即调用 <code>Scheduler#interrupt(JobDetail#getKey())</code> 方法时触发）。</p>
-<p>其中 <code>InterruptableJob</code> 接口又继承了 <code>Job</code> 接口，所以当我们使用时，只需要实现 <code>InterruptableJob</code> 接口，重写其中的 <code>execute</code> 和 <code>interrupt</code> 方法即可。</p>
-<h2 id="十一-排除特殊日期"><a href="#十一-排除特殊日期" class="headerlink" title="十一.排除特殊日期"></a>十一.排除特殊日期</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Add the holiday calendar to the schedule</span></span><br><span class="line">HolidayCalendar holidayCalendar = <span class="keyword">new</span> HolidayCalendar();</span><br><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.set(<span class="number">2005</span>, <span class="number">6</span>, <span class="number">4</span>);</span><br><span class="line">holidayCalendar.addExcludedDate(calendar.getTime());</span><br><span class="line"></span><br><span class="line">AnnualCalendar holidays = <span class="keyword">new</span> AnnualCalendar();</span><br><span class="line"><span class="comment">// fourth of July (July 4)</span></span><br><span class="line">Calendar fourthOfJuly = <span class="keyword">new</span> GregorianCalendar(<span class="number">2005</span>, <span class="number">6</span>, <span class="number">4</span>);</span><br><span class="line">holidays.setDayExcluded(fourthOfJuly, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// halloween (Oct 31)</span></span><br><span class="line">Calendar halloween = <span class="keyword">new</span> GregorianCalendar(<span class="number">2005</span>, <span class="number">9</span>, <span class="number">31</span>);</span><br><span class="line">holidays.setDayExcluded(halloween, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// christmas (Dec 25)</span></span><br><span class="line">Calendar christmas = <span class="keyword">new</span> GregorianCalendar(<span class="number">2005</span>, <span class="number">11</span>, <span class="number">25</span>);</span><br><span class="line">holidays.setDayExcluded(christmas, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// tell the schedule about our holiday calendar</span></span><br><span class="line">sched.addCalendar(<span class="string">&quot;holidays&quot;</span>, holidays, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// schedule a job to run hourly, starting on halloween</span></span><br><span class="line"><span class="comment">// at 10 am</span></span><br><span class="line">Date runDate = dateOf(<span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">31</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">JobDetail job = newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;group1&quot;</span>).build();</span><br><span class="line"></span><br><span class="line"><span class="comment">// modifiedByCalendar</span></span><br><span class="line">SimpleTrigger trigger = newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(runDate)</span><br><span class="line">    .withSchedule(simpleSchedule().withIntervalInHours(<span class="number">1</span>).repeatForever()).modifiedByCalendar(<span class="string">&quot;holidays&quot;</span>)</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>Calendar名称</th>
-<th>用法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>CronCalendar</td>
-<td>用来排除 给定CronExpression表示的 时间集</td>
-</tr>
-<tr>
-<td>AnnualCalendar</td>
-<td>用来排除 年 中的 天</td>
-</tr>
-<tr>
-<td>HolidayCalendar</td>
-<td>用来排除 某年 中的 某天 (与 AnnualCalendar 类似，区别是把年考虑进去了)</td>
-</tr>
-<tr>
-<td>MonthlyCalendar</td>
-<td>用来排除 月 中的 天</td>
-</tr>
-<tr>
-<td>WeeklyCalendar</td>
-<td>用来排除 星期 中的 天</td>
-</tr>
-<tr>
-<td>DailyCalendar</td>
-<td>用来排除 一天中的 某个时间段 (不能跨天) (可以反转时间段的作用)</td>
-</tr>
-</tbody></table>
-<h2 id="十二-监听器"><a href="#十二-监听器" class="headerlink" title="十二.监听器"></a>十二.监听器</h2><h3 id="1-JobListener"><a href="#1-JobListener" class="headerlink" title="1.JobListener"></a>1.JobListener</h3><table>
-<thead>
-<tr>
-<th>方法签名</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>getName()</td>
-<td>获取该监听器的名称</td>
-</tr>
-<tr>
-<td>jobToBeExecuted（）</td>
-<td>在Job将要被执行时调用这个方法</td>
-</tr>
-<tr>
-<td>jobExecutionVetoed（）</td>
-<td>在Job即将被执行，但却被 TriggerListerner监听器的 vetoJobExecution（）方法否决时 执行 也就是该执行时，但却未执行时调用</td>
-</tr>
-<tr>
-<td>jobWasExecuted（）</td>
-<td>执行结束时调用</td>
-</tr>
-</tbody></table>
-<h3 id="2-TriggerListener"><a href="#2-TriggerListener" class="headerlink" title="2.TriggerListener"></a>2.TriggerListener</h3><table>
-<thead>
-<tr>
-<th>方法签名</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>getName()</td>
-<td>获取触发器的名称</td>
-</tr>
-<tr>
-<td>triggerFired()</td>
-<td>当与监听器相关联的Trigger被触发，Job上的execute()方法将被执行时，Scheduler就调用该方法</td>
-</tr>
-<tr>
-<td>vetoJobExecution()</td>
-<td>在 Trigger 触发后，Job 将要被执行时由 Scheduler 调用这个方法。 TriggerListener 给了一个选择去否决 Job 的执行。 假如这个方法返回 true，这个 Job 将不会为此次 Trigger 触发而得到执行。</td>
-</tr>
-<tr>
-<td>triggerMisfired()</td>
-<td>Scheduler 调用这个方法是在 Trigger 错过触发时。 你应该关注此方法中持续时间长的逻辑：在出现许多错过触发的 Trigger 时， 长逻辑会导致骨牌效应。你应当保持这上方法尽量的小。</td>
-</tr>
-<tr>
-<td>triggerComplete()</td>
-<td>Trigger 被触发并且完成了 Job 的执行时，Scheduler 调用这个方法</td>
-</tr>
-</tbody></table>
-<h3 id="3-SchedulerListener"><a href="#3-SchedulerListener" class="headerlink" title="3.SchedulerListener"></a>3.SchedulerListener</h3><table>
-<thead>
-<tr>
-<th>方法签名</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>jobScheduled（）</td>
-<td>用于部署JobDetail时调用</td>
-</tr>
-<tr>
-<td>jobUnscheduled()</td>
-<td>用于卸载JobDetail时调用</td>
-</tr>
-<tr>
-<td>triggerFinalized()</td>
-<td>当一个 Trigger 来到了再也不会触发的状态时调用这个方法。 除非这个 Job 已设置成了持久性，否则它就会从 Scheduler 中移除</td>
-</tr>
-<tr>
-<td>triggerPaused()</td>
-<td>Scheduler 调用这个方法是发生在一个 Trigger被暂停时</td>
-</tr>
-<tr>
-<td>triggersPaused()</td>
-<td>Scheduler 调用这个方法是发生在一个 Trigger 组被暂停时。 假如是 Trigger 组的话，triggerName 参数将为 null</td>
-</tr>
-<tr>
-<td>triggerResumed()</td>
-<td>Scheduler 调用这个方法是发生成一个 Trigger从暂停中恢复时</td>
-</tr>
-<tr>
-<td>triggersResumed()</td>
-<td>Scheduler 调用这个方法是发生成一个 Trigger 组从暂停中恢复时。假如是 Trigger 组的话，triggerName 参数将为 null。</td>
-</tr>
-<tr>
-<td>jobAdded()</td>
-<td>添加job时调用</td>
-</tr>
-<tr>
-<td>jobDeleted()</td>
-<td>删除job时调用</td>
-</tr>
-<tr>
-<td>jobPaused()</td>
-<td>挂起Job时调用</td>
-</tr>
-<tr>
-<td>jobsPaused()</td>
-<td>挂起jobs组时调用，假如是组的话，参数将为null</td>
-</tr>
-<tr>
-<td>jobResumed()</td>
-<td>恢复Job时调用</td>
-</tr>
-<tr>
-<td>jobsResumed()</td>
-<td>恢复Job组时调用，假如是组的话，参数将为null</td>
-</tr>
-<tr>
-<td>schedulerError()</td>
-<td>在 Scheduler 的正常运行期间产生一个严重错误时调用这个方法</td>
-</tr>
-<tr>
-<td>schedulerInStandbyMode()</td>
-<td>当Scheduler处于StandBy模式时，调用该方法</td>
-</tr>
-<tr>
-<td>schedulerStarted()</td>
-<td>当Scheduler 开启时，调用该方法</td>
-</tr>
-<tr>
-<td>schedulerStarting()</td>
-<td>当Scheduler 开启中，调用该方法</td>
-</tr>
-<tr>
-<td>schedulerShutdown()</td>
-<td>当Scheduler停止时，调用该方法</td>
-</tr>
-<tr>
-<td>schedulerShuttingdown()</td>
-<td>当Scheduler停止中，调用该方法</td>
-</tr>
-<tr>
-<td>schedulingDataCleared()</td>
-<td>当Scheduler中的数据被清除时，调用该方法</td>
-</tr>
-</tbody></table>
-<h3 id="4-example"><a href="#4-example" class="headerlink" title="4.example"></a>4.example</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Set up the listener</span></span><br><span class="line">JobListener listener = <span class="keyword">new</span> Job1Listener();</span><br><span class="line">Matcher&lt;JobKey&gt; matcher = KeyMatcher.keyEquals(job.getKey());</span><br><span class="line">sched.getListenerManager().addJobListener(listener, matcher);</span><br><span class="line"></span><br><span class="line">TriggerListener triggerListener = <span class="keyword">new</span> TriggerListener();</span><br><span class="line">KeyMatcher&lt;TriggerKey&gt; triggerKeyKeyMatcher = KeyMatcher.keyEquals(trigger.getKey());</span><br><span class="line">sched.getListenerManager().addTriggerListener(triggerListener, triggerKeyKeyMatcher);</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-Matcher"><a href="#5-Matcher" class="headerlink" title="5.Matcher"></a>5.Matcher</h3><p><img data-src="quartz.assets/5.png"></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 对group1中job以2结尾的，整个group2，group3中除了以1结尾的 任务生效</span></span><br><span class="line"><span class="comment">* (A or B) or C</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">OrMatcher&lt;JobKey&gt; matcher = OrMatcher.or(</span><br><span class="line">    OrMatcher.or(</span><br><span class="line">        AndMatcher.and(GroupMatcher.jobGroupEquals(<span class="string">&quot;group1&quot;</span>), NameMatcher.jobNameEndsWith(<span class="string">&quot;2&quot;</span>)),</span><br><span class="line">        GroupMatcher.jobGroupEquals(<span class="string">&quot;group2&quot;</span>)</span><br><span class="line">    ),</span><br><span class="line">    AndMatcher.and(GroupMatcher.jobGroupEquals(<span class="string">&quot;group3&quot;</span>), NotMatcher.not(NameMatcher.jobNameEndsWith(<span class="string">&quot;1&quot;</span>)))</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<h2 id="十三-远程调用"><a href="#十三-远程调用" class="headerlink" title="十三.远程调用"></a>十三.远程调用</h2><p>可以通过RMI协议向Scheduler调度器远程添加job任务</p>
-<p>RemoteServerExample.java</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// First we must get a reference to a scheduler</span></span><br><span class="line">SchedulerFactory sf = <span class="keyword">new</span> StdSchedulerFactory();</span><br><span class="line">Scheduler sched = sf.getScheduler();</span><br><span class="line"><span class="comment">// start the schedule</span></span><br><span class="line">sched.start();</span><br><span class="line"><span class="comment">// wait five minutes to give our jobs a chance to run</span></span><br><span class="line">Thread.sleep(<span class="number">600L</span> * <span class="number">1000L</span>);</span><br></pre></td></tr></table></figure>
-
-<p>server.propertiest</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Configure Main Scheduler Properties  </span></span><br><span class="line"><span class="meta">org.quartz.scheduler.instanceName</span>: <span class="string">Sched1</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.export</span>: <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryHost</span>: <span class="string">localhost</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryPort</span>: <span class="string">1099</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.createRegistry</span>: <span class="string">true</span></span><br><span class="line"><span class="comment"># Configure ThreadPool  </span></span><br><span class="line"><span class="meta">org.quartz.threadPool.class</span>: <span class="string">org.quartz.simpl.SimpleThreadPool</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadCount</span>: <span class="string">10</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadPriority</span>: <span class="string">5</span></span><br><span class="line"><span class="comment"># Configure JobStore  </span></span><br><span class="line"><span class="meta">org.quartz.jobStore.misfireThreshold</span>: <span class="string">60000</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.class</span>: <span class="string">org.quartz.simpl.RAMJobStore</span></span><br></pre></td></tr></table></figure>
-
-<p>RemoteClientExample.java</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// First we must get a reference to a scheduler</span></span><br><span class="line">SchedulerFactory sf = <span class="keyword">new</span> StdSchedulerFactory();</span><br><span class="line">Scheduler sched = sf.getScheduler();</span><br><span class="line"></span><br><span class="line"><span class="comment">// define the job and ask it to run</span></span><br><span class="line">JobDetail job = newJob(SimpleJob.class)</span><br><span class="line">    .withIdentity(<span class="string">&quot;remotelyAddedJob&quot;</span>, <span class="string">&quot;default&quot;</span>)</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">JobDataMap map = job.getJobDataMap();</span><br><span class="line">map.put(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;Your remotely added job has executed!&quot;</span>);</span><br><span class="line"></span><br><span class="line">Trigger trigger = newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;remotelyAddedTrigger&quot;</span>, <span class="string">&quot;default&quot;</span>)</span><br><span class="line">    .forJob(job.getKey())</span><br><span class="line">    .withSchedule(cronSchedule(<span class="string">&quot;/5 * * ? * *&quot;</span>))</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line"><span class="comment">// schedule the job</span></span><br><span class="line">sched.scheduleJob(job, trigger);</span><br></pre></td></tr></table></figure>
-
-<p>client.properties</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Properties file for use by StdSchedulerFactory</span></span><br><span class="line"><span class="comment"># to create a Quartz Scheduler Instance.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Configure Main Scheduler Properties</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.instanceName</span>: <span class="string">Sched1</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.logger</span>: <span class="string">schedLogger</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.proxy</span>: <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryHost</span>: <span class="string">localhost</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryPort</span>: <span class="string">1099</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>定时任务</category>
-      </categories>
-      <tags>
-        <tag>定时任务</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>long类型的id属性传到前端会精度丢失的解决方案</title>
-    <url>/post/6/</url>
-    <content><![CDATA[<h1 id="long类型的id属性传到前端会精度丢失的解决方案"><a href="#long类型的id属性传到前端会精度丢失的解决方案" class="headerlink" title="long类型的id属性传到前端会精度丢失的解决方案"></a>long类型的id属性传到前端会精度丢失的解决方案</h1><p>数据库id由varchar类型改为number后，使用mybatis-plus雪花算法生成id，从数据库查询出来都是正常的，但是传给前端的时候发生了失真。<strong>JSON字符串转JS对象，JSON中的数字会转为 number 类型， number 类型的精度是16位，但是雪花算法生成的id长度有19位，so后面的几位精度就丢失了</strong>。如果想要前端不丢失精度，JSON中的id就不能是long类型，改为String类型就好了。</p>
-<p>一、在实体类的id属性上面加上注解 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@JsonSerialize(using = ToStringSerializer.class)</span></span><br></pre></td></tr></table></figure>
-
-<span id="more"></span>
-
-<p>二、添加全局配置</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JacksonConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="meta">@Primary</span></span><br><span class="line">  <span class="meta">@ConditionalOnMissingBean(ObjectMapper.class)</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> ObjectMapper <span class="title">jacksonObjectMapper</span><span class="params">(Jackson2ObjectMapperBuilder builder)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 若若POJO对象的属性值为null，序列化时不进行显示</span></span><br><span class="line">    builder.serializationInclusion(JsonInclude.Include.NON_NULL);</span><br><span class="line">    <span class="comment">// Include.NON_EMPTY,若POJO对象的属性值为&quot;&quot;，序列化时不进行显示</span></span><br><span class="line">    builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);</span><br><span class="line">    <span class="comment">//DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES相当于配置，JSON串含有未知字段时，反序列化依旧可以成功</span></span><br><span class="line">    builder.failOnUnknownProperties(<span class="keyword">false</span>);</span><br><span class="line">    <span class="comment">//序列化时的命名策略——驼峰命名法</span></span><br><span class="line">    builder.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);</span><br><span class="line">    <span class="comment">//针对于Date类型，文本格式化</span></span><br><span class="line">    builder.simpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//针对于JDK新时间类。序列化时带有T的问题，自定义格式化字符串</span></span><br><span class="line">    JavaTimeModule javaTimeModule = <span class="keyword">new</span> JavaTimeModule();</span><br><span class="line">    javaTimeModule.addSerializer(LocalDateTime.class, <span class="keyword">new</span> LocalDateTimeSerializer(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)));</span><br><span class="line">    javaTimeModule.addDeserializer(LocalDateTime.class, <span class="keyword">new</span> LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)));</span><br><span class="line">    builder.modules(javaTimeModule);</span><br><span class="line"></span><br><span class="line">    ObjectMapper objectMapper = builder.createXmlMapper(<span class="keyword">false</span>).build();</span><br><span class="line">    <span class="comment">// 全局配置序列化返回 JSON 处理</span></span><br><span class="line">    SimpleModule simpleModule = <span class="keyword">new</span> SimpleModule();</span><br><span class="line">    <span class="comment">//JSON Long ==&gt; String</span></span><br><span class="line">    simpleModule.addSerializer(Long.class, ToStringSerializer.instance);</span><br><span class="line">    <span class="comment">// BigDecimal ==&gt; String</span></span><br><span class="line">    simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);</span><br><span class="line">    objectMapper.registerModule(simpleModule);</span><br><span class="line">    <span class="keyword">return</span> objectMapper;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>三、在application.yml中加上以下配置，这个办法会将所有数字都变成字符串，包括<code>long</code> 和<code>int</code> 类型</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  jackson:</span><br><span class="line">    generator:</span><br><span class="line">      writeNumbersAsStrings: <span class="keyword">true</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Bug</category>
-      </categories>
-      <tags>
-        <tag>Bug</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mybatis-plus lambda链式调用</title>
-    <url>/post/5/</url>
-    <content><![CDATA[<p>mybatis plus  lambda 链式调用 </p>
-<h3 id="一、LambdaQueryWrapper-lt-gt"><a href="#一、LambdaQueryWrapper-lt-gt" class="headerlink" title="一、LambdaQueryWrapper&lt;&gt;"></a>一、LambdaQueryWrapper&lt;&gt;</h3><h3 id="二、QueryWrapper-lambda"><a href="#二、QueryWrapper-lambda" class="headerlink" title="二、QueryWrapper().lambda()"></a>二、QueryWrapper<T>().lambda()</h3><h3 id="三、Wrappers-lambdaQuery"><a href="#三、Wrappers-lambdaQuery" class="headerlink" title="三、Wrappers.lambdaQuery()"></a>三、Wrappers.<T>lambdaQuery()</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 生成的sql语句 SELECT * FROM user WHERE name LIKE ? AND age &lt; ?</span></span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda = <span class="keyword">new</span> QueryWrapper&lt;User&gt;().lambda();</span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda2 = <span class="keyword">new</span> LambdaQueryWrapper&lt;&gt;();</span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">        lambda3.like(User::getName, <span class="string">&quot;雨&quot;</span>)</span><br><span class="line">            .lt(User::getAge, <span class="number">40</span>);</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectList(lambda3);</span><br><span class="line">        users.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-
-<span id="more"></span>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// name like &#x27;王%&#x27; and (age &lt;40 or email in not null)</span></span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">        lambda3.likeRight(User::getName, <span class="string">&quot;王&quot;</span>)</span><br><span class="line">                .and(qw -&gt; qw.lt(User::getAge, <span class="number">40</span>).or().isNotNull(User::getEmail));</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectList(lambda3);</span><br><span class="line">        users.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
-
-<h4 id="自定义sql"><a href="#自定义sql" class="headerlink" title="自定义sql"></a>自定义sql</h4><ul>
-<li>DAO</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 自定义sql 使用</span></span><br><span class="line"><span class="comment">    * Dao层  代码：</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Select</span>(&quot;select * from $&#123;ew.customSqlSegment&#125;&quot;)</span></span><br><span class="line"><span class="comment">    * List&lt;User&gt; selectAll(<span class="doctag">@Param</span>(Constants.WRAPPER)Wrapper&lt;User&gt; wrapper);</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectLambda4my</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">       lambda3.likeRight(User::getName, <span class="string">&quot;王&quot;</span>)</span><br><span class="line">               .and(qw -&gt; qw.lt(User::getAge, <span class="number">40</span>).or().isNotNull(User::getEmail));</span><br><span class="line">       List&lt;User&gt; users = userMapper.selectAll(lambda3);</span><br><span class="line">       users.forEach(System.out::println);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Mapper</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;User&gt; <span class="title">selectAll</span><span class="params">(<span class="meta">@Param(Constants.WRAPPER)</span> Wrapper&lt;User&gt; wrapper)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>xml</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">        <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">        <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.mp.dao.UserMapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAll&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">        select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">        select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="四、LambdaQueryChainWrapper-xxxxMapper"><a href="#四、LambdaQueryChainWrapper-xxxxMapper" class="headerlink" title="四、LambdaQueryChainWrapper(xxxxMapper)"></a>四、LambdaQueryChainWrapper<T>(xxxxMapper)</h3><p><em>MP 3.0.7 新增的方式</em></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 生成的sql语句 SELECT * FROM user WHERE name LIKE ? AND age &gt;= ?</span></span><br><span class="line">List&lt;User&gt; users = <span class="keyword">new</span> LambdaQueryChainWrapper&lt;User&gt;(userMapper)</span><br><span class="line">                .like(User::getName, <span class="string">&quot;雨&quot;</span>)</span><br><span class="line">                .ge(User::getAge, <span class="number">20</span>)</span><br><span class="line">                .list();</span><br></pre></td></tr></table></figure>
-
-<h3 id="五、lambda在分页中的应用"><a href="#五、lambda在分页中的应用" class="headerlink" title="五、lambda在分页中的应用"></a>五、lambda在分页中的应用</h3><ul>
-<li>配置类</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MybatisPlusConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MybatisPlusInterceptor <span class="title">mybatisPlusInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        MybatisPlusInterceptor interceptor = <span class="keyword">new</span> MybatisPlusInterceptor();</span><br><span class="line">        <span class="comment">// 格式化sql语句</span></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;format&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;optimizeJoin&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> PaginationInnerInterceptor(DbType.MYSQL));</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Mapper</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">IPage&lt;User&gt; <span class="title">selectUserPage</span><span class="params">(Page&lt;User&gt; page,<span class="meta">@Param(Constants.WRAPPER)</span>Wrapper&lt;User&gt; wrapper)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>xml</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">    select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>demo</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">QueryWrapper&lt;User&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;User&gt;();</span><br><span class="line">        queryWrapper.ge(<span class="string">&quot;age&quot;</span>, <span class="number">26</span>);</span><br><span class="line">        <span class="comment">//后面参数false  表示不查询总记录数</span></span><br><span class="line">        Page&lt;User&gt; userPage = <span class="keyword">new</span> Page&lt;&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="keyword">false</span>);</span><br><span class="line">        IPage&lt;User&gt; iPage = userMapper.selectUserPage(userPage, queryWrapper);</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>mybatis</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>后台</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Oracle</title>
     <url>/post/3/</url>
     <content><![CDATA[<h1 id="oracle"><a href="#oracle" class="headerlink" title="oracle"></a>oracle</h1><p><a href="https://blog.csdn.net/u011955534/article/details/14168913">常用函数</a></p>
@@ -712,232 +91,6 @@
       <tags>
         <tag>html</tag>
         <tag>css</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker</title>
-    <url>/post/2/</url>
-    <content><![CDATA[<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><p><img data-src="http://www.qiyunzhou.top/images/docker/0.png"></p>
-<p><strong>Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。</strong>它是目前最流行的 Linux 容器解决方案。</p>
-<p>Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。</p>
-<p>总体来说，Docker 的接口相当简单，用户可以方便地创建和使用容器，把自己的应用放入容器。容器还可以进行版本管理、复制、分享、修改，就像管理普通的代码一样。</p>
-<span id="more"></span>
-
-<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1、yum 包更新到最新</span> </span><br><span class="line">yum update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</span> </span><br><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3、 设置yum源</span></span><br><span class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4、 安装docker，出现输入的界面都按 y</span> </span><br><span class="line">yum install -y docker-ce</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5、 查看docker版本，验证是否验证成功</span></span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
-
-<h2 id="卸载Docker"><a href="#卸载Docker" class="headerlink" title="卸载Docker"></a>卸载Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum remove docker-ce docker-ce-cli containerd.io</span><br><span class="line"></span><br><span class="line">rm -rf /var/lib/docker#docker默认工作路径</span><br></pre></td></tr></table></figure>
-
-<p>阿里云配置Docker镜像加速</p>
-<p><img data-src="http://www.qiyunzhou.top/images/docker/1.png"></p>
-<h2 id="Docker基本组成"><a href="#Docker基本组成" class="headerlink" title="Docker基本组成"></a>Docker基本组成</h2><p><img data-src="http://www.qiyunzhou.top/images/docker/2.png"></p>
-<p><strong>镜像(image):</strong></p>
-<p>docker镜像好比一个模板,可以通过这个模板来创建容器服务,tomcat镜像===&gt;run ==&gt;tomcat01容器(提供服务器)</p>
-<p>通过这个镜像可以创建多个容器(最终服务运行或者项目运行就是在容器中的)</p>
-<p><strong>容器(container):</strong></p>
-<p>Docker利用容器技术,独立运行一个或者一个组应用,通过镜像来创建的</p>
-<p>启动,停止,删除,基本命令!</p>
-<p><strong>仓库(repository):</strong></p>
-<p>仓库就是存放镜像的地方!</p>
-<p>仓库分为共有仓库和私有仓库</p>
-<p>Docker Hub(默认是国外的)</p>
-<p>阿里云… 都有容器服务器(配置镜像加速)</p>
-<h2 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h2><h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">docker版本</span> </span><br><span class="line">docker version </span><br><span class="line"><span class="meta">#</span><span class="bash">显示docker的系统信息,包括镜像和容器的数量</span></span><br><span class="line">docker info </span><br><span class="line"><span class="meta">#</span><span class="bash">查看某个具体的命令</span></span><br><span class="line">docker [命令] --help  </span><br></pre></td></tr></table></figure>
-
-<h3 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看下载的所有镜像</span></span><br><span class="line">docker docker </span><br><span class="line"><span class="meta">#</span><span class="bash">搜索镜像</span></span><br><span class="line">docker search</span><br><span class="line"><span class="meta">#</span><span class="bash">下载镜像</span></span><br><span class="line">docker pull </span><br><span class="line"><span class="meta">#</span><span class="bash">删除镜像</span></span><br><span class="line">docker rmi </span><br></pre></td></tr></table></figure>
-
-<h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><p>说明 : 有了镜像才可以创建容器</p>
-<h4 id="容器常用命令"><a href="#容器常用命令" class="headerlink" title="容器常用命令"></a>容器常用命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull #下载镜像 docker image pull</span><br><span class="line"></span><br><span class="line">docker rmi #删除镜像 docker image rm</span><br><span class="line"></span><br><span class="line">docker docker</span><br><span class="line"></span><br><span class="line">docker docker -a  #列出所有镜像详细信息</span><br><span class="line">docker docker -aq #列出所有镜像的id</span><br><span class="line">docker search mysql #查询网上的mysql的镜像 </span><br><span class="line"><span class="meta">#</span><span class="bash">  --filter=STARS=3000 <span class="comment">#过滤，搜索出来的镜像收藏STARS数量大于3000的</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">等价于</span></span><br><span class="line">docker pull tomcat:8</span><br><span class="line">docker pull docker.io/library/tomcat:8</span><br><span class="line"></span><br><span class="line">docker rmi -f 镜像id #删除指定id的镜像</span><br><span class="line">docker rmi -f $(docker docker -aq) #删除全部的镜像</span><br><span class="line">docker stop $(docker ps -a -q) #停止所有的容器</span><br><span class="line">docker pull centos        #docker中下载centos</span><br><span class="line">docker run 镜像id         #新建容器并启动</span><br><span class="line">docker container list -a  # 查看所有的容器</span><br><span class="line">docker ps -a              # 查看所有的容器</span><br><span class="line">docker rm 容器id          #删除指定容器</span><br><span class="line">docker start 容器id	      #启动容器</span><br><span class="line">docker restart 容器id     #重启容器</span><br><span class="line">docker stop 容器id	      #停止当前正在运行的容器</span><br><span class="line">docker kill 容器id	      #强制停止当前容器</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run [可选参数] image | docker container run [可选参数] image </span><br><span class="line"><span class="meta">#</span><span class="bash">参书说明</span></span><br><span class="line">--name=&quot;Name&quot;		#容器名字 tomcat01 tomcat02 用来区分容器</span><br><span class="line">-d					#后台方式运行</span><br><span class="line">-it 				#使用交互方式运行，进入容器查看内容</span><br><span class="line">-p					#指定容器的端口 -p 8080(宿主机):8080(容器)</span><br><span class="line">		-p ip:主机端口:容器端口</span><br><span class="line">		-p 主机端口:容器端口(常用)</span><br><span class="line">		-p 容器端口</span><br><span class="line">		容器端口</span><br><span class="line">-P(大写) 				随机指定端口</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it centos /bin/bash # 测试、启动并进入容器</span><br><span class="line"></span><br><span class="line">exit #从容器退回主机</span><br><span class="line"></span><br><span class="line">docker ps 命令  		#列出当前正在运行的容器 还没退出的（exit）</span><br><span class="line">  -a, --all     	 #列出当前正在运行的容器 + 带出历史运行过的容器</span><br><span class="line">  -n=?, --last int   #列出最近创建的?个容器 ?为1则只列出最近创建的一个容器,为2则列出2个</span><br><span class="line">  -q, --quiet        #只列出容器的编号</span><br></pre></td></tr></table></figure>
-
-<h4 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">exit 		#容器直接退出</span><br><span class="line">ctrl +P +Q  #容器不停止退出 	---注意：这个很有用的操作</span><br></pre></td></tr></table></figure>
-
-<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm 容器id   				#删除指定的容器，不能删除正在运行的容器，如果要强制删除 rm -rf</span><br><span class="line">docker rm -f $(docker ps -aq)  	 #删除所有的容器</span><br><span class="line">docker ps -a -q|xargs docker rm  #删除所有的容器</span><br></pre></td></tr></table></figure>
-
-<h4 id="后台启动命令"><a href="#后台启动命令" class="headerlink" title="后台启动命令"></a>后台启动命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d centos #这都是看不到信息的</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 问题docker ps. 发现centos 停止了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 常见的坑，docker容器使用后台运行，就必须要有要一个前台进程，docker发现没有应用，就会自动停止</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> nginx，容器启动后，发现自己没有提供服务，就会立刻停止，就是没有程序了</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker logs --help</span><br><span class="line">Options:</span><br><span class="line">      --details        Show extra details provided to logs </span><br><span class="line">*  -f, --follow         Follow log output</span><br><span class="line">      --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">*      --tail string    Number of lines to show from the end of the logs (default &quot;all&quot;)</span><br><span class="line">*  -t, --timestamps     Show timestamps</span><br><span class="line">      --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">➜  ~ docker run -d centos /bin/sh -c &quot;while true;do echo 6666;sleep 1;done&quot; #模拟日志      </span><br><span class="line"><span class="meta">#</span><span class="bash">显示日志</span></span><br><span class="line">-tf		#显示日志信息（一直更新）</span><br><span class="line">--tail number #需要显示日志条数</span><br><span class="line">docker logs -t --tail n 容器id #查看n行日志</span><br><span class="line">docker logs -ft 容器id #跟着日志</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看容器进程信息"><a href="#查看容器进程信息" class="headerlink" title="查看容器进程信息"></a>查看容器进程信息</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看容器中进程信息ps</span></span><br><span class="line">docker top 容器id</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看镜像的元数据"><a href="#查看镜像的元数据" class="headerlink" title="查看镜像的元数据"></a>查看镜像的元数据</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect 容器id</span><br><span class="line">docker inspect 镜像id</span><br></pre></td></tr></table></figure>
-
-<h4 id="进入当前正在运行的容器"><a href="#进入当前正在运行的容器" class="headerlink" title="进入当前正在运行的容器"></a>进入当前正在运行的容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方式一</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 进入当前正在运行的容器</span></span><br><span class="line">docker exec -it 容器id bashshell</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方式二</span></span><br><span class="line">docker attach 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">测试</span></span><br><span class="line">docker attach 55321bcae33d </span><br><span class="line">正在执行当前的代码...</span><br><span class="line">区别</span><br><span class="line"><span class="meta">#</span><span class="bash">docker <span class="built_in">exec</span> <span class="comment">#进入当前容器后开启一个新的终端，可以在里面操作。（常用）</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">docker attach <span class="comment"># 进入容器正在执行的终端</span></span></span><br></pre></td></tr></table></figure>
-
-<h4 id="从容器内拷贝内容到主机上"><a href="#从容器内拷贝内容到主机上" class="headerlink" title="从容器内拷贝内容到主机上"></a>从容器内拷贝内容到主机上</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">先进入到容器中</span></span><br><span class="line">docker exec -it 56a5583b25b4 /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">再创建一个新文件</span></span><br><span class="line">echo &quot;hello&quot; &gt; hello.java # &quot;hello&quot;是内容 hello.java是文件名（souce命令用不了）</span><br><span class="line"><span class="meta">#</span><span class="bash">测试文件是否存在了</span></span><br><span class="line">cat hello.java </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">将容器中的文件拷贝到主机上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker cp 容器名:容器内文件 主机上的路径</span></span><br><span class="line">docker cp 9035020356a4:/java.java /home</span><br></pre></td></tr></table></figure>
-
-<h4 id="命令大全"><a href="#命令大全" class="headerlink" title="命令大全"></a>命令大全</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">attach      Attach local standard input, output, and error streams to a running container</span><br><span class="line"><span class="meta">#</span><span class="bash">当前shell下 attach连接指定运行的镜像</span></span><br><span class="line">build       Build an image from a Dockerfile # 通过Dockerfile定制镜像</span><br><span class="line">commit      Create a new image from a container&#x27;s changes #提交当前容器为新的镜像</span><br><span class="line">cp          Copy files/folders between a container and the local filesystem #拷贝文件</span><br><span class="line">create      Create a new container #创建一个新的容器</span><br><span class="line">diff        Inspect changes to files or directories on a container&#x27;s filesystem #查看docker容器的变化</span><br><span class="line">events      Get real time events from the server # 从服务获取容器实时时间</span><br><span class="line">exec        Run a command in a running container # 在运行中的容器上运行命令</span><br><span class="line">export      Export a container&#x27;s filesystem as a tar archive #导出容器文件系统作为一个tar归档文件[对应import]</span><br><span class="line">history     Show the history of an image # 展示一个镜像形成历史</span><br><span class="line">docker      List docker #列出系统当前的镜像</span><br><span class="line">import      Import the contents from a tarball to create a filesystem image #从tar包中导入内容创建一个文件系统镜像</span><br><span class="line">info        Display system-wide information # 显示全系统信息</span><br><span class="line">inspect     Return low-level information on Docker objects #查看容器详细信息</span><br><span class="line">kill        Kill one or more running containers # kill指定docker容器</span><br><span class="line">load        Load an image from a tar archive or STDIN #从一个tar包或标准输入中加载一个镜像[对应save]</span><br><span class="line">login       Log in to a Docker registry #</span><br><span class="line">logout      Log out from a Docker registry</span><br><span class="line">logs        Fetch the logs of a container</span><br><span class="line">pause       Pause all processes within one or more containers</span><br><span class="line">port        List port mappings or a specific mapping for the container</span><br><span class="line">ps          List containers</span><br><span class="line">pull        Pull an image or a repository from a registry</span><br><span class="line">push        Push an image or a repository to a registry</span><br><span class="line">rename      Rename a container</span><br><span class="line">restart     Restart one or more containers</span><br><span class="line">rm          Remove one or more containers</span><br><span class="line">rmi         Remove one or more docker</span><br><span class="line">run         Run a command in a new container</span><br><span class="line">save        Save one or more docker to a tar archive (streamed to STDOUT by default)</span><br><span class="line">search      Search the Docker Hub for docker</span><br><span class="line">start       Start one or more stopped containers</span><br><span class="line">stats       Display a live stream of container(s) resource usage statistics</span><br><span class="line">stop        Stop one or more running containers</span><br><span class="line">tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</span><br><span class="line">top         Display the running processes of a container</span><br><span class="line">unpause     Unpause all processes within one or more containers</span><br><span class="line">update      Update configuration of one or more containers</span><br><span class="line">version     Show the Docker version information</span><br><span class="line">wait        Block until one or more containers stop, then print their exit codes</span><br></pre></td></tr></table></figure>
-
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p><img data-src="http://www.qiyunzhou.top/images/docker/8.png"></p>
-<h2 id="Docker镜像讲解"><a href="#Docker镜像讲解" class="headerlink" title="Docker镜像讲解"></a>Docker镜像讲解</h2><h3 id="镜像是什么"><a href="#镜像是什么" class="headerlink" title="镜像是什么"></a><strong>镜像是什么</strong></h3><p>镜像是一种轻量级、可执行的独立软件保，用来打包软件运行环境和基于运行环境开发的软件，他包含运行某个软件所需的所有内容，包括代码、运行时库、环境变量和配置文件</p>
-<h2 id="Docker镜像加载原理"><a href="#Docker镜像加载原理" class="headerlink" title="Docker镜像加载原理"></a><strong>Docker镜像加载原理</strong></h2><h3 id="UnionFs-（联合文件系统）"><a href="#UnionFs-（联合文件系统）" class="headerlink" title="UnionFs （联合文件系统）"></a>UnionFs （联合文件系统）</h3><p>UnionFs（联合文件系统）：Union文件系统（UnionFs）是一种分层、轻量级并且高性能的文件系统，他支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下（ unite several directories into a single virtual filesystem)。Union文件系统是 Docker镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像<br>特性：一次同时加载多个文件系统，但从外面看起来，只能看到一个文件系统，联合加载会把各层文件系统叠加起来，这样最终的文件系统会包含所有底层的文件和目录</p>
-<h3 id="Docker镜像加载原理-1"><a href="#Docker镜像加载原理-1" class="headerlink" title="Docker镜像加载原理"></a>Docker镜像加载原理</h3><p>docker的镜像实际上由一层一层的文件系统组成，这种层级的文件系统UnionFS。<br>boots(boot file system）主要包含 bootloader和 Kernel, bootloader主要是引导加 kernel, Linux刚启动时会加bootfs文件系统，在 Docker镜像的最底层是 boots。这一层与我们典型的Linux/Unix系统是一样的，包含boot加載器和内核。当boot加载完成之后整个内核就都在内存中了，此时内存的使用权已由 bootfs转交给内核，此时系统也会卸载bootfs。<br>rootfs（root file system),在 bootfs之上。包含的就是典型 Linux系统中的/dev,/proc,/bin,/etc等标准目录和文件。 rootfs就是各种不同的操作系统发行版，比如 Ubuntu, Centos等等。<br><img data-src="http://www.qiyunzhou.top/images/docker/3.png"></p>
-<h3 id="分层的镜像"><a href="#分层的镜像" class="headerlink" title="分层的镜像"></a>分层的镜像</h3><p>我们可以去下载一个镜像，注意观察下载的日志输出，可以看到是一层层的在下载</p>
-<p>最大的好处，我觉得莫过于资源共享了！比如有多个镜像都从相同的Base镜像构建而来，那么宿主机只需在磁盘上保留一份base镜像，同时内存中也只需要加载一份base镜像，这样就可以为所有的容器服务了，而且镜像的每一层都可以被共享。</p>
-<p>查看镜像分层的方式可以通过<code>docker image inspect</code> 命令</p>
-<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h3 id="什么是容器数据卷"><a href="#什么是容器数据卷" class="headerlink" title="什么是容器数据卷"></a>什么是容器数据卷</h3><p>当我们在使用docker容器的时候，会产生一系列的数据文件，这些数据文件在我们关闭docker容器时是会消失的，但是其中产生的部分内容我们是希望能够把它给保存起来另作用途的，Docker将应用与运行环境打包成容器发布，我们希望在运行过程钟产生的部分数据是可以持久化的的，而且容器之间我们希望能够实现数据共享。</p>
-<p>通俗地来说，docker容器数据卷可以看成使我们生活中常用的u盘，它存在于一个或多个的容器中，由docker挂载到容器，但不属于联合文件系统，Docker不会在容器删除时删除其挂载的数据卷。</p>
-<h3 id="使用数据卷"><a href="#使用数据卷" class="headerlink" title="使用数据卷"></a>使用数据卷</h3><p>添加数据卷的方式有两种</p>
-<ul>
-<li>第一种是直接通过命令行挂载，<code>-v, --volume list                    Bind mount a volume</code></li>
-<li>第二种是通过dockerFile添加</li>
-</ul>
-<blockquote>
-<p>通过命令挂载</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it -v  /宿主机绝对路径目录:  /容器内目录  -p 主机端口:容器内端口</span><br><span class="line">docker run -it -v /home/ceshi:/home centos /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">通过 docker inspect 容器id 查看</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="具名和匿名挂载"><a href="#具名和匿名挂载" class="headerlink" title="具名和匿名挂载"></a>具名和匿名挂载</h3><h4 id="1-匿名挂载"><a href="#1-匿名挂载" class="headerlink" title="1. 匿名挂载"></a>1. 匿名挂载</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx01 -v /etc/nginx nginx</span></span><br><span class="line"> </span><br><span class="line">//端口映射-p(小写)、-P(大写)区别</span><br><span class="line">-p指定要映射的端口，一个指定端口上只可以绑定一个容器</span><br><span class="line">-P将容器内部开放的网络端口随机映射到宿主机的一个端口上</span><br></pre></td></tr></table></figure>
-
-<p>查看所有volume情况，-v 只写了容器内的路径，没有写容器的路径</p>
-<img data-src="4.png" style="zoom: 80%;" />
-
-<h4 id="2-具名挂载"><a href="#2-具名挂载" class="headerlink" title="2. 具名挂载"></a>2. 具名挂载</h4><p>具名挂载：就是挂载的卷定义一个自己的名字，可以方便的查找</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx02 -v Bertram:/etc/nginx nginx</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker volume ls</span></span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">.....</span><br><span class="line">local               Bertram</span><br></pre></td></tr></table></figure>
-
-<p>查看卷所对应的路径</p>
-<img data-src="5.png" style="zoom: 80%;" />
-
-<p>所有的docker容器内的卷，没有指定目录的情况下都是在 <strong>/data/volumes</strong>目录下</p>
-<h4 id="3-设置权限"><a href="#3-设置权限" class="headerlink" title="3.  设置权限"></a>3.  设置权限</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 通过 -v 容器内路径，ro rw改变读写权限</span></span><br><span class="line">ro readonly  #只读</span><br><span class="line">rw readwrite #可读可写</span><br><span class="line"><span class="meta"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 一旦这个设置了容器权限，容器对我们挂载出来的内容就有了限定</span></span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:ro nginx</span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:rw nginx</span><br><span class="line"><span class="meta">#</span><span class="bash"> 只要看到ro就说明这个路径只能通过宿主机来操作，容器内无法操作。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>Dockerfile 就是用来构建docker镜像的构建文件！命令脚本</p>
-<h3 id="构建步骤："><a href="#构建步骤：" class="headerlink" title="构建步骤："></a>构建步骤：</h3><ul>
-<li><p>编写一个dockerfile文件</p>
-</li>
-<li><p>docker build 构建称为一个镜像</p>
-</li>
-<li><p>docker run运行镜像</p>
-</li>
-<li><p>docker push发布镜像（DockerHub 、阿里云仓库)</p>
-</li>
-</ul>
-<h3 id="DockerFile构建过程"><a href="#DockerFile构建过程" class="headerlink" title="DockerFile构建过程"></a>DockerFile构建过程</h3><p><strong>基础知识：</strong></p>
-<p>1、每个保留关键字(指令）都是必须是大写字母</p>
-<p>2、执行从上到下顺序</p>
-<p>3、#表示注释</p>
-<p>4、每一个指令都会创建提交一个新的镜像层，并提交！</p>
-<p><img data-src="http://www.qiyunzhou.top/images/docker/6.png"></p>
-<h3 id="DockerFile的指令"><a href="#DockerFile的指令" class="headerlink" title="DockerFile的指令"></a>DockerFile的指令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FROM				# 基础镜像，一切从这里开始构建</span><br><span class="line">MAINTAINER			# 镜像是谁写的， 姓名+邮箱</span><br><span class="line">RUN					# 镜像构建的时候需要运行的命令</span><br><span class="line">ADD					# 步骤，tomcat镜像，这个tomcat压缩包！添加内容 添加同目录</span><br><span class="line">WORKDIR				# 镜像的工作目录</span><br><span class="line">VOLUME				# 挂载的目录</span><br><span class="line">EXPOSE				# 保留端口配置</span><br><span class="line">CMD					# 指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代。</span><br><span class="line">ENTRYPOINT			# 指定这个容器启动的时候要运行的命令，可以追加命令</span><br><span class="line">ONBUILD				# 当构建一个被继承 DockerFile 这个时候就会运行ONBUILD的指令，触发指令。</span><br><span class="line">COPY				# 类似ADD，将我们文件拷贝到镜像中</span><br><span class="line">ENV					# 构建的时候设置环境变量！</span><br></pre></td></tr></table></figure>
-
-<h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><blockquote>
-<p>创建一个自己的centos</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.编写Dockerfile文件</span></span><br><span class="line">vim mydockerfile-centos</span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER qyz&lt;15086314018@163.com&gt;</span><br><span class="line"></span><br><span class="line">ENV MYPATH /usr/local</span><br><span class="line">WORKDIR $MYPATH</span><br><span class="line"></span><br><span class="line">RUN yum -y install vim</span><br><span class="line">RUN yum -y install net-tools</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">CMD echo $MYPATH</span><br><span class="line">CMD echo &quot;-----end----&quot;</span><br><span class="line">CMD /bin/bash</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 2、通过这个文件构建镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令 docker build -f 文件路径 -t 镜像名:[tag] .</span></span><br><span class="line">docker build -f mydockerfile-centos -t mycentos:0.1 .</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试运行</strong></p>
-<p><img data-src="http://www.qiyunzhou.top/images/docker/7.png"></p>
-<h3 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h3><table>
-<thead>
-<tr>
-<th>关键字</th>
-<th>作用</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>FROM</td>
-<td>指定父镜像</td>
-<td>指定dockerfile基于那个image构建</td>
-</tr>
-<tr>
-<td>MAINTAINER</td>
-<td>作者信息</td>
-<td>用来标明这个dockerfile谁写的</td>
-</tr>
-<tr>
-<td>LABEL</td>
-<td>标签</td>
-<td>用来标明dockerfile的标签 可以使用Label代替Maintainer 最终都是在docker image基本信息中可以查看</td>
-</tr>
-<tr>
-<td>RUN</td>
-<td>执行命令</td>
-<td>执行一段命令 默认是/bin/sh 格式: RUN command 或者 RUN [“command” , “param1”,”param2”]</td>
-</tr>
-<tr>
-<td>CMD</td>
-<td>容器启动命令</td>
-<td>提供启动容器时候的默认命令 和ENTRYPOINT配合使用.格式 CMD command param1 param2 或者 CMD [“command” , “param1”,”param2”]</td>
-</tr>
-<tr>
-<td>ENTRYPOINT</td>
-<td>入口</td>
-<td>一般在制作一些执行就关闭的容器中会使用</td>
-</tr>
-<tr>
-<td>COPY</td>
-<td>复制文件</td>
-<td>build的时候复制文件到image中</td>
-</tr>
-<tr>
-<td>ADD</td>
-<td>添加文件</td>
-<td>build的时候添加文件到image中 不仅仅局限于当前build上下文 可以来源于远程服务</td>
-</tr>
-<tr>
-<td>ENV</td>
-<td>环境变量</td>
-<td>指定build时候的环境变量 可以在启动的容器的时候 通过-e覆盖 格式ENV name=value</td>
-</tr>
-<tr>
-<td>ARG</td>
-<td>构建参数</td>
-<td>构建参数 只在构建的时候使用的参数 如果有ENV 那么ENV的相同名字的值始终覆盖arg的参数</td>
-</tr>
-<tr>
-<td>VOLUME</td>
-<td>定义外部可以挂载的数据卷</td>
-<td>指定build的image那些目录可以启动的时候挂载到文件系统中 启动容器的时候使用 -v 绑定 格式 VOLUME [“目录”]</td>
-</tr>
-<tr>
-<td>EXPOSE</td>
-<td>暴露端口</td>
-<td>定义容器运行的时候监听的端口 启动容器的使用-p来绑定暴露端口 格式: EXPOSE 8080 或者 EXPOSE 8080/udp</td>
-</tr>
-<tr>
-<td>WORKDIR</td>
-<td>工作目录</td>
-<td>指定容器内部的工作目录 如果没有创建则自动创建 如果指定/ 使用的是绝对地址 如果不是/开头那么是在上一条workdir的路径的相对路径</td>
-</tr>
-<tr>
-<td>USER</td>
-<td>指定执行用户</td>
-<td>指定build或者启动的时候 用户 在RUN CMD ENTRYPONT执行的时候的用户</td>
-</tr>
-<tr>
-<td>HEALTHCHECK</td>
-<td>健康检查</td>
-<td>指定监测当前容器的健康监测的命令 基本上没用 因为很多时候 应用本身有健康监测机制</td>
-</tr>
-<tr>
-<td>ONBUILD</td>
-<td>触发器</td>
-<td>当存在ONBUILD关键字的镜像作为基础镜像的时候 当执行FROM完成之后 会执行 ONBUILD的命令 但是不影响当前镜像 用处也不怎么大</td>
-</tr>
-<tr>
-<td>STOPSIGNAL</td>
-<td>发送信号量到宿主机</td>
-<td>该STOPSIGNAL指令设置将发送到容器的系统调用信号以退出。</td>
-</tr>
-<tr>
-<td>SHELL</td>
-<td>指定执行脚本的shell</td>
-<td>指定RUN CMD ENTRYPOINT 执行命令的时候 使用的shell</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>容器</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -2031,6 +1184,853 @@
       </categories>
       <tags>
         <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mybatis-plus lambda链式调用</title>
+    <url>/post/5/</url>
+    <content><![CDATA[<p>mybatis plus  lambda 链式调用 </p>
+<h3 id="一、LambdaQueryWrapper-lt-gt"><a href="#一、LambdaQueryWrapper-lt-gt" class="headerlink" title="一、LambdaQueryWrapper&lt;&gt;"></a>一、LambdaQueryWrapper&lt;&gt;</h3><h3 id="二、QueryWrapper-lambda"><a href="#二、QueryWrapper-lambda" class="headerlink" title="二、QueryWrapper().lambda()"></a>二、QueryWrapper<T>().lambda()</h3><h3 id="三、Wrappers-lambdaQuery"><a href="#三、Wrappers-lambdaQuery" class="headerlink" title="三、Wrappers.lambdaQuery()"></a>三、Wrappers.<T>lambdaQuery()</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 生成的sql语句 SELECT * FROM user WHERE name LIKE ? AND age &lt; ?</span></span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda = <span class="keyword">new</span> QueryWrapper&lt;User&gt;().lambda();</span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda2 = <span class="keyword">new</span> LambdaQueryWrapper&lt;&gt;();</span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">        lambda3.like(User::getName, <span class="string">&quot;雨&quot;</span>)</span><br><span class="line">            .lt(User::getAge, <span class="number">40</span>);</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectList(lambda3);</span><br><span class="line">        users.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// name like &#x27;王%&#x27; and (age &lt;40 or email in not null)</span></span><br><span class="line">LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">        lambda3.likeRight(User::getName, <span class="string">&quot;王&quot;</span>)</span><br><span class="line">                .and(qw -&gt; qw.lt(User::getAge, <span class="number">40</span>).or().isNotNull(User::getEmail));</span><br><span class="line">        List&lt;User&gt; users = userMapper.selectList(lambda3);</span><br><span class="line">        users.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<h4 id="自定义sql"><a href="#自定义sql" class="headerlink" title="自定义sql"></a>自定义sql</h4><ul>
+<li>DAO</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 自定义sql 使用</span></span><br><span class="line"><span class="comment">    * Dao层  代码：</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Select</span>(&quot;select * from $&#123;ew.customSqlSegment&#125;&quot;)</span></span><br><span class="line"><span class="comment">    * List&lt;User&gt; selectAll(<span class="doctag">@Param</span>(Constants.WRAPPER)Wrapper&lt;User&gt; wrapper);</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectLambda4my</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       LambdaQueryWrapper&lt;User&gt; lambda3 = Wrappers.&lt;User&gt;lambdaQuery();</span><br><span class="line">       lambda3.likeRight(User::getName, <span class="string">&quot;王&quot;</span>)</span><br><span class="line">               .and(qw -&gt; qw.lt(User::getAge, <span class="number">40</span>).or().isNotNull(User::getEmail));</span><br><span class="line">       List&lt;User&gt; users = userMapper.selectAll(lambda3);</span><br><span class="line">       users.forEach(System.out::println);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Mapper</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">List&lt;User&gt; <span class="title">selectAll</span><span class="params">(<span class="meta">@Param(Constants.WRAPPER)</span> Wrapper&lt;User&gt; wrapper)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">        <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">        <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.mp.dao.UserMapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectAll&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">        select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">        select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="四、LambdaQueryChainWrapper-xxxxMapper"><a href="#四、LambdaQueryChainWrapper-xxxxMapper" class="headerlink" title="四、LambdaQueryChainWrapper(xxxxMapper)"></a>四、LambdaQueryChainWrapper<T>(xxxxMapper)</h3><p><em>MP 3.0.7 新增的方式</em></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 生成的sql语句 SELECT * FROM user WHERE name LIKE ? AND age &gt;= ?</span></span><br><span class="line">List&lt;User&gt; users = <span class="keyword">new</span> LambdaQueryChainWrapper&lt;User&gt;(userMapper)</span><br><span class="line">                .like(User::getName, <span class="string">&quot;雨&quot;</span>)</span><br><span class="line">                .ge(User::getAge, <span class="number">20</span>)</span><br><span class="line">                .list();</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、lambda在分页中的应用"><a href="#五、lambda在分页中的应用" class="headerlink" title="五、lambda在分页中的应用"></a>五、lambda在分页中的应用</h3><ul>
+<li>配置类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MybatisPlusConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> MybatisPlusInterceptor <span class="title">mybatisPlusInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        MybatisPlusInterceptor interceptor = <span class="keyword">new</span> MybatisPlusInterceptor();</span><br><span class="line">        <span class="comment">// 格式化sql语句</span></span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;format&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        properties.setProperty(<span class="string">&quot;optimizeJoin&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">        interceptor.addInnerInterceptor(<span class="keyword">new</span> PaginationInnerInterceptor(DbType.MYSQL));</span><br><span class="line">        <span class="keyword">return</span> interceptor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Mapper</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function">IPage&lt;User&gt; <span class="title">selectUserPage</span><span class="params">(Page&lt;User&gt; page,<span class="meta">@Param(Constants.WRAPPER)</span>Wrapper&lt;User&gt; wrapper)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectUserPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.mp.entity.User&quot;</span>&gt;</span></span><br><span class="line">    select * from user $&#123;ew.customSqlSegment&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>demo</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">QueryWrapper&lt;User&gt; queryWrapper = <span class="keyword">new</span> QueryWrapper&lt;User&gt;();</span><br><span class="line">        queryWrapper.ge(<span class="string">&quot;age&quot;</span>, <span class="number">26</span>);</span><br><span class="line">        <span class="comment">//后面参数false  表示不查询总记录数</span></span><br><span class="line">        Page&lt;User&gt; userPage = <span class="keyword">new</span> Page&lt;&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="keyword">false</span>);</span><br><span class="line">        IPage&lt;User&gt; iPage = userMapper.selectUserPage(userPage, queryWrapper);</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>后台</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker</title>
+    <url>/post/2/</url>
+    <content><![CDATA[<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><p><img data-src="http://www.qiyunzhou.top/images/docker/0.png"></p>
+<p><strong>Docker 属于 Linux 容器的一种封装，提供简单易用的容器使用接口。</strong>它是目前最流行的 Linux 容器解决方案。</p>
+<p>Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。</p>
+<p>总体来说，Docker 的接口相当简单，用户可以方便地创建和使用容器，把自己的应用放入容器。容器还可以进行版本管理、复制、分享、修改，就像管理普通的代码一样。</p>
+<span id="more"></span>
+
+<h2 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1、yum 包更新到最新</span> </span><br><span class="line">yum update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2、安装需要的软件包， yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的</span> </span><br><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3、 设置yum源</span></span><br><span class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4、 安装docker，出现输入的界面都按 y</span> </span><br><span class="line">yum install -y docker-ce</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5、 查看docker版本，验证是否验证成功</span></span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<h2 id="卸载Docker"><a href="#卸载Docker" class="headerlink" title="卸载Docker"></a>卸载Docker</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum remove docker-ce docker-ce-cli containerd.io</span><br><span class="line"></span><br><span class="line">rm -rf /var/lib/docker#docker默认工作路径</span><br></pre></td></tr></table></figure>
+
+<p>阿里云配置Docker镜像加速</p>
+<p><img data-src="http://www.qiyunzhou.top/images/docker/1.png"></p>
+<h2 id="Docker基本组成"><a href="#Docker基本组成" class="headerlink" title="Docker基本组成"></a>Docker基本组成</h2><p><img data-src="http://www.qiyunzhou.top/images/docker/2.png"></p>
+<p><strong>镜像(image):</strong></p>
+<p>docker镜像好比一个模板,可以通过这个模板来创建容器服务,tomcat镜像===&gt;run ==&gt;tomcat01容器(提供服务器)</p>
+<p>通过这个镜像可以创建多个容器(最终服务运行或者项目运行就是在容器中的)</p>
+<p><strong>容器(container):</strong></p>
+<p>Docker利用容器技术,独立运行一个或者一个组应用,通过镜像来创建的</p>
+<p>启动,停止,删除,基本命令!</p>
+<p><strong>仓库(repository):</strong></p>
+<p>仓库就是存放镜像的地方!</p>
+<p>仓库分为共有仓库和私有仓库</p>
+<p>Docker Hub(默认是国外的)</p>
+<p>阿里云… 都有容器服务器(配置镜像加速)</p>
+<h2 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a>Docker常用命令</h2><h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">docker版本</span> </span><br><span class="line">docker version </span><br><span class="line"><span class="meta">#</span><span class="bash">显示docker的系统信息,包括镜像和容器的数量</span></span><br><span class="line">docker info </span><br><span class="line"><span class="meta">#</span><span class="bash">查看某个具体的命令</span></span><br><span class="line">docker [命令] --help  </span><br></pre></td></tr></table></figure>
+
+<h3 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看下载的所有镜像</span></span><br><span class="line">docker docker </span><br><span class="line"><span class="meta">#</span><span class="bash">搜索镜像</span></span><br><span class="line">docker search</span><br><span class="line"><span class="meta">#</span><span class="bash">下载镜像</span></span><br><span class="line">docker pull </span><br><span class="line"><span class="meta">#</span><span class="bash">删除镜像</span></span><br><span class="line">docker rmi </span><br></pre></td></tr></table></figure>
+
+<h3 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h3><p>说明 : 有了镜像才可以创建容器</p>
+<h4 id="容器常用命令"><a href="#容器常用命令" class="headerlink" title="容器常用命令"></a>容器常用命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull #下载镜像 docker image pull</span><br><span class="line"></span><br><span class="line">docker rmi #删除镜像 docker image rm</span><br><span class="line"></span><br><span class="line">docker docker</span><br><span class="line"></span><br><span class="line">docker docker -a  #列出所有镜像详细信息</span><br><span class="line">docker docker -aq #列出所有镜像的id</span><br><span class="line">docker search mysql #查询网上的mysql的镜像 </span><br><span class="line"><span class="meta">#</span><span class="bash">  --filter=STARS=3000 <span class="comment">#过滤，搜索出来的镜像收藏STARS数量大于3000的</span></span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">等价于</span></span><br><span class="line">docker pull tomcat:8</span><br><span class="line">docker pull docker.io/library/tomcat:8</span><br><span class="line"></span><br><span class="line">docker rmi -f 镜像id #删除指定id的镜像</span><br><span class="line">docker rmi -f $(docker docker -aq) #删除全部的镜像</span><br><span class="line">docker stop $(docker ps -a -q) #停止所有的容器</span><br><span class="line">docker pull centos        #docker中下载centos</span><br><span class="line">docker run 镜像id         #新建容器并启动</span><br><span class="line">docker container list -a  # 查看所有的容器</span><br><span class="line">docker ps -a              # 查看所有的容器</span><br><span class="line">docker rm 容器id          #删除指定容器</span><br><span class="line">docker start 容器id	      #启动容器</span><br><span class="line">docker restart 容器id     #重启容器</span><br><span class="line">docker stop 容器id	      #停止当前正在运行的容器</span><br><span class="line">docker kill 容器id	      #强制停止当前容器</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run [可选参数] image | docker container run [可选参数] image </span><br><span class="line"><span class="meta">#</span><span class="bash">参书说明</span></span><br><span class="line">--name=&quot;Name&quot;		#容器名字 tomcat01 tomcat02 用来区分容器</span><br><span class="line">-d					#后台方式运行</span><br><span class="line">-it 				#使用交互方式运行，进入容器查看内容</span><br><span class="line">-p					#指定容器的端口 -p 8080(宿主机):8080(容器)</span><br><span class="line">		-p ip:主机端口:容器端口</span><br><span class="line">		-p 主机端口:容器端口(常用)</span><br><span class="line">		-p 容器端口</span><br><span class="line">		容器端口</span><br><span class="line">-P(大写) 				随机指定端口</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it centos /bin/bash # 测试、启动并进入容器</span><br><span class="line"></span><br><span class="line">exit #从容器退回主机</span><br><span class="line"></span><br><span class="line">docker ps 命令  		#列出当前正在运行的容器 还没退出的（exit）</span><br><span class="line">  -a, --all     	 #列出当前正在运行的容器 + 带出历史运行过的容器</span><br><span class="line">  -n=?, --last int   #列出最近创建的?个容器 ?为1则只列出最近创建的一个容器,为2则列出2个</span><br><span class="line">  -q, --quiet        #只列出容器的编号</span><br></pre></td></tr></table></figure>
+
+<h4 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">exit 		#容器直接退出</span><br><span class="line">ctrl +P +Q  #容器不停止退出 	---注意：这个很有用的操作</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker rm 容器id   				#删除指定的容器，不能删除正在运行的容器，如果要强制删除 rm -rf</span><br><span class="line">docker rm -f $(docker ps -aq)  	 #删除所有的容器</span><br><span class="line">docker ps -a -q|xargs docker rm  #删除所有的容器</span><br></pre></td></tr></table></figure>
+
+<h4 id="后台启动命令"><a href="#后台启动命令" class="headerlink" title="后台启动命令"></a>后台启动命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -d centos #这都是看不到信息的</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 问题docker ps. 发现centos 停止了</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 常见的坑，docker容器使用后台运行，就必须要有要一个前台进程，docker发现没有应用，就会自动停止</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> nginx，容器启动后，发现自己没有提供服务，就会立刻停止，就是没有程序了</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="查看日志"><a href="#查看日志" class="headerlink" title="查看日志"></a>查看日志</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker logs --help</span><br><span class="line">Options:</span><br><span class="line">      --details        Show extra details provided to logs </span><br><span class="line">*  -f, --follow         Follow log output</span><br><span class="line">      --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">*      --tail string    Number of lines to show from the end of the logs (default &quot;all&quot;)</span><br><span class="line">*  -t, --timestamps     Show timestamps</span><br><span class="line">      --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37) or relative (e.g. 42m for 42 minutes)</span><br><span class="line">➜  ~ docker run -d centos /bin/sh -c &quot;while true;do echo 6666;sleep 1;done&quot; #模拟日志      </span><br><span class="line"><span class="meta">#</span><span class="bash">显示日志</span></span><br><span class="line">-tf		#显示日志信息（一直更新）</span><br><span class="line">--tail number #需要显示日志条数</span><br><span class="line">docker logs -t --tail n 容器id #查看n行日志</span><br><span class="line">docker logs -ft 容器id #跟着日志</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看容器进程信息"><a href="#查看容器进程信息" class="headerlink" title="查看容器进程信息"></a>查看容器进程信息</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看容器中进程信息ps</span></span><br><span class="line">docker top 容器id</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看镜像的元数据"><a href="#查看镜像的元数据" class="headerlink" title="查看镜像的元数据"></a>查看镜像的元数据</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker inspect 容器id</span><br><span class="line">docker inspect 镜像id</span><br></pre></td></tr></table></figure>
+
+<h4 id="进入当前正在运行的容器"><a href="#进入当前正在运行的容器" class="headerlink" title="进入当前正在运行的容器"></a>进入当前正在运行的容器</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 方式一</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 进入当前正在运行的容器</span></span><br><span class="line">docker exec -it 容器id bashshell</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 方式二</span></span><br><span class="line">docker attach 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">测试</span></span><br><span class="line">docker attach 55321bcae33d </span><br><span class="line">正在执行当前的代码...</span><br><span class="line">区别</span><br><span class="line"><span class="meta">#</span><span class="bash">docker <span class="built_in">exec</span> <span class="comment">#进入当前容器后开启一个新的终端，可以在里面操作。（常用）</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">docker attach <span class="comment"># 进入容器正在执行的终端</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="从容器内拷贝内容到主机上"><a href="#从容器内拷贝内容到主机上" class="headerlink" title="从容器内拷贝内容到主机上"></a>从容器内拷贝内容到主机上</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">先进入到容器中</span></span><br><span class="line">docker exec -it 56a5583b25b4 /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">再创建一个新文件</span></span><br><span class="line">echo &quot;hello&quot; &gt; hello.java # &quot;hello&quot;是内容 hello.java是文件名（souce命令用不了）</span><br><span class="line"><span class="meta">#</span><span class="bash">测试文件是否存在了</span></span><br><span class="line">cat hello.java </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">将容器中的文件拷贝到主机上</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker cp 容器名:容器内文件 主机上的路径</span></span><br><span class="line">docker cp 9035020356a4:/java.java /home</span><br></pre></td></tr></table></figure>
+
+<h4 id="命令大全"><a href="#命令大全" class="headerlink" title="命令大全"></a>命令大全</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">attach      Attach local standard input, output, and error streams to a running container</span><br><span class="line"><span class="meta">#</span><span class="bash">当前shell下 attach连接指定运行的镜像</span></span><br><span class="line">build       Build an image from a Dockerfile # 通过Dockerfile定制镜像</span><br><span class="line">commit      Create a new image from a container&#x27;s changes #提交当前容器为新的镜像</span><br><span class="line">cp          Copy files/folders between a container and the local filesystem #拷贝文件</span><br><span class="line">create      Create a new container #创建一个新的容器</span><br><span class="line">diff        Inspect changes to files or directories on a container&#x27;s filesystem #查看docker容器的变化</span><br><span class="line">events      Get real time events from the server # 从服务获取容器实时时间</span><br><span class="line">exec        Run a command in a running container # 在运行中的容器上运行命令</span><br><span class="line">export      Export a container&#x27;s filesystem as a tar archive #导出容器文件系统作为一个tar归档文件[对应import]</span><br><span class="line">history     Show the history of an image # 展示一个镜像形成历史</span><br><span class="line">docker      List docker #列出系统当前的镜像</span><br><span class="line">import      Import the contents from a tarball to create a filesystem image #从tar包中导入内容创建一个文件系统镜像</span><br><span class="line">info        Display system-wide information # 显示全系统信息</span><br><span class="line">inspect     Return low-level information on Docker objects #查看容器详细信息</span><br><span class="line">kill        Kill one or more running containers # kill指定docker容器</span><br><span class="line">load        Load an image from a tar archive or STDIN #从一个tar包或标准输入中加载一个镜像[对应save]</span><br><span class="line">login       Log in to a Docker registry #</span><br><span class="line">logout      Log out from a Docker registry</span><br><span class="line">logs        Fetch the logs of a container</span><br><span class="line">pause       Pause all processes within one or more containers</span><br><span class="line">port        List port mappings or a specific mapping for the container</span><br><span class="line">ps          List containers</span><br><span class="line">pull        Pull an image or a repository from a registry</span><br><span class="line">push        Push an image or a repository to a registry</span><br><span class="line">rename      Rename a container</span><br><span class="line">restart     Restart one or more containers</span><br><span class="line">rm          Remove one or more containers</span><br><span class="line">rmi         Remove one or more docker</span><br><span class="line">run         Run a command in a new container</span><br><span class="line">save        Save one or more docker to a tar archive (streamed to STDOUT by default)</span><br><span class="line">search      Search the Docker Hub for docker</span><br><span class="line">start       Start one or more stopped containers</span><br><span class="line">stats       Display a live stream of container(s) resource usage statistics</span><br><span class="line">stop        Stop one or more running containers</span><br><span class="line">tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE</span><br><span class="line">top         Display the running processes of a container</span><br><span class="line">unpause     Unpause all processes within one or more containers</span><br><span class="line">update      Update configuration of one or more containers</span><br><span class="line">version     Show the Docker version information</span><br><span class="line">wait        Block until one or more containers stop, then print their exit codes</span><br></pre></td></tr></table></figure>
+
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p><img data-src="http://www.qiyunzhou.top/images/docker/8.png"></p>
+<h2 id="Docker镜像讲解"><a href="#Docker镜像讲解" class="headerlink" title="Docker镜像讲解"></a>Docker镜像讲解</h2><h3 id="镜像是什么"><a href="#镜像是什么" class="headerlink" title="镜像是什么"></a><strong>镜像是什么</strong></h3><p>镜像是一种轻量级、可执行的独立软件保，用来打包软件运行环境和基于运行环境开发的软件，他包含运行某个软件所需的所有内容，包括代码、运行时库、环境变量和配置文件</p>
+<h2 id="Docker镜像加载原理"><a href="#Docker镜像加载原理" class="headerlink" title="Docker镜像加载原理"></a><strong>Docker镜像加载原理</strong></h2><h3 id="UnionFs-（联合文件系统）"><a href="#UnionFs-（联合文件系统）" class="headerlink" title="UnionFs （联合文件系统）"></a>UnionFs （联合文件系统）</h3><p>UnionFs（联合文件系统）：Union文件系统（UnionFs）是一种分层、轻量级并且高性能的文件系统，他支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下（ unite several directories into a single virtual filesystem)。Union文件系统是 Docker镜像的基础。镜像可以通过分层来进行继承，基于基础镜像（没有父镜像），可以制作各种具体的应用镜像<br>特性：一次同时加载多个文件系统，但从外面看起来，只能看到一个文件系统，联合加载会把各层文件系统叠加起来，这样最终的文件系统会包含所有底层的文件和目录</p>
+<h3 id="Docker镜像加载原理-1"><a href="#Docker镜像加载原理-1" class="headerlink" title="Docker镜像加载原理"></a>Docker镜像加载原理</h3><p>docker的镜像实际上由一层一层的文件系统组成，这种层级的文件系统UnionFS。<br>boots(boot file system）主要包含 bootloader和 Kernel, bootloader主要是引导加 kernel, Linux刚启动时会加bootfs文件系统，在 Docker镜像的最底层是 boots。这一层与我们典型的Linux/Unix系统是一样的，包含boot加載器和内核。当boot加载完成之后整个内核就都在内存中了，此时内存的使用权已由 bootfs转交给内核，此时系统也会卸载bootfs。<br>rootfs（root file system),在 bootfs之上。包含的就是典型 Linux系统中的/dev,/proc,/bin,/etc等标准目录和文件。 rootfs就是各种不同的操作系统发行版，比如 Ubuntu, Centos等等。<br><img data-src="http://www.qiyunzhou.top/images/docker/3.png"></p>
+<h3 id="分层的镜像"><a href="#分层的镜像" class="headerlink" title="分层的镜像"></a>分层的镜像</h3><p>我们可以去下载一个镜像，注意观察下载的日志输出，可以看到是一层层的在下载</p>
+<p>最大的好处，我觉得莫过于资源共享了！比如有多个镜像都从相同的Base镜像构建而来，那么宿主机只需在磁盘上保留一份base镜像，同时内存中也只需要加载一份base镜像，这样就可以为所有的容器服务了，而且镜像的每一层都可以被共享。</p>
+<p>查看镜像分层的方式可以通过<code>docker image inspect</code> 命令</p>
+<h2 id="容器数据卷"><a href="#容器数据卷" class="headerlink" title="容器数据卷"></a>容器数据卷</h2><h3 id="什么是容器数据卷"><a href="#什么是容器数据卷" class="headerlink" title="什么是容器数据卷"></a>什么是容器数据卷</h3><p>当我们在使用docker容器的时候，会产生一系列的数据文件，这些数据文件在我们关闭docker容器时是会消失的，但是其中产生的部分内容我们是希望能够把它给保存起来另作用途的，Docker将应用与运行环境打包成容器发布，我们希望在运行过程钟产生的部分数据是可以持久化的的，而且容器之间我们希望能够实现数据共享。</p>
+<p>通俗地来说，docker容器数据卷可以看成使我们生活中常用的u盘，它存在于一个或多个的容器中，由docker挂载到容器，但不属于联合文件系统，Docker不会在容器删除时删除其挂载的数据卷。</p>
+<h3 id="使用数据卷"><a href="#使用数据卷" class="headerlink" title="使用数据卷"></a>使用数据卷</h3><p>添加数据卷的方式有两种</p>
+<ul>
+<li>第一种是直接通过命令行挂载，<code>-v, --volume list                    Bind mount a volume</code></li>
+<li>第二种是通过dockerFile添加</li>
+</ul>
+<blockquote>
+<p>通过命令挂载</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run -it -v  /宿主机绝对路径目录:  /容器内目录  -p 主机端口:容器内端口</span><br><span class="line">docker run -it -v /home/ceshi:/home centos /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">通过 docker inspect 容器id 查看</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="具名和匿名挂载"><a href="#具名和匿名挂载" class="headerlink" title="具名和匿名挂载"></a>具名和匿名挂载</h3><h4 id="1-匿名挂载"><a href="#1-匿名挂载" class="headerlink" title="1. 匿名挂载"></a>1. 匿名挂载</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx01 -v /etc/nginx nginx</span></span><br><span class="line"> </span><br><span class="line">//端口映射-p(小写)、-P(大写)区别</span><br><span class="line">-p指定要映射的端口，一个指定端口上只可以绑定一个容器</span><br><span class="line">-P将容器内部开放的网络端口随机映射到宿主机的一个端口上</span><br></pre></td></tr></table></figure>
+
+<p>查看所有volume情况，-v 只写了容器内的路径，没有写容器的路径</p>
+<img data-src="4.png" style="zoom: 80%;" />
+
+<h4 id="2-具名挂载"><a href="#2-具名挂载" class="headerlink" title="2. 具名挂载"></a>2. 具名挂载</h4><p>具名挂载：就是挂载的卷定义一个自己的名字，可以方便的查找</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run -d -P --name nginx02 -v Bertram:/etc/nginx nginx</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> docker volume ls</span></span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">.....</span><br><span class="line">local               Bertram</span><br></pre></td></tr></table></figure>
+
+<p>查看卷所对应的路径</p>
+<img data-src="5.png" style="zoom: 80%;" />
+
+<p>所有的docker容器内的卷，没有指定目录的情况下都是在 <strong>/data/volumes</strong>目录下</p>
+<h4 id="3-设置权限"><a href="#3-设置权限" class="headerlink" title="3.  设置权限"></a>3.  设置权限</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 通过 -v 容器内路径，ro rw改变读写权限</span></span><br><span class="line">ro readonly  #只读</span><br><span class="line">rw readwrite #可读可写</span><br><span class="line"><span class="meta"> </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 一旦这个设置了容器权限，容器对我们挂载出来的内容就有了限定</span></span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:ro nginx</span><br><span class="line">docker run -d -P --name nginx02 -v Bertram:/etc/nginx:rw nginx</span><br><span class="line"><span class="meta">#</span><span class="bash"> 只要看到ro就说明这个路径只能通过宿主机来操作，容器内无法操作。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h2><p>Dockerfile 就是用来构建docker镜像的构建文件！命令脚本</p>
+<h3 id="构建步骤："><a href="#构建步骤：" class="headerlink" title="构建步骤："></a>构建步骤：</h3><ul>
+<li><p>编写一个dockerfile文件</p>
+</li>
+<li><p>docker build 构建称为一个镜像</p>
+</li>
+<li><p>docker run运行镜像</p>
+</li>
+<li><p>docker push发布镜像（DockerHub 、阿里云仓库)</p>
+</li>
+</ul>
+<h3 id="DockerFile构建过程"><a href="#DockerFile构建过程" class="headerlink" title="DockerFile构建过程"></a>DockerFile构建过程</h3><p><strong>基础知识：</strong></p>
+<p>1、每个保留关键字(指令）都是必须是大写字母</p>
+<p>2、执行从上到下顺序</p>
+<p>3、#表示注释</p>
+<p>4、每一个指令都会创建提交一个新的镜像层，并提交！</p>
+<p><img data-src="http://www.qiyunzhou.top/images/docker/6.png"></p>
+<h3 id="DockerFile的指令"><a href="#DockerFile的指令" class="headerlink" title="DockerFile的指令"></a>DockerFile的指令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">FROM				# 基础镜像，一切从这里开始构建</span><br><span class="line">MAINTAINER			# 镜像是谁写的， 姓名+邮箱</span><br><span class="line">RUN					# 镜像构建的时候需要运行的命令</span><br><span class="line">ADD					# 步骤，tomcat镜像，这个tomcat压缩包！添加内容 添加同目录</span><br><span class="line">WORKDIR				# 镜像的工作目录</span><br><span class="line">VOLUME				# 挂载的目录</span><br><span class="line">EXPOSE				# 保留端口配置</span><br><span class="line">CMD					# 指定这个容器启动的时候要运行的命令，只有最后一个会生效，可被替代。</span><br><span class="line">ENTRYPOINT			# 指定这个容器启动的时候要运行的命令，可以追加命令</span><br><span class="line">ONBUILD				# 当构建一个被继承 DockerFile 这个时候就会运行ONBUILD的指令，触发指令。</span><br><span class="line">COPY				# 类似ADD，将我们文件拷贝到镜像中</span><br><span class="line">ENV					# 构建的时候设置环境变量！</span><br></pre></td></tr></table></figure>
+
+<h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><blockquote>
+<p>创建一个自己的centos</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.编写Dockerfile文件</span></span><br><span class="line">vim mydockerfile-centos</span><br><span class="line">FROM centos</span><br><span class="line">MAINTAINER qyz&lt;15086314018@163.com&gt;</span><br><span class="line"></span><br><span class="line">ENV MYPATH /usr/local</span><br><span class="line">WORKDIR $MYPATH</span><br><span class="line"></span><br><span class="line">RUN yum -y install vim</span><br><span class="line">RUN yum -y install net-tools</span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">CMD echo $MYPATH</span><br><span class="line">CMD echo &quot;-----end----&quot;</span><br><span class="line">CMD /bin/bash</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 2、通过这个文件构建镜像</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 命令 docker build -f 文件路径 -t 镜像名:[tag] .</span></span><br><span class="line">docker build -f mydockerfile-centos -t mycentos:0.1 .</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试运行</strong></p>
+<p><img data-src="http://www.qiyunzhou.top/images/docker/7.png"></p>
+<h3 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h3><table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FROM</td>
+<td>指定父镜像</td>
+<td>指定dockerfile基于那个image构建</td>
+</tr>
+<tr>
+<td>MAINTAINER</td>
+<td>作者信息</td>
+<td>用来标明这个dockerfile谁写的</td>
+</tr>
+<tr>
+<td>LABEL</td>
+<td>标签</td>
+<td>用来标明dockerfile的标签 可以使用Label代替Maintainer 最终都是在docker image基本信息中可以查看</td>
+</tr>
+<tr>
+<td>RUN</td>
+<td>执行命令</td>
+<td>执行一段命令 默认是/bin/sh 格式: RUN command 或者 RUN [“command” , “param1”,”param2”]</td>
+</tr>
+<tr>
+<td>CMD</td>
+<td>容器启动命令</td>
+<td>提供启动容器时候的默认命令 和ENTRYPOINT配合使用.格式 CMD command param1 param2 或者 CMD [“command” , “param1”,”param2”]</td>
+</tr>
+<tr>
+<td>ENTRYPOINT</td>
+<td>入口</td>
+<td>一般在制作一些执行就关闭的容器中会使用</td>
+</tr>
+<tr>
+<td>COPY</td>
+<td>复制文件</td>
+<td>build的时候复制文件到image中</td>
+</tr>
+<tr>
+<td>ADD</td>
+<td>添加文件</td>
+<td>build的时候添加文件到image中 不仅仅局限于当前build上下文 可以来源于远程服务</td>
+</tr>
+<tr>
+<td>ENV</td>
+<td>环境变量</td>
+<td>指定build时候的环境变量 可以在启动的容器的时候 通过-e覆盖 格式ENV name=value</td>
+</tr>
+<tr>
+<td>ARG</td>
+<td>构建参数</td>
+<td>构建参数 只在构建的时候使用的参数 如果有ENV 那么ENV的相同名字的值始终覆盖arg的参数</td>
+</tr>
+<tr>
+<td>VOLUME</td>
+<td>定义外部可以挂载的数据卷</td>
+<td>指定build的image那些目录可以启动的时候挂载到文件系统中 启动容器的时候使用 -v 绑定 格式 VOLUME [“目录”]</td>
+</tr>
+<tr>
+<td>EXPOSE</td>
+<td>暴露端口</td>
+<td>定义容器运行的时候监听的端口 启动容器的使用-p来绑定暴露端口 格式: EXPOSE 8080 或者 EXPOSE 8080/udp</td>
+</tr>
+<tr>
+<td>WORKDIR</td>
+<td>工作目录</td>
+<td>指定容器内部的工作目录 如果没有创建则自动创建 如果指定/ 使用的是绝对地址 如果不是/开头那么是在上一条workdir的路径的相对路径</td>
+</tr>
+<tr>
+<td>USER</td>
+<td>指定执行用户</td>
+<td>指定build或者启动的时候 用户 在RUN CMD ENTRYPONT执行的时候的用户</td>
+</tr>
+<tr>
+<td>HEALTHCHECK</td>
+<td>健康检查</td>
+<td>指定监测当前容器的健康监测的命令 基本上没用 因为很多时候 应用本身有健康监测机制</td>
+</tr>
+<tr>
+<td>ONBUILD</td>
+<td>触发器</td>
+<td>当存在ONBUILD关键字的镜像作为基础镜像的时候 当执行FROM完成之后 会执行 ONBUILD的命令 但是不影响当前镜像 用处也不怎么大</td>
+</tr>
+<tr>
+<td>STOPSIGNAL</td>
+<td>发送信号量到宿主机</td>
+<td>该STOPSIGNAL指令设置将发送到容器的系统调用信号以退出。</td>
+</tr>
+<tr>
+<td>SHELL</td>
+<td>指定执行脚本的shell</td>
+<td>指定RUN CMD ENTRYPOINT 执行命令的时候 使用的shell</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>容器</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>long类型的id属性传到前端会精度丢失的解决方案</title>
+    <url>/post/6/</url>
+    <content><![CDATA[<h1 id="long类型的id属性传到前端会精度丢失的解决方案"><a href="#long类型的id属性传到前端会精度丢失的解决方案" class="headerlink" title="long类型的id属性传到前端会精度丢失的解决方案"></a>long类型的id属性传到前端会精度丢失的解决方案</h1><p>数据库id由varchar类型改为number后，使用mybatis-plus雪花算法生成id，从数据库查询出来都是正常的，但是传给前端的时候发生了失真。<strong>JSON字符串转JS对象，JSON中的数字会转为 number 类型， number 类型的精度是16位，但是雪花算法生成的id长度有19位，so后面的几位精度就丢失了</strong>。如果想要前端不丢失精度，JSON中的id就不能是long类型，改为String类型就好了。</p>
+<p>一、在实体类的id属性上面加上注解 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@JsonSerialize(using = ToStringSerializer.class)</span></span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>二、添加全局配置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JacksonConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="meta">@Primary</span></span><br><span class="line">  <span class="meta">@ConditionalOnMissingBean(ObjectMapper.class)</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> ObjectMapper <span class="title">jacksonObjectMapper</span><span class="params">(Jackson2ObjectMapperBuilder builder)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 若若POJO对象的属性值为null，序列化时不进行显示</span></span><br><span class="line">    builder.serializationInclusion(JsonInclude.Include.NON_NULL);</span><br><span class="line">    <span class="comment">// Include.NON_EMPTY,若POJO对象的属性值为&quot;&quot;，序列化时不进行显示</span></span><br><span class="line">    builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);</span><br><span class="line">    <span class="comment">//DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES相当于配置，JSON串含有未知字段时，反序列化依旧可以成功</span></span><br><span class="line">    builder.failOnUnknownProperties(<span class="keyword">false</span>);</span><br><span class="line">    <span class="comment">//序列化时的命名策略——驼峰命名法</span></span><br><span class="line">    builder.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);</span><br><span class="line">    <span class="comment">//针对于Date类型，文本格式化</span></span><br><span class="line">    builder.simpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//针对于JDK新时间类。序列化时带有T的问题，自定义格式化字符串</span></span><br><span class="line">    JavaTimeModule javaTimeModule = <span class="keyword">new</span> JavaTimeModule();</span><br><span class="line">    javaTimeModule.addSerializer(LocalDateTime.class, <span class="keyword">new</span> LocalDateTimeSerializer(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)));</span><br><span class="line">    javaTimeModule.addDeserializer(LocalDateTime.class, <span class="keyword">new</span> LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>)));</span><br><span class="line">    builder.modules(javaTimeModule);</span><br><span class="line"></span><br><span class="line">    ObjectMapper objectMapper = builder.createXmlMapper(<span class="keyword">false</span>).build();</span><br><span class="line">    <span class="comment">// 全局配置序列化返回 JSON 处理</span></span><br><span class="line">    SimpleModule simpleModule = <span class="keyword">new</span> SimpleModule();</span><br><span class="line">    <span class="comment">//JSON Long ==&gt; String</span></span><br><span class="line">    simpleModule.addSerializer(Long.class, ToStringSerializer.instance);</span><br><span class="line">    <span class="comment">// BigDecimal ==&gt; String</span></span><br><span class="line">    simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);</span><br><span class="line">    objectMapper.registerModule(simpleModule);</span><br><span class="line">    <span class="keyword">return</span> objectMapper;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三、在application.yml中加上以下配置，这个办法会将所有数字都变成字符串，包括<code>long</code> 和<code>int</code> 类型</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  jackson:</span><br><span class="line">    generator:</span><br><span class="line">      writeNumbersAsStrings: <span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Bug</category>
+      </categories>
+      <tags>
+        <tag>Bug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>quartz</title>
+    <url>/post/6fe218f0/</url>
+    <content><![CDATA[<h1 id="Quartz"><a href="#Quartz" class="headerlink" title="Quartz"></a>Quartz</h1><p>[官网](<a href="http://www.quartz-scheduler.org/">Quartz Enterprise Job Scheduler (quartz-scheduler.org)</a>)</p>
+<h2 id="一-依赖"><a href="#一-依赖" class="headerlink" title="一. 依赖"></a>一. 依赖</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;!-- quartz --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-quartz&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="quartz.assets/1-16394964071901.png"></p>
+<p>一个调度器scheduler可以调用多个触发器trigger，一个trigger只能关联一个jobDetail，而一个jobDetail可以被多个trigger引用；一个job又可以被多个jobDetail引用。</p>
+<p><strong>CoreTrigger</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">CalendarIntervalTriggerImpl (org.quartz.impl.triggers)</span><br><span class="line">SimpleTriggerImpl (org.quartz.impl.triggers)</span><br><span class="line">DailyTimeIntervalTriggerImpl (org.quartz.impl.triggers)</span><br><span class="line">CronTriggerImpl (org.quartz.impl.triggers)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二-Cron表达式"><a href="#二-Cron表达式" class="headerlink" title="二.Cron表达式"></a>二.Cron表达式</h2><h3 id="1-结构"><a href="#1-结构" class="headerlink" title="1.结构"></a>1.结构</h3><p>corn从左到右（用空格隔开）：秒 分 小时 月份中的日期 月份 星期中的日期 年份</p>
+<h3 id="2-各字段的含义"><a href="#2-各字段的含义" class="headerlink" title="2. 各字段的含义"></a>2. 各字段的含义</h3><img data-src="quartz.assets/2.png" style="zoom:80%;" />
+
+
+
+<p>“*“字符用于指定所有值。例如，分钟字段中的”*”表示”每分钟”。<br>“?”在日和星期字段允许使用。它用于指定”无特定值”。<br>“-“字符用于指定范围。例如，小时字段中的”10-12”表示”小时10、11和12”。<br>“,”字符用于指定其他值。例如，”星期几”字段中的”MON, WED, FRI”表示”星期一，星期三和星期五的日子”；<br>        “/“字符用于指定增量。例如，秒字段中的”0/15”表示”秒0、15、30和45”;秒字段中的”5/15”表示”秒5、20、35和50”。<br>        在”/“之前指定”*“等同于指定0为开头的值。本质上，对于表达式中的每个字段，都有一组可以打开或关闭的数字。<br>        对于秒和分钟，数字范围为0到59。对于小时0到23,对于每月的0到31,以及对于月0到11 （JAN至DEC）。<br>        “/“字符可以帮助您打开给定集合中的每个”第n个”值。因此，”月”字段中的”7/6”仅打开”7”月，并不意味着每6个月一次。</p>
+<p>“月”和”周”字段中允许使用”L”字符。该字符是”last”的简写，但在两个字段中每个都有不同的含义。<br>        例如，”月”字段中的值” L表示”月的最后一天、即非润年的1月31日，2月28日。<br>        如果单独在”星期几”字段中使用，则仅表示”7”或”SAT”（周六）。<br>        但是，如果在星期几字段中使用另一个值，则表示”该月的最后一个xxx天”一例如，”6L表示”该月的最后一个星期五”。<br>        还可以指定与该月最后一天的偏移量，例如”L-3”,这表示日历月的倒数第三天。<br>        使用”L”选项时，不要指定列表或值的范围很重要，因为这样会导致混淆/意外结果。</p>
+<p>“日”字段中允许使用”W”字符。此字符用于指定最接近给定日期的工作日（星期一至星期五）。<br>        例如，如果要指定”15W”作为”月日”字段的值，则含义是:离月15日最近的工作日”。<br>        因此，如果15号是星期六，那么触发器将在14号星期五触发。<br>        如果15日是星期日，则触发器将在16日星期一触发。如果15号是星期二，那么它将在15号星期二触发。<br>        但是，如果将”1W”指定为月份的值，而1号是星期六，则触发器将在第3天，星期一触发，因为它不会”跳过”一个月日的边界。<br>        仅当月份中的某天是一天，而不是范围或天数列表时，才可以指定”W”字符。</p>
+<p>还可将”L”和”W”字符组合为一个月中的一天的表达式，以产生”LW”,这表示”该月的最后一个工作日”。<br>“星期几”字段允许使用”#”字符。此字符用于指定月份的”第n个”XXX天。<br>        例如，”星期几”字段中的”6#3”的值表示该月的第三个星期五（第6天=星期五，”#3”=该月的第三个星期五）。<br>        其他示例：”2#1”=该月的第一个星期一，”4#5”=该月的第五个星期三。<br>        请注意，如果您指定”#5”，并且该月的指定星期几中没有5个，则该月将不会触发。<br>        如果使用”#”字符，则”星期几”字段中只能有一个表达式（”3#1,6#3”无效，因为有两个表达式）。</p>
+<p>法定字符以及月份和星期几的名称不区分大小写。<br>笔记：<br>支持同时指定星期几和每月某天的值还不完整（您需要在这些字段之一中使用”?”字符）。<br>支持溢出范围-也就是说，左侧的数字大于右侧的数字。您可能会在晚上10点到凌晨2点做22-2,以赶上晚上10点，或者您可能有NOV-FEB。<br>        非常重要的一点是要注意，溢出范国的过度使用会创建没有意义的范围，并且不能确定CronExpression选择哪种解释。<br>        例如”0 0 14-6? * FRI-MON”。</p>
+<h2 id="三-Sample-Application"><a href="#三-Sample-Application" class="headerlink" title="三. Sample Application"></a>三. Sample Application</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Grab the Scheduler instance from the Factory</span></span><br><span class="line">    Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// and start it off</span></span><br><span class="line">    scheduler.start();</span><br><span class="line">    <span class="comment">// define the job and tie it to our HelloJob class</span></span><br><span class="line">    JobDetail job = JobBuilder.newJob(HelloJob.class)</span><br><span class="line">        .withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Trigger the job to run now, and then repeat every 40 seconds</span></span><br><span class="line">    Trigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">        .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">        .startNow()</span><br><span class="line">        .withSchedule(simpleSchedule()</span><br><span class="line">                      .withIntervalInSeconds(<span class="number">40</span>)</span><br><span class="line">                      .repeatForever())</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Tell quartz to schedule the job using our trigger</span></span><br><span class="line">    scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line">    TimeUnit.SECONDS.sleep(<span class="number">60</span>);</span><br><span class="line">    scheduler.shutdown();</span><br><span class="line">&#125; <span class="keyword">catch</span> (SchedulerException se) &#123;</span><br><span class="line">    se.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-JobDetail-requestRecovery"><a href="#1-JobDetail-requestRecovery" class="headerlink" title="1.JobDetail#requestRecovery"></a>1.JobDetail#requestRecovery</h3><p>当任务宕掉的时候，是否需要重新执行job，默认为true，需要持久化</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job&quot;</span> + count, <span class="string">&quot;group_1&quot;</span>).requestRecovery().build() </span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Trigger-withPriority"><a href="#2-Trigger-withPriority" class="headerlink" title="2.Trigger#withPriority"></a>2.Trigger#withPriority</h3><p>任务的优先级，默认5，数字越大优先级越大，优先级相同，则比较trigger的key</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Trigger trigger1 = newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;Priority1Trigger5SecondRepeat&quot;</span>)</span><br><span class="line">    .startAt(startTime)</span><br><span class="line">  	 .withSchedule(simpleSchedule().withRepeatCount(<span class="number">1</span>).withIntervalInSeconds(<span class="number">5</span>))</span><br><span class="line">    .withPriority(<span class="number">1</span>)</span><br><span class="line">    .forJob(job)</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="四-SimpleTrigger"><a href="#四-SimpleTrigger" class="headerlink" title="四.SimpleTrigger"></a>四.SimpleTrigger</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(HelloJob.class).withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;group1&quot;</span>).build();</span><br><span class="line"></span><br><span class="line"><span class="comment">// startNow 立即执行一次</span></span><br><span class="line">SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startNow()</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// withIntervalInSeconds withRepeatCount 每隔5s执行一次，重复6次</span></span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger2&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(startTime)</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">5</span>).withRepeatCount(<span class="number">5</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// futureDate 5s后执行一次</span></span><br><span class="line">SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger3&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(DateBuilder.futureDate(<span class="number">5</span>, DateBuilder.IntervalUnit.SECOND))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// repeatForever 每5s执行一次</span></span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger4&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(startTime)</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">5</span>).repeatForever())</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line"></span><br><span class="line"><span class="comment">// storeDurably triggerJob 不需要trigger，触发一次</span></span><br><span class="line">JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job6&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .storeDurably()</span><br><span class="line">    .build();</span><br><span class="line">scheduler.addJob(job, <span class="keyword">true</span>);</span><br><span class="line">scheduler.triggerJob(JobKey.jobKey(<span class="string">&quot;job6&quot;</span>, <span class="string">&quot;group1&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// rescheduleJob 使用另一个trigger执行</span></span><br><span class="line"><span class="comment">// 每隔5s执行一次，重复4次</span></span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger5&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startNow()</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">5</span>).withRepeatCount(<span class="number">3</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br><span class="line">System.out.println(job.getKey() + <span class="string">&quot; will run at: &quot;</span> + DateUtil.format(ft) + <span class="string">&quot; and repeat: &quot;</span> + trigger.getRepeatCount() + <span class="string">&quot; times, every &quot;</span></span><br><span class="line">                   + trigger.getRepeatInterval() / <span class="number">1000</span> + <span class="string">&quot; seconds&quot;</span>);</span><br><span class="line"><span class="comment">// 上一个trigger只会执行 3次</span></span><br><span class="line">TimeUnit.SECONDS.sleep(<span class="number">10</span>);</span><br><span class="line"><span class="comment">// rescheduleJob重新执行trigger调度器</span></span><br><span class="line">trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger5&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startNow()</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(<span class="number">1</span>).withRepeatCount(<span class="number">4</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.rescheduleJob(trigger.getKey(), trigger);</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-CronTrigger"><a href="#五-CronTrigger" class="headerlink" title="五.CronTrigger"></a>五.CronTrigger</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job1&quot;</span>,<span class="string">&quot;group1&quot;</span>).build();</span><br><span class="line"><span class="comment">// CronScheduleBuilder 每隔20s执行一次</span></span><br><span class="line">CronTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .withSchedule(CronScheduleBuilder.cronSchedule(<span class="string">&quot;0/20 * * * * ?&quot;</span>))</span><br><span class="line">    .build();</span><br><span class="line">scheduler.scheduleJob(job, trigger);</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-常用cron表达式"><a href="#1-常用cron表达式" class="headerlink" title="1.常用cron表达式"></a>1.常用cron表达式</h3><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0 0 10,14,16 * * ?</td>
+<td>每天上午10点，下午2点，4点</td>
+</tr>
+<tr>
+<td>0 0 10,14,16 * * ?</td>
+<td>每天上午10点，下午2点，4点</td>
+</tr>
+<tr>
+<td>0 0/30 9-17 * * ?</td>
+<td>朝九晚五工作时间内每半小时</td>
+</tr>
+<tr>
+<td>0 0 12 ? * WED</td>
+<td>表示每个星期三中午12点</td>
+</tr>
+<tr>
+<td>0 0 12 * * ?</td>
+<td>每天中午12点触发</td>
+</tr>
+<tr>
+<td>0 15 10 ? * *</td>
+<td>每天上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 * * ?</td>
+<td>每天上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 * * ? *</td>
+<td>每天上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 * * ? 2005</td>
+<td>2005年的每天上午10:15触发</td>
+</tr>
+<tr>
+<td>0 * 14 * * ?</td>
+<td>在每天下午2点到下午2:59期间的每1分钟触发</td>
+</tr>
+<tr>
+<td>0 0/5 14 * * ?</td>
+<td>在每天下午2点到下午2:55期间的每5分钟触发</td>
+</tr>
+<tr>
+<td>0 0/5 14,18 * * ?</td>
+<td>在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发</td>
+</tr>
+<tr>
+<td>0 0-5 14 * * ?</td>
+<td>在每天下午2点到下午2:05期间的每1分钟触发</td>
+</tr>
+<tr>
+<td>0 10,44 14 ? 3 WED</td>
+<td>每年三月的星期三的下午2:10和2:44触发</td>
+</tr>
+<tr>
+<td>0 15 10 ? * MON-FRI</td>
+<td>周一至周五的上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 15 * ?</td>
+<td>每月15日上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 L * ?</td>
+<td>每月最后一日的上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 ? * 6L</td>
+<td>每月的最后一个星期五上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 ? * 6L</td>
+<td>2002-2005 2002年至2005年的每月的最后一个星期五上午10:15触发</td>
+</tr>
+<tr>
+<td>0 15 10 ? * 6#3</td>
+<td>每月的第三个星期五上午10:15触发</td>
+</tr>
+</tbody></table>
+<h2 id="六-Job的状态"><a href="#六-Job的状态" class="headerlink" title="六.Job的状态"></a>六.Job的状态</h2><p>1、每次任务被触发，Job都会是一个新的实例<br>2、默认情况下，相同的任务可以被并发执行<br>      @DisallowConcurrentExecution 可以禁止相同任务的并发行为<br>      若JobKey相同，则Quartz认为是同一个任务<br>3、如果任务 需要修改 dataMap，并且下次被触发时 需要用到上次修改的 dataMap<br>      可以使用@PersistlobDataAfterExecution<br>      当使用了@PersistJobDataAfterExecution，还应<br>认真考虑是否要使用@DisallowConcurrentExecution<br><img data-src="quartz.assets/3.png"></p>
+<h2 id="七-Spring配置Quartz"><a href="#七-Spring配置Quartz" class="headerlink" title="七.Spring配置Quartz"></a>七.Spring配置Quartz</h2><p>spring集成了quartz框架，只需继承<strong>QuartzJobBean</strong>，编写自己的Job即可</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringJob1</span> <span class="keyword">extends</span> <span class="title">QuartzJobBean</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> HelloService helloService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">executeInternal</span><span class="params">(JobExecutionContext context)</span> <span class="keyword">throws</span> JobExecutionException </span>&#123;</span><br><span class="line">        StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">&quot; &quot;</span>)</span><br><span class="line">                .add(<span class="string">&quot;SpringJob1&quot;</span>)</span><br><span class="line">                .add(helloService.hello())</span><br><span class="line">                .add(Thread.currentThread().getName());</span><br><span class="line">        System.out.println(stringJoiner);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置job</p>
+<p>方式一：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobInit</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> Scheduler scheduler;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> SchedulerException </span>&#123;</span><br><span class="line">        JobDetail jobDetail = JobBuilder.newJob(SpringJob1.class)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        Trigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">                .startNow()</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        scheduler.scheduleJob(jobDetail, trigger);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方式二：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JobConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> JobDetail <span class="title">springJobDetail</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> JobBuilder.newJob(SpringJob1.class)</span><br><span class="line">                .withIdentity(<span class="string">&quot;springJobDetail&quot;</span>)</span><br><span class="line">                .storeDurably()</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Trigger <span class="title">springTrigger</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> TriggerBuilder.newTrigger()</span><br><span class="line">                .forJob(<span class="string">&quot;springJobDetail&quot;</span>)</span><br><span class="line">                .startNow()</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="八-quartz持久化"><a href="#八-quartz持久化" class="headerlink" title="八.quartz持久化"></a>八.quartz持久化</h2><p>Quartz框架有两种任务存储方式。一种是<strong>RAMJobStore</strong>存储方式，也是默认的存储方式。RAMJobStore将quartz定时的任务信息存储在服务器的内存中，这种方式的优点是可以提供最好的性能，因为任务信息都存储在内存中访问获取数据速度快。缺点是当服务器突然崩溃了再次重启后你的定时任务也就没有了。另一种是<strong>JDBC任务</strong>（作业）存储方式，这种方式是将任务信息存储在数据库中，当服务器突然崩溃了再次重启后你的任务还是会接着上次继续执行的，不过需要配置一个quartz.propertity的配置文件</p>
+<h3 id="1-quartz-properties配置文件"><a href="#1-quartz-properties配置文件" class="headerlink" title="1.quartz.properties配置文件"></a>1.quartz.properties配置文件</h3><figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 实例化ThreadPool时，使用的线程类为SimpleThreadPool</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.class</span> = <span class="string">org.quartz.simpl.SimpleThreadPool</span></span><br><span class="line"><span class="comment"># threadCount和threadPriority将以setter的形式注入ThreadPool实例</span></span><br><span class="line"><span class="comment"># 并发个数</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadCount</span> = <span class="string">5</span></span><br><span class="line"><span class="comment"># 优先级</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadPriority</span> = <span class="string">5</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread</span> = <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.misfireThreshold</span> = <span class="string">5000</span></span><br><span class="line"><span class="comment">#持久化使用的类</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.class</span> = <span class="string">org.quartz.impl.jdbcjobstore.JobStoreTX</span></span><br><span class="line"><span class="comment">#数据库中表的前缀</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.tablePrefix</span> = <span class="string">QRTZ_</span></span><br><span class="line"><span class="comment">#数据源命名</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.dataSource</span> = <span class="string">qzDS</span></span><br><span class="line"><span class="comment">#qzDS 数据源</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.driver</span> = <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.URL</span> = <span class="string">jdbc:mysql://localhost:3306/quartz?useUnicode=true&amp;characterEncoding=UTF-8</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.user</span> = <span class="string">root</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.password</span> = <span class="string">root</span></span><br><span class="line"><span class="meta">org.quartz.dataSource.qzDS.maxConnections</span> = <span class="string">10</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-spring配置quartz持久化"><a href="#2-spring配置quartz持久化" class="headerlink" title="2.spring配置quartz持久化"></a>2.spring配置quartz持久化</h3><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># quartz相关配置</span></span><br><span class="line">  <span class="attr">quartz:</span></span><br><span class="line">  <span class="comment"># 默认情况下，使用内存中的JobStore。但是，如果应用程序中有DataSource bean，并且spring.quartz可用，则可以配置基于jdbc的存储。配置Job-store-type属性</span></span><br><span class="line">    <span class="attr">job-store-type:</span> <span class="string">jdbc</span></span><br><span class="line">    <span class="comment"># 初始化项目不重新创建quartz相关表</span></span><br><span class="line">    <span class="attr">jdbc:</span></span><br><span class="line">      <span class="attr">initialize-schema:</span> <span class="string">never</span></span><br><span class="line">    <span class="comment"># spring中设置quartz配置，有如下两种方式  </span></span><br><span class="line"><span class="comment">#    properties:</span></span><br><span class="line"><span class="comment">#      org.quartz.threadPool.threadCount: 5</span></span><br><span class="line">    <span class="attr">properties:</span></span><br><span class="line">      <span class="attr">org:</span></span><br><span class="line">        <span class="attr">quartz:</span></span><br><span class="line">          <span class="attr">threadPool:</span></span><br><span class="line">            <span class="string">threadCount:5</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-持久化生成的表"><a href="#3-持久化生成的表" class="headerlink" title="3.持久化生成的表"></a>3.持久化生成的表</h3><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>表名</th>
+<th>表说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>qrtz_calendars</td>
+<td>以 Blob 类型存储 Quartz 的 Calendar 信息</td>
+</tr>
+<tr>
+<td>2</td>
+<td>qrtz_cron_triggers</td>
+<td>存储 Cron Trigger，包括 Cron 表达式和时区信息</td>
+</tr>
+<tr>
+<td>3</td>
+<td>qrtz_fired_triggers</td>
+<td>存储与已触发的 Trigger 相关的状态信息，以及相联 Job 的执行信息</td>
+</tr>
+<tr>
+<td>4</td>
+<td>qrtz_paused_trigger_grps</td>
+<td>存储已暂停的 Trigger 组的信息</td>
+</tr>
+<tr>
+<td>5</td>
+<td>qrtz_scheduler_state</td>
+<td>存储少量的有关调度器 (Scheduler) 的状态，和别的 调度器 (Scheduler)实例(假如是用于一个集群中)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>qrtz_locks</td>
+<td>存储程序的悲观锁的信息(假如使用了悲观锁)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>qrtz_job_details</td>
+<td>存储每一个已配置的 Job 的详细信息(jobDetail)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>qrtz_simple_triggers</td>
+<td>存储简单的 Trigger，包括重复次数，间隔，以及已触的次数</td>
+</tr>
+<tr>
+<td>9</td>
+<td>qrtz_blob_triggers</td>
+<td>以 Blob 类型存储的Trigger (用于 Quartz 用户用 JDBC 创建他们自己定制的 Trigger 类型，JobStore 并不知道如何存储实例的时候)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>qrtz_triggers</td>
+<td>存储已配置的 触发器 (Trigger) 的信息</td>
+</tr>
+<tr>
+<td>11</td>
+<td>qrtz_simprop_triggers</td>
+<td>存储CalendarIntervalTrigger和DailyTimeIntervalTrigger两种类型的触发器</td>
+</tr>
+</tbody></table>
+<h2 id="九-Misfire"><a href="#九-Misfire" class="headerlink" title="九.Misfire"></a>九.Misfire</h2><p>misfire，中文意思是“失火”。在 quartz 中的含义是：到了任务触发时间，但是任务却没有被触发<br>失火的原因可能是：</p>
+<ul>
+<li>使用了 @DisallowConcurrentExecution 注解，而且任务的执行时间 &gt; 任务间隔</li>
+<li>线程池满了，没有资源执行任务</li>
+<li>机器宕机或者人为停止，过段时间恢复运行</li>
+</ul>
+<p><img data-src="quartz.assets/4.png"></p>
+<h3 id="1-只执行一次的job"><a href="#1-只执行一次的job" class="headerlink" title="1.只执行一次的job"></a>1.只执行一次的job</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(MisfireJob.class)</span><br><span class="line">            .withIdentity(<span class="string">&quot;job&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">            .build();</span><br><span class="line">    Date next = DateUtils.addSeconds(<span class="keyword">new</span> Date(), -<span class="number">10</span>);</span><br><span class="line">    SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">            .withIdentity(<span class="string">&quot;trigger&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">            .startAt(next)</span><br><span class="line">            .withSchedule(SimpleScheduleBuilder.simpleSchedule()</span><br><span class="line">                    .withMisfireHandlingInstructionFireNow()<span class="comment">/*可以指定为任意一个可用的misfire策略*/</span>)</span><br><span class="line">            .build();</span><br><span class="line">    scheduler.scheduleJob(job, trigger);</span><br></pre></td></tr></table></figure>
+
+<p> 假设job设定的执行时间是8点00分00秒，而当前时间是8点00分10秒，由于misfireThreshold设置为1秒，则发生了misfire。各misfire策略如下:</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MISFIRE_INSTRUCTION_SMART_POLICY–default</td>
+<td>默认策略等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
+</tr>
+<tr>
+<td>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</td>
+<td>Quartz不会判断job发生misfire，但是当Quartz有可用资源的时候，会尽可能早的执行所有发生misfire的任务，结果等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionFireNow MISFIRE_INSTRUCTION_FIRE_NOW</td>
+<td>立即执行job，即在8点00分10秒发现了misfire以后立即执行job。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNowWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
+<td>等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNowWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</td>
+<td>等同于MISFIRE_INSTRUCTION_FIRE_NOW。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNextWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</td>
+<td>不会执行job。此命令会等待下一次执行时间来执行job，但是只执行一次的job，在发生misfire以后没有下次的执行时间，因此使用此命令不会再执行job。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNextWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</td>
+<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT。</td>
+</tr>
+</tbody></table>
+<h3 id="2-固定次数执行的job"><a href="#2-固定次数执行的job" class="headerlink" title="2.固定次数执行的job"></a>2.固定次数执行的job</h3><p>设置job开始执行时间是早上8点，执行间隔是1小时，执行次数是5次，那么job总的执行次数是6次（开始执行的一次以及后面执行的5次），则计划的执行时间是8:00，9:00,10:00,11:00,12:00,13:00</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = newJob(MisfireJob.class)</span><br><span class="line">                .withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">SimpleTrigger trigger = newTrigger()</span><br><span class="line">                .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;g1&quot;</span>)</span><br><span class="line">                .startAt(nextOne)</span><br><span class="line">                .withSchedule(simpleSchedule()</span><br><span class="line">                        .withIntervalInHours(<span class="number">1</span>)</span><br><span class="line">                        .withRepeatCount(<span class="number">5</span>)</span><br><span class="line">                        .withMisfireHandlingInstructionNowWithRemainingCount()<span class="comment">/*可以指定为任意可用的策略*/</span>)</span><br><span class="line">                .build();</span><br></pre></td></tr></table></figure>
+
+<p>假设8:00的任务执行了，但是由于某些原因，scheduler没有执行9:00和10:00的任务，在10:15分的时候scheduler发现job有两次没有执行，这两次的延迟执行时间分别是1小时15分和15分，都大于设置的misfireThreshold=1秒，因此发生了两次misfire。各misfire策略如下：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MISFIRE_INSTRUCTION_SMART_POLICY–default</td>
+<td>默认执行策略，在固定次数执行的情况下，等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
+</tr>
+<tr>
+<td>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</td>
+<td>Quartz不会判断发生misfire，在Quartz资源可用时会尽可能早的执行所有发生misfire的任务。<br/>例如：Quartz会在10:15执行9:00和10:00的任务，然后按照原计划继续执行剩下的任务。最后任务执行完成时间还是13:00。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionFireNow MISFIRE_INSTRUCTION_FIRE_NOW</td>
+<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNowWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
+<td>立即执行第一个发生misfire的任务，并且修改startTime为当前时间，然后按照设定的间隔时间执行下一次任务，直到所有的任务执行完成，此命令不会遗漏任务的执行次数。<br/>例如：10:15会立即执行9:00的任务，startTime修改为10:15，然后后续的任务执行时间为,11:15,12:15,13:15,14:15，也就是说任务完成时间延迟到了14:15，但是任务的执行次数还是总共的6次。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNowWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</td>
+<td>立即执行第一个发生misfire的任务，并且修改startTime为当前时间，然后按照设定的间隔时间执行下一个任务，直到所有剩余任务执行完成，此命令会忽略已经发生misfire的任务（第一个misfire任务除外，因为会被立即执行），继续执行剩余的正常任务。<br/>例如：10:15会立即执行9:00的任务，并且修改startTime为10:15，然后Quartz会忽略10:00发生的misfire的任务，然后后续的执行时间为：11:15,12:15,13:15，由于10:00的任务被忽略了，因此总的执行次数实际上是5次。<br/></td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNextWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</td>
+<td>不会立即执行任务，会等到下一次的计划执行时间开始执行，然后按照设定的间隔时间执行直到执行到计划的任务结束时间。<br/>这个地方需要注意一下，不要被命令的名字所迷惑，第一眼印象可能觉得这个命令会把已经misfire的任务也执行了，而且好多博文也是这么讲解的，实际上并没有，我也是在自己测试的时候发现的，其实这个命令在发现存在misfire以后，后续并没有再执行发生misfire的任务，而是继续执行剩下的任务，直到结束时间，因此此命令与MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT的执行结果相同，至于原因后面会讲。<br/>例如：10:15发现9:00和10:00发生了misfire，并不会立即执行，由于原计划的下一次执行时间是11:00，因此Quartz会等到11:00执行任务，然后在原计划的13:00执行最后一个任务结束，因此实际上总的执行次数是4次。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNextWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</td>
+<td>不会立即执行任务，会等到下一次计划执行时间开始执行，忽略已经发生了misfire的任务，然后按照设定的间隔时间执行直到计划的任务结束时间。<br/>例如：10:15发现9:00和10:00发生了misfire，并不会立即执行，忽略掉发生misfire的9:00和10:00的任务，按照计划在11:00执行任务，直到13:00执行最后一个任务结束，因此总的执行次数是4次。</td>
+</tr>
+</tbody></table>
+<h3 id="3-无限次数执行的job"><a href="#3-无限次数执行的job" class="headerlink" title="3.无限次数执行的job"></a>3.无限次数执行的job</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">JobDetail job = JobBuilder.newJob(MisfireJob.class)</span><br><span class="line">                .withIdentity(<span class="string">&quot;job&quot;</span>, <span class="string">&quot;g&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">SimpleTrigger trigger = TriggerBuilder.newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger&quot;</span>, <span class="string">&quot;g&quot;</span>)</span><br><span class="line">    .startAt(next)</span><br><span class="line">    .withSchedule(SimpleScheduleBuilder.simpleSchedule()</span><br><span class="line">                  .withIntervalInHours(<span class="number">1</span>)</span><br><span class="line">                  .repeatForever())</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+<p>假设8:00的任务执行了，但是由于某些原因，scheduler没有执行9:00和10:00的任务，在10:15分的时候scheduler发现job有两次没有执行，这两次的延迟执行时间分别是1小时15分和15分，都大于设置的misfireThreshold=1秒，因此发生了两次misfire。各misfire策略如下：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MISFIRE_INSTRUCTION_SMART_POLICY–default</td>
+<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT。</td>
+</tr>
+<tr>
+<td>MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY</td>
+<td>Quartz不会判断发生misfire，在Quartz资源可用时会尽可能早的执行所有发生misfire的任务。<br/>例如：Quartz会在10:15执行9:00和10:00的任务，然后按照原计划继续执行下去。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionFireNow MISFIRE_INSTRUCTION_FIRE_NOW</td>
+<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNowWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT</td>
+<td>因为执行次数为无限次，所以等同于MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNowWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT</td>
+<td>立即执行第一个发生misfire的任务，并且修改startTime为当前时间，然后按照设定的间隔时间执行下一个任务，一直执行下去，执行次数是无限的，但是计划的执行时间会被改变，因为此策略会修改startTime。<br/>例如：10:15会立即执行9:00的任务，并且修改startTime为10:15，后续的执行时间被修改为了11:15，12:15，13:15以此类推。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNextWithExistingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT</td>
+<td>等同于MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT。</td>
+</tr>
+<tr>
+<td>withMisfireHandlingInstructionNextWithRemainingCount<br/>MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT</td>
+<td>不会立即执行任务，会等到下一次计划执行时间开始执行，忽略已经发生了misfire的任务，然后按照原计划执行时间继续执行下去。实际上就相当于不管有没有发生misfire，就按照原计划继续执行下去。<br/>例如：10:15发现9:00和10:00发生了misfire，并不会立即执行，忽略掉发生misfire的9:00和10:00的任务，按照计划在11:00执行任务，然后一直按照原计划执行下去。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><a href="https://blog.csdn.net/chen888999/article/details/78575492"> Quartz misfire详解_自在小丁的博客-CSDN博客_misfire quartz</a></p>
+</blockquote>
+<h2 id="十-异常与中断处理"><a href="#十-异常与中断处理" class="headerlink" title="十.异常与中断处理"></a>十.异常与中断处理</h2><h3 id="1-作业异常"><a href="#1-作业异常" class="headerlink" title="1.作业异常"></a>1.作业异常</h3><h4 id="1-1-捕获并解决异常，立即重新执行作业"><a href="#1-1-捕获并解决异常，立即重新执行作业" class="headerlink" title="1.1 捕获并解决异常，立即重新执行作业"></a>1.1 捕获并解决异常，立即重新执行作业</h4><p>在我们捕获异常并解决异常后，可以调用 <code>JobExecutionException#setRefireImmediately(true)</code> 立即重新执行作业。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 一个异常例子，假设第一次传入的 denominator 为 0，那么将会抛出异常</span></span><br><span class="line">    calculation = <span class="number">4815</span> / denominator;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    JobExecutionException e2 = <span class="keyword">new</span> JobExecutionException(e);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在第一次异常后，修改 denominator 参数为 1，那么后面的执行就不会出错了</span></span><br><span class="line">    dataMap.put(<span class="string">&quot;denominator&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// true 表示立即重新执行作业</span></span><br><span class="line">    e2.setRefireImmediately(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">throw</span> e2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>： 为了共享在同一个 JobDetail 中的 JobDataMap，我们需要在上面这个 job 实现类上加入 <code>@PersistJobDataAfterExecution</code> 和 <code>@DisallowConcurrentExecution</code> 注解</p>
+<h4 id="1-2-捕获异常，取消所有触发器"><a href="#1-2-捕获异常，取消所有触发器" class="headerlink" title="1.2 捕获异常，取消所有触发器"></a>1.2 捕获异常，取消所有触发器</h4><p>在我们捕获异常时，可以调用 <code>JobExecutionException#setUnscheduleAllTriggers(true)</code> 取消所有与这个作业有关的触发器。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 一个异常例子</span></span><br><span class="line">    <span class="keyword">int</span> zero = <span class="number">0</span>;</span><br><span class="line">    calculation = <span class="number">4815</span> / zero;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    JobExecutionException e2 = <span class="keyword">new</span> JobExecutionException(e);</span><br><span class="line">    <span class="comment">// true 表示 Quartz 会自动取消所有与这个 job 有关的 trigger，从而避免再次运行 job</span></span><br><span class="line">    e2.setUnscheduleAllTriggers(<span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">throw</span> e2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-作业中断"><a href="#2-作业中断" class="headerlink" title="2. 作业中断"></a>2. 作业中断</h3><p><code>org.quartz.InterruptableJob</code> 接口提供了一种中断机制，这个接口只有一个方法 <code>interrupt()</code>，这个方法会在用户发出中断请求到 Scheduler（调度器）时触发（即调用 <code>Scheduler#interrupt(JobDetail#getKey())</code> 方法时触发）。</p>
+<p>其中 <code>InterruptableJob</code> 接口又继承了 <code>Job</code> 接口，所以当我们使用时，只需要实现 <code>InterruptableJob</code> 接口，重写其中的 <code>execute</code> 和 <code>interrupt</code> 方法即可。</p>
+<h2 id="十一-排除特殊日期"><a href="#十一-排除特殊日期" class="headerlink" title="十一.排除特殊日期"></a>十一.排除特殊日期</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Add the holiday calendar to the schedule</span></span><br><span class="line">HolidayCalendar holidayCalendar = <span class="keyword">new</span> HolidayCalendar();</span><br><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.set(<span class="number">2005</span>, <span class="number">6</span>, <span class="number">4</span>);</span><br><span class="line">holidayCalendar.addExcludedDate(calendar.getTime());</span><br><span class="line"></span><br><span class="line">AnnualCalendar holidays = <span class="keyword">new</span> AnnualCalendar();</span><br><span class="line"><span class="comment">// fourth of July (July 4)</span></span><br><span class="line">Calendar fourthOfJuly = <span class="keyword">new</span> GregorianCalendar(<span class="number">2005</span>, <span class="number">6</span>, <span class="number">4</span>);</span><br><span class="line">holidays.setDayExcluded(fourthOfJuly, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// halloween (Oct 31)</span></span><br><span class="line">Calendar halloween = <span class="keyword">new</span> GregorianCalendar(<span class="number">2005</span>, <span class="number">9</span>, <span class="number">31</span>);</span><br><span class="line">holidays.setDayExcluded(halloween, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// christmas (Dec 25)</span></span><br><span class="line">Calendar christmas = <span class="keyword">new</span> GregorianCalendar(<span class="number">2005</span>, <span class="number">11</span>, <span class="number">25</span>);</span><br><span class="line">holidays.setDayExcluded(christmas, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// tell the schedule about our holiday calendar</span></span><br><span class="line">sched.addCalendar(<span class="string">&quot;holidays&quot;</span>, holidays, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// schedule a job to run hourly, starting on halloween</span></span><br><span class="line"><span class="comment">// at 10 am</span></span><br><span class="line">Date runDate = dateOf(<span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">31</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">JobDetail job = newJob(SimpleJob.class).withIdentity(<span class="string">&quot;job1&quot;</span>, <span class="string">&quot;group1&quot;</span>).build();</span><br><span class="line"></span><br><span class="line"><span class="comment">// modifiedByCalendar</span></span><br><span class="line">SimpleTrigger trigger = newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;trigger1&quot;</span>, <span class="string">&quot;group1&quot;</span>)</span><br><span class="line">    .startAt(runDate)</span><br><span class="line">    .withSchedule(simpleSchedule().withIntervalInHours(<span class="number">1</span>).repeatForever()).modifiedByCalendar(<span class="string">&quot;holidays&quot;</span>)</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Calendar名称</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CronCalendar</td>
+<td>用来排除 给定CronExpression表示的 时间集</td>
+</tr>
+<tr>
+<td>AnnualCalendar</td>
+<td>用来排除 年 中的 天</td>
+</tr>
+<tr>
+<td>HolidayCalendar</td>
+<td>用来排除 某年 中的 某天 (与 AnnualCalendar 类似，区别是把年考虑进去了)</td>
+</tr>
+<tr>
+<td>MonthlyCalendar</td>
+<td>用来排除 月 中的 天</td>
+</tr>
+<tr>
+<td>WeeklyCalendar</td>
+<td>用来排除 星期 中的 天</td>
+</tr>
+<tr>
+<td>DailyCalendar</td>
+<td>用来排除 一天中的 某个时间段 (不能跨天) (可以反转时间段的作用)</td>
+</tr>
+</tbody></table>
+<h2 id="十二-监听器"><a href="#十二-监听器" class="headerlink" title="十二.监听器"></a>十二.监听器</h2><h3 id="1-JobListener"><a href="#1-JobListener" class="headerlink" title="1.JobListener"></a>1.JobListener</h3><table>
+<thead>
+<tr>
+<th>方法签名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>getName()</td>
+<td>获取该监听器的名称</td>
+</tr>
+<tr>
+<td>jobToBeExecuted（）</td>
+<td>在Job将要被执行时调用这个方法</td>
+</tr>
+<tr>
+<td>jobExecutionVetoed（）</td>
+<td>在Job即将被执行，但却被 TriggerListerner监听器的 vetoJobExecution（）方法否决时 执行 也就是该执行时，但却未执行时调用</td>
+</tr>
+<tr>
+<td>jobWasExecuted（）</td>
+<td>执行结束时调用</td>
+</tr>
+</tbody></table>
+<h3 id="2-TriggerListener"><a href="#2-TriggerListener" class="headerlink" title="2.TriggerListener"></a>2.TriggerListener</h3><table>
+<thead>
+<tr>
+<th>方法签名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>getName()</td>
+<td>获取触发器的名称</td>
+</tr>
+<tr>
+<td>triggerFired()</td>
+<td>当与监听器相关联的Trigger被触发，Job上的execute()方法将被执行时，Scheduler就调用该方法</td>
+</tr>
+<tr>
+<td>vetoJobExecution()</td>
+<td>在 Trigger 触发后，Job 将要被执行时由 Scheduler 调用这个方法。 TriggerListener 给了一个选择去否决 Job 的执行。 假如这个方法返回 true，这个 Job 将不会为此次 Trigger 触发而得到执行。</td>
+</tr>
+<tr>
+<td>triggerMisfired()</td>
+<td>Scheduler 调用这个方法是在 Trigger 错过触发时。 你应该关注此方法中持续时间长的逻辑：在出现许多错过触发的 Trigger 时， 长逻辑会导致骨牌效应。你应当保持这上方法尽量的小。</td>
+</tr>
+<tr>
+<td>triggerComplete()</td>
+<td>Trigger 被触发并且完成了 Job 的执行时，Scheduler 调用这个方法</td>
+</tr>
+</tbody></table>
+<h3 id="3-SchedulerListener"><a href="#3-SchedulerListener" class="headerlink" title="3.SchedulerListener"></a>3.SchedulerListener</h3><table>
+<thead>
+<tr>
+<th>方法签名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>jobScheduled（）</td>
+<td>用于部署JobDetail时调用</td>
+</tr>
+<tr>
+<td>jobUnscheduled()</td>
+<td>用于卸载JobDetail时调用</td>
+</tr>
+<tr>
+<td>triggerFinalized()</td>
+<td>当一个 Trigger 来到了再也不会触发的状态时调用这个方法。 除非这个 Job 已设置成了持久性，否则它就会从 Scheduler 中移除</td>
+</tr>
+<tr>
+<td>triggerPaused()</td>
+<td>Scheduler 调用这个方法是发生在一个 Trigger被暂停时</td>
+</tr>
+<tr>
+<td>triggersPaused()</td>
+<td>Scheduler 调用这个方法是发生在一个 Trigger 组被暂停时。 假如是 Trigger 组的话，triggerName 参数将为 null</td>
+</tr>
+<tr>
+<td>triggerResumed()</td>
+<td>Scheduler 调用这个方法是发生成一个 Trigger从暂停中恢复时</td>
+</tr>
+<tr>
+<td>triggersResumed()</td>
+<td>Scheduler 调用这个方法是发生成一个 Trigger 组从暂停中恢复时。假如是 Trigger 组的话，triggerName 参数将为 null。</td>
+</tr>
+<tr>
+<td>jobAdded()</td>
+<td>添加job时调用</td>
+</tr>
+<tr>
+<td>jobDeleted()</td>
+<td>删除job时调用</td>
+</tr>
+<tr>
+<td>jobPaused()</td>
+<td>挂起Job时调用</td>
+</tr>
+<tr>
+<td>jobsPaused()</td>
+<td>挂起jobs组时调用，假如是组的话，参数将为null</td>
+</tr>
+<tr>
+<td>jobResumed()</td>
+<td>恢复Job时调用</td>
+</tr>
+<tr>
+<td>jobsResumed()</td>
+<td>恢复Job组时调用，假如是组的话，参数将为null</td>
+</tr>
+<tr>
+<td>schedulerError()</td>
+<td>在 Scheduler 的正常运行期间产生一个严重错误时调用这个方法</td>
+</tr>
+<tr>
+<td>schedulerInStandbyMode()</td>
+<td>当Scheduler处于StandBy模式时，调用该方法</td>
+</tr>
+<tr>
+<td>schedulerStarted()</td>
+<td>当Scheduler 开启时，调用该方法</td>
+</tr>
+<tr>
+<td>schedulerStarting()</td>
+<td>当Scheduler 开启中，调用该方法</td>
+</tr>
+<tr>
+<td>schedulerShutdown()</td>
+<td>当Scheduler停止时，调用该方法</td>
+</tr>
+<tr>
+<td>schedulerShuttingdown()</td>
+<td>当Scheduler停止中，调用该方法</td>
+</tr>
+<tr>
+<td>schedulingDataCleared()</td>
+<td>当Scheduler中的数据被清除时，调用该方法</td>
+</tr>
+</tbody></table>
+<h3 id="4-example"><a href="#4-example" class="headerlink" title="4.example"></a>4.example</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Set up the listener</span></span><br><span class="line">JobListener listener = <span class="keyword">new</span> Job1Listener();</span><br><span class="line">Matcher&lt;JobKey&gt; matcher = KeyMatcher.keyEquals(job.getKey());</span><br><span class="line">sched.getListenerManager().addJobListener(listener, matcher);</span><br><span class="line"></span><br><span class="line">TriggerListener triggerListener = <span class="keyword">new</span> TriggerListener();</span><br><span class="line">KeyMatcher&lt;TriggerKey&gt; triggerKeyKeyMatcher = KeyMatcher.keyEquals(trigger.getKey());</span><br><span class="line">sched.getListenerManager().addTriggerListener(triggerListener, triggerKeyKeyMatcher);</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-Matcher"><a href="#5-Matcher" class="headerlink" title="5.Matcher"></a>5.Matcher</h3><p><img data-src="quartz.assets/5.png"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 对group1中job以2结尾的，整个group2，group3中除了以1结尾的 任务生效</span></span><br><span class="line"><span class="comment">* (A or B) or C</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">OrMatcher&lt;JobKey&gt; matcher = OrMatcher.or(</span><br><span class="line">    OrMatcher.or(</span><br><span class="line">        AndMatcher.and(GroupMatcher.jobGroupEquals(<span class="string">&quot;group1&quot;</span>), NameMatcher.jobNameEndsWith(<span class="string">&quot;2&quot;</span>)),</span><br><span class="line">        GroupMatcher.jobGroupEquals(<span class="string">&quot;group2&quot;</span>)</span><br><span class="line">    ),</span><br><span class="line">    AndMatcher.and(GroupMatcher.jobGroupEquals(<span class="string">&quot;group3&quot;</span>), NotMatcher.not(NameMatcher.jobNameEndsWith(<span class="string">&quot;1&quot;</span>)))</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h2 id="十三-远程调用"><a href="#十三-远程调用" class="headerlink" title="十三.远程调用"></a>十三.远程调用</h2><p>可以通过RMI协议向Scheduler调度器远程添加job任务</p>
+<p>RemoteServerExample.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// First we must get a reference to a scheduler</span></span><br><span class="line">SchedulerFactory sf = <span class="keyword">new</span> StdSchedulerFactory();</span><br><span class="line">Scheduler sched = sf.getScheduler();</span><br><span class="line"><span class="comment">// start the schedule</span></span><br><span class="line">sched.start();</span><br><span class="line"><span class="comment">// wait five minutes to give our jobs a chance to run</span></span><br><span class="line">Thread.sleep(<span class="number">600L</span> * <span class="number">1000L</span>);</span><br></pre></td></tr></table></figure>
+
+<p>server.propertiest</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Configure Main Scheduler Properties  </span></span><br><span class="line"><span class="meta">org.quartz.scheduler.instanceName</span>: <span class="string">Sched1</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.export</span>: <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryHost</span>: <span class="string">localhost</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryPort</span>: <span class="string">1099</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.createRegistry</span>: <span class="string">true</span></span><br><span class="line"><span class="comment"># Configure ThreadPool  </span></span><br><span class="line"><span class="meta">org.quartz.threadPool.class</span>: <span class="string">org.quartz.simpl.SimpleThreadPool</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadCount</span>: <span class="string">10</span></span><br><span class="line"><span class="meta">org.quartz.threadPool.threadPriority</span>: <span class="string">5</span></span><br><span class="line"><span class="comment"># Configure JobStore  </span></span><br><span class="line"><span class="meta">org.quartz.jobStore.misfireThreshold</span>: <span class="string">60000</span></span><br><span class="line"><span class="meta">org.quartz.jobStore.class</span>: <span class="string">org.quartz.simpl.RAMJobStore</span></span><br></pre></td></tr></table></figure>
+
+<p>RemoteClientExample.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// First we must get a reference to a scheduler</span></span><br><span class="line">SchedulerFactory sf = <span class="keyword">new</span> StdSchedulerFactory();</span><br><span class="line">Scheduler sched = sf.getScheduler();</span><br><span class="line"></span><br><span class="line"><span class="comment">// define the job and ask it to run</span></span><br><span class="line">JobDetail job = newJob(SimpleJob.class)</span><br><span class="line">    .withIdentity(<span class="string">&quot;remotelyAddedJob&quot;</span>, <span class="string">&quot;default&quot;</span>)</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">JobDataMap map = job.getJobDataMap();</span><br><span class="line">map.put(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;Your remotely added job has executed!&quot;</span>);</span><br><span class="line"></span><br><span class="line">Trigger trigger = newTrigger()</span><br><span class="line">    .withIdentity(<span class="string">&quot;remotelyAddedTrigger&quot;</span>, <span class="string">&quot;default&quot;</span>)</span><br><span class="line">    .forJob(job.getKey())</span><br><span class="line">    .withSchedule(cronSchedule(<span class="string">&quot;/5 * * ? * *&quot;</span>))</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line"><span class="comment">// schedule the job</span></span><br><span class="line">sched.scheduleJob(job, trigger);</span><br></pre></td></tr></table></figure>
+
+<p>client.properties</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Properties file for use by StdSchedulerFactory</span></span><br><span class="line"><span class="comment"># to create a Quartz Scheduler Instance.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Configure Main Scheduler Properties</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.instanceName</span>: <span class="string">Sched1</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.logger</span>: <span class="string">schedLogger</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.proxy</span>: <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryHost</span>: <span class="string">localhost</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryPort</span>: <span class="string">1099</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>定时任务</category>
+      </categories>
+      <tags>
+        <tag>定时任务</tag>
       </tags>
   </entry>
   <entry>
