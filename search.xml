@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title></title>
-    <url>/post/0/</url>
+    <title>Quartz</title>
+    <url>/post/7/</url>
     <content><![CDATA[<h1 id="Quartz"><a href="#Quartz" class="headerlink" title="Quartz"></a>Quartz</h1><p>[官网](<a href="http://www.quartz-scheduler.org/">Quartz Enterprise Job Scheduler (quartz-scheduler.org)</a>)</p>
 <h2 id="一-依赖"><a href="#一-依赖" class="headerlink" title="一. 依赖"></a>一. 依赖</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;!-- quartz --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-quartz&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 
-<p><img data-src="http://www.qiyunzhou.top/images/quartz/1-16394964071901.png"></p>
+<p><img data-src="http://www.qiyunzhou.top/images/quartz/1.png"></p>
 <p>一个调度器scheduler可以调用多个触发器trigger，一个trigger只能关联一个jobDetail，而一个jobDetail可以被多个trigger引用；一个job又可以被多个jobDetail引用。</p>
 <span id="more"></span>
 
@@ -537,6 +537,12 @@
 <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Properties file for use by StdSchedulerFactory</span></span><br><span class="line"><span class="comment"># to create a Quartz Scheduler Instance.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Configure Main Scheduler Properties</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.instanceName</span>: <span class="string">Sched1</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.logger</span>: <span class="string">schedLogger</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.proxy</span>: <span class="string">true</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryHost</span>: <span class="string">localhost</span></span><br><span class="line"><span class="meta">org.quartz.scheduler.rmi.registryPort</span>: <span class="string">1099</span></span><br></pre></td></tr></table></figure>
 
 ]]></content>
+      <categories>
+        <category>定时任务</category>
+      </categories>
+      <tags>
+        <tag>定时任务</tag>
+      </tags>
   </entry>
   <entry>
     <title>long类型的id属性传到前端会精度丢失的解决方案</title>
