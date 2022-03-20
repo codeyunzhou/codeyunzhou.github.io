@@ -29,7 +29,7 @@
 <meta property="og:description" content="Maven1. 基本概念Maven是一个项目构建工具，它的主要功能有：  提供了一套标准化的项目结构； 提供了一套标准化的构建流程（编译，测试，打包，发布……）； 提供了一套依赖管理机制  1.1 Maven的目标Maven 的主要目的是为开发者提供  一个可复用、可维护、更易理解的工程综合模型 与这个模型交互的插件或者工具  Maven 工程结构和内容被定义在一个 xml 文件中 － pom.x">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-17T13:46:53.000Z">
-<meta property="article:modified_time" content="2022-03-17T16:13:03.329Z">
+<meta property="article:modified_time" content="2022-03-20T16:06:31.730Z">
 <meta property="article:author" content="yunzhou">
 <meta property="article:tag" content="maven">
 <meta name="twitter:card" content="summary">
@@ -237,7 +237,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-18 00:13:03" itemprop="dateModified" datetime="2022-03-18T00:13:03+08:00">2022-03-18</time>
+                <time title="修改时间：2022-03-21 00:06:31" itemprop="dateModified" datetime="2022-03-21T00:06:31+08:00">2022-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,14 +255,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.5k</span>
+              <span>6.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>6 分钟</span>
             </span>
 
         </div>
@@ -327,50 +327,7 @@
 <h3 id="3-3-Super-POM"><a href="#3-3-Super-POM" class="headerlink" title="3.3  Super POM"></a>3.3  Super POM</h3><p>所有的 POM 都继承自一个父 POM（无论是否显式定义了这个父 POM）。父 POM 也被称作 <strong>Super POM</strong>，它包含了一些可以被继承的默认设置。</p>
 <p>Maven 使用 effective pom（Super pom 加上工程自己的配置）来执行相关的目标，它帮助开发者在 pom.xml 中做尽可能少的配置，当然这些配置可以被方便的重写。</p>
 <p>查看 Super POM 默认配置的一个简单方法是执行以下命令：<code>mvn help:effective-pom</code></p>
-<h2 id="4-构建生命周期"><a href="#4-构建生命周期" class="headerlink" title="4. 构建生命周期"></a>4. 构建生命周期</h2><p>一个典型的 Maven 构建生命周期是由以下几个阶段的序列组成的：</p>
-<table>
-<thead>
-<tr>
-<th align="left">阶段</th>
-<th align="left">处理</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">prepare-resources</td>
-<td align="left">资源拷贝</td>
-<td align="left">本阶段可以自定义需要拷贝的资源</td>
-</tr>
-<tr>
-<td align="left">compile</td>
-<td align="left">编译</td>
-<td align="left">本阶段完成源代码编译</td>
-</tr>
-<tr>
-<td align="left">package</td>
-<td align="left">打包</td>
-<td align="left">本阶段根据 pom.xml 中描述的打包配置创建 JAR / WAR 包</td>
-</tr>
-<tr>
-<td align="left">install</td>
-<td align="left">安装</td>
-<td align="left">本阶段在本地 / 远程仓库中安装工程包</td>
-</tr>
-</tbody></table>
-<p>当需要在某个特定阶段之前或之后执行目标时，可以使用 <strong>pre</strong> 和 <strong>post</strong> 来定义这个<strong>目标</strong></p>
-<p>当 Maven 开始构建工程，会按照所定义的阶段序列的顺序执行每个阶段注册的目标。Maven 有以下三个标准的生命周期：</p>
-<ul>
-<li>clean</li>
-<li>default(or build)</li>
-<li>site</li>
-</ul>
-<h3 id="4-1-Clean"><a href="#4-1-Clean" class="headerlink" title="4.1 Clean"></a>4.1 Clean</h3><p>当我们执行 <em>mvn post-clean</em> 命令时，Maven 调用 clean 生命周期，它包含以下阶段。</p>
-<ul>
-<li>pre-clean</li>
-<li>clean</li>
-<li>post-clean</li>
-</ul>
-<h3 id="4-2-Default-or-Build"><a href="#4-2-Default-or-Build" class="headerlink" title="4.2 Default (or Build)"></a>4.2 Default (or Build)</h3><p>这是 Maven 的主要生命周期，被用于构建应用。包括下面的 23 个阶段。</p>
+<h2 id="4-构建生命周期"><a href="#4-构建生命周期" class="headerlink" title="4. 构建生命周期"></a>4. 构建生命周期</h2><h3 id="4-1-Lifecycle和Phase"><a href="#4-1-Lifecycle和Phase" class="headerlink" title="4.1 Lifecycle和Phase"></a>4.1 Lifecycle和Phase</h3><p>这是 Maven 的主要生命周期，被用于构建应用。包括下面的 23 个阶段（phase）。</p>
 <table>
 <thead>
 <tr>
@@ -463,16 +420,240 @@
 <td align="left">拷贝最终的工程包到远程仓库中，以共享给其他开发人员和工程。</td>
 </tr>
 </tbody></table>
-<h3 id="4-4-Site"><a href="#4-4-Site" class="headerlink" title="4.4 Site"></a>4.4 Site</h3><p>Maven Site 插件一般用来创建新的报告文档、部署站点等。</p>
-<p>阶段：</p>
+<p>如果我们运行<code>mvn package</code>，Maven就会执行<code>default</code>生命周期，它会从开始一直运行到<code>package</code>这个phase为止：</p>
 <ul>
-<li>pre-site</li>
-<li>site</li>
-<li>post-site</li>
-<li>site-deploy</li>
+<li>validate</li>
+<li>…</li>
+<li>package</li>
 </ul>
-<h2 id="5-Maven命令"><a href="#5-Maven命令" class="headerlink" title="5.  Maven命令"></a>5.  Maven命令</h2><blockquote>
+<p>运行<code>mvn clean package</code>，Maven先执行<code>clean</code>生命周期并运行到<code>clean</code>这个phase，然后执行<code>default</code>生命周期并运行到<code>package</code>这个phase</p>
+<ul>
+<li>pre-clean</li>
+<li>clean （注意这个clean是phase）</li>
+<li>validate</li>
+<li>…</li>
+<li>package</li>
+</ul>
+<h3 id="4-2-Goal"><a href="#4-2-Goal" class="headerlink" title="4.2 Goal"></a>4.2 Goal</h3><p>执行一个phase又会触发一个或多个goal，也就是说，执行phase实际执行的是goal，goal可以被单独执行。goal的命名总是<code>abc:xyz</code>这种形式。</p>
+<h2 id="5-Maven命令"><a href="#5-Maven命令" class="headerlink" title="5.  Maven命令"></a>5.  Maven命令</h2><p><strong>格式</strong></p>
+<p><code>mvn [plugin-name]:[goal-name]</code></p>
+<p>-D 指定参数，如 -Dmaven.test.skip=true 跳过单元测试；<br> -P 指定 Profile 配置，可以用于区分环境；<br> -e 显示maven运行出错的信息；<br> -o 离线执行命令,即不去远程仓库更新包；<br> -X 显示maven允许的debug信息；<br> -U 强制去远程更新snapshot的插件或依赖，默认每天只更新一次。</p>
+<p><strong>常用命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mvn archetype:create</td>
+<td>创建maven项目</td>
+</tr>
+<tr>
+<td>-DgroupId=packageName</td>
+<td>指定 group</td>
+</tr>
+<tr>
+<td>-DartifactId=projectName</td>
+<td>指定 artifact</td>
+</tr>
+<tr>
+<td>-DarchetypeArtifactId=maven-archetype-webapp</td>
+<td>创建web项目</td>
+</tr>
+<tr>
+<td>mvn archetype:generate</td>
+<td>创建maven项目</td>
+</tr>
+<tr>
+<td>mvn validate</td>
+<td>验证项目是否正确</td>
+</tr>
+<tr>
+<td>mvn package</td>
+<td>maven 打包</td>
+</tr>
+<tr>
+<td>mvn jar:jar</td>
+<td>只打jar包</td>
+</tr>
+<tr>
+<td>mvn source:jar</td>
+<td>生成源码jar包</td>
+</tr>
+<tr>
+<td>mvn generate-sources</td>
+<td>产生应用需要的任何额外的源代码</td>
+</tr>
+<tr>
+<td>mvn compile</td>
+<td>编译源代码</td>
+</tr>
+<tr>
+<td>mvn test-compile</td>
+<td>编译测试代码</td>
+</tr>
+<tr>
+<td>mvn test</td>
+<td>运行测试</td>
+</tr>
+<tr>
+<td>mvn verify</td>
+<td>运行检查</td>
+</tr>
+<tr>
+<td>mvn clean</td>
+<td>清理maven项目</td>
+</tr>
+<tr>
+<td>mvn eclipse:eclipse</td>
+<td>生成eclipse项目</td>
+</tr>
+<tr>
+<td>mvn eclipse:clean</td>
+<td>清理eclipse配置</td>
+</tr>
+<tr>
+<td>mvn idea:idea</td>
+<td>生成idea项目</td>
+</tr>
+<tr>
+<td>mvn install</td>
+<td>安装项目到本地仓库</td>
+</tr>
+<tr>
+<td>mvn:deploy</td>
+<td>发布项目到远程仓库</td>
+</tr>
+<tr>
+<td>mvn integration-test</td>
+<td>在集成测试可以运行的环境中处理和发布包</td>
+</tr>
+<tr>
+<td>mvn dependency:tree</td>
+<td>显示maven依赖树</td>
+</tr>
+<tr>
+<td>mvn dependency:list</td>
+<td>显示maven依赖列表</td>
+</tr>
+<tr>
+<td>mvn dependency:sources</td>
+<td>下载依赖包的源码</td>
+</tr>
+</tbody></table>
+<p>安装本地jar到本地仓库：</p>
+<p><code>mvn install:install-file -DgroupId=packageName -DartifactId=projectName -Dversion=version -Dpackaging=jar -Dfile=path</code></p>
+<p><strong>web项目相关命令</strong></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mvn tomcat:run</td>
+<td>启动tomcat</td>
+</tr>
+<tr>
+<td>mvn jetty:run</td>
+<td>启动jetty</td>
+</tr>
+<tr>
+<td>mvn tomcat:deploy</td>
+<td>运行打包部署</td>
+</tr>
+<tr>
+<td>mvn tomcat:undeploy</td>
+<td>撤销部署</td>
+</tr>
+<tr>
+<td>mvn tomcat:start</td>
+<td>启动web应用</td>
+</tr>
+<tr>
+<td>mvn tomcat:stop</td>
+<td>停止web应用</td>
+</tr>
+<tr>
+<td>mvn tomcat:redeploy</td>
+<td>重新部署</td>
+</tr>
+<tr>
+<td>mvn war:exploded tomcat:exploded</td>
+<td>部署展开的war文件</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6f57c322e50e">30 个常用 Maven 命令 - 简书 (jianshu.com)</a></p>
+</blockquote>
+<h2 id="6-Maven-Plugins"><a href="#6-Maven-Plugins" class="headerlink" title="6. Maven Plugins"></a>6. Maven Plugins</h2><p>Maven 实际上是一个依赖插件执行的框架，每个任务实际上是由插件完成。plugin是一种专供 Maven本身使用的Library，同一个plugin通常使用同一前置字，然后本身会带有说明提供那些作业的自我解说文件（metadata）， 通常这个自我解说文件，也会定义每种作业隶属于那种phase（作业阶段）</p>
+<p>插件类型：</p>
+<ul>
+<li>Build plugins，在构建时执行，并在 pom.xml 的 元素中配置</li>
+<li>Reporting plugins，在网站生成过程中执行，并在 pom.xml 的 元素中配置</li>
+</ul>
+<p>插件列表</p>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>clean</td>
+<td>构建之后清理目标文件。删除目标目录。</td>
+</tr>
+<tr>
+<td>compiler</td>
+<td>编译 Java 源文件。</td>
+</tr>
+<tr>
+<td>surefile</td>
+<td>运行 JUnit 单元测试。创建测试报告。</td>
+</tr>
+<tr>
+<td>jar</td>
+<td>从当前工程中构建 JAR 文件。</td>
+</tr>
+<tr>
+<td>war</td>
+<td>从当前工程中构建 WAR 文件。</td>
+</tr>
+<tr>
+<td>javadoc</td>
+<td>为工程生成 Javadoc。</td>
+</tr>
+<tr>
+<td>antrun</td>
+<td>从构建过程的任意一个阶段中运行一个 ant 任务的集合</td>
+</tr>
+</tbody></table>
+<h2 id="7-Project变量"><a href="#7-Project变量" class="headerlink" title="7.Project变量"></a>7.Project变量</h2><p>maven内部设置了属性变量，可以直接使用</p>
+<h3 id="7-1-内置属性"><a href="#7-1-内置属性" class="headerlink" title="7.1 内置属性"></a>7.1 内置属性</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 表示项目根目录，即包含pom.xml文件的目录</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;basedir&#125;</span>   </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 等同于 $&#123;project.version&#125; 或者 $&#123;pom.version&#125;   表示项目版本</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;version&#125;</span>  </span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-POM属性"><a href="#7-2-POM属性" class="headerlink" title="7.2 POM属性"></a>7.2 POM属性</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目的主源码目录，默认为src/main/java/</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.build.sourceDirectory&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目的测试源码目录，默认为/src/test/java/</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.build.testSourceDirectory&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目构建输出目录，默认为target/</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.build.directory&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目主代码编译输出目录，默认为target/classes/</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.build.outputDirectory&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目测试代码编译输出目录，默认为target/testclasses/</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.build.testOutputDirectory&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目的groupId</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.groupId&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目的artifactId</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.artifactId&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目的version,等同于$&#123;version&#125;</span></span>   </span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.version&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 项目打包输出文件的名称，默认为$&#123;project.artifactId&#125;$&#123;project.version&#125;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.build.finalName&#125;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># pom.xml &#x27;&lt;name&#x27;&gt;所指定的名称</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;project.name&#125; 或 <span class="variable">$&#123;pom.name&#125;</span></span>   </span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-自定义属性"><a href="#7-3-自定义属性" class="headerlink" title="7.3 自定义属性"></a>7.3 自定义属性</h3><p>在pom中<properties>元素下自定义的Maven属性</p>
+<h3 id="7-4-Settings属性"><a href="#7-4-Settings属性" class="headerlink" title="7.4 Settings属性"></a>7.4 Settings属性</h3><p>所有用的的 settings.xml 中的设定都可以通过 settings. 前缀进行引用 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 指向用户本地仓库的地址</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash">&#123;settings.localRepository&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-5-Java系统属性"><a href="#7-5-Java系统属性" class="headerlink" title="7.5 Java系统属性"></a>7.5 Java系统属性</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">所有Java系统属性都可以使用Maven属性引用，例如$&#123;user.home&#125;指向了用户目录。</span><br><span class="line">可以通过命令行mvn help:system查看所有的Java系统属性</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-6-环境变量属性"><a href="#7-6-环境变量属性" class="headerlink" title="7.6 环境变量属性"></a>7.6 环境变量属性</h3><p>所有环境变量都可以使用以env.开头的Maven属性引用。例如${env.JAVA_HOME}指代了JAVA_HOME环境变量的值。也可以通过命令行<code>mvn help:system</code>查看所有环境变量</p>
+<h3 id="7-7-父级工程属性"><a href="#7-7-父级工程属性" class="headerlink" title="7.7 父级工程属性"></a>7.7 父级工程属性</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">上级工程的pom中的变量用前缀 $&#123;project.parent &#125; 引用. </span><br><span class="line">上级工程的版本也可以这样引用: $&#123;parent.version &#125;.maven的变量</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<blockquote>
 <p><a target="_blank" rel="noopener" href="http://www.itbook.team/book/maven/">Maven中文手册 (itbook.team)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1252599548343744/1255945359327200">Maven基础 - 廖雪峰的官方网站 (liaoxuefeng.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://kentyeh.github.io/mavenStartup/index.html">Mave教學 | Maven 初學者中文教程 (kentyeh.github.io)</a></p>
 </blockquote>
 
     </div>
@@ -558,7 +739,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven"><span class="nav-text">Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">1. 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Maven%E7%9A%84%E7%9B%AE%E6%A0%87"><span class="nav-text">1.1 Maven的目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%BA%A6%E5%AE%9A%E4%BC%98%E4%BA%8E%E9%85%8D%E7%BD%AE"><span class="nav-text">1.2  约定优于配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Maven%E9%85%8D%E7%BD%AE"><span class="nav-text">2.  Maven配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">2.1  环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%8C%87%E5%AE%9A%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="nav-text">2.1 指定本地仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BE%E7%BD%AE%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93"><span class="nav-text">2.2 设置镜像仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E9%85%8D%E7%BD%AE-JDK-%E7%89%88%E6%9C%AC"><span class="nav-text">2.3  配置 JDK 版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-POM"><span class="nav-text">3. POM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-POM-%E4%B8%BE%E4%BE%8B"><span class="nav-text">3.1 POM 举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Maven%E5%9D%90%E6%A0%87"><span class="nav-text">3.2  Maven坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Super-POM"><span class="nav-text">3.3  Super POM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%9E%84%E5%BB%BA%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">4. 构建生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Clean"><span class="nav-text">4.1 Clean</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Default-or-Build"><span class="nav-text">4.2 Default (or Build)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Site"><span class="nav-text">4.4 Site</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Maven%E5%91%BD%E4%BB%A4"><span class="nav-text">5.  Maven命令</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Maven"><span class="nav-text">Maven</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">1. 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-Maven%E7%9A%84%E7%9B%AE%E6%A0%87"><span class="nav-text">1.1 Maven的目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%BA%A6%E5%AE%9A%E4%BC%98%E4%BA%8E%E9%85%8D%E7%BD%AE"><span class="nav-text">1.2  约定优于配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Maven%E9%85%8D%E7%BD%AE"><span class="nav-text">2.  Maven配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">2.1  环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%8C%87%E5%AE%9A%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="nav-text">2.1 指定本地仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BE%E7%BD%AE%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93"><span class="nav-text">2.2 设置镜像仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E9%85%8D%E7%BD%AE-JDK-%E7%89%88%E6%9C%AC"><span class="nav-text">2.3  配置 JDK 版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-POM"><span class="nav-text">3. POM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-POM-%E4%B8%BE%E4%BE%8B"><span class="nav-text">3.1 POM 举例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Maven%E5%9D%90%E6%A0%87"><span class="nav-text">3.2  Maven坐标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Super-POM"><span class="nav-text">3.3  Super POM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%9E%84%E5%BB%BA%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">4. 构建生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Lifecycle%E5%92%8CPhase"><span class="nav-text">4.1 Lifecycle和Phase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Goal"><span class="nav-text">4.2 Goal</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Maven%E5%91%BD%E4%BB%A4"><span class="nav-text">5.  Maven命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Maven-Plugins"><span class="nav-text">6. Maven Plugins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Project%E5%8F%98%E9%87%8F"><span class="nav-text">7.Project变量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%86%85%E7%BD%AE%E5%B1%9E%E6%80%A7"><span class="nav-text">7.1 内置属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-POM%E5%B1%9E%E6%80%A7"><span class="nav-text">7.2 POM属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%B1%9E%E6%80%A7"><span class="nav-text">7.3 自定义属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-Settings%E5%B1%9E%E6%80%A7"><span class="nav-text">7.4 Settings属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-Java%E7%B3%BB%E7%BB%9F%E5%B1%9E%E6%80%A7"><span class="nav-text">7.5 Java系统属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%B1%9E%E6%80%A7"><span class="nav-text">7.6 环境变量属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-7-%E7%88%B6%E7%BA%A7%E5%B7%A5%E7%A8%8B%E5%B1%9E%E6%80%A7"><span class="nav-text">7.7 父级工程属性</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -643,12 +824,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">147k</span>
+    <span title="站点总字数">150k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:14</span>
+    <span title="站点阅读时长">2:16</span>
 </div>
 
 </br>
