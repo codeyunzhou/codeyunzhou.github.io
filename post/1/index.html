@@ -28,11 +28,13 @@
 <meta property="og:site_name" content="云州的博客">
 <meta property="og:description" content="关机&#x2F;重启&#x2F;注销   常用命令 作用    shutdown-h now 即刻关机   shutdown-h 10 10分钟后关机   shutdown-h 11: 00 11:00关机   shutdown-h +10 预定时间关机(10分钟后)   shutdown-c 取消指定时间关机   shutdown-r now 重启   shutdown-r 10 10分钟之后重启   shutdo">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/codeyunzhou/images/raw/master/linux/202203181518631.png">
 <meta property="article:published_time" content="2021-07-09T03:15:47.000Z">
-<meta property="article:modified_time" content="2021-07-19T14:25:41.284Z">
+<meta property="article:modified_time" content="2022-03-21T14:58:56.886Z">
 <meta property="article:author" content="yunzhou">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/codeyunzhou/images/raw/master/linux/202203181518631.png">
 
 <link rel="canonical" href="http://www.qiyunzhou.top/post/1/">
 
@@ -237,7 +239,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-07-19 22:25:41" itemprop="dateModified" datetime="2021-07-19T22:25:41+08:00">2021-07-19</time>
+                <time title="修改时间：2022-03-21 22:58:56" itemprop="dateModified" datetime="2022-03-21T22:58:56+08:00">2022-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -255,14 +257,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>6.1k</span>
+              <span>9.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
+              <span>8 分钟</span>
             </span>
 
         </div>
@@ -1356,6 +1358,484 @@
 <td>清理缓存</td>
 </tr>
 </tbody></table>
+<h2 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h2><h3 id="linux命令大全"><a href="#linux命令大全" class="headerlink" title="linux命令大全"></a>linux命令大全</h3><p><a target="_blank" rel="noopener" href="https://www.linuxcool.com/">Linux命令大全(手册) – 真正好用的Linux命令在线查询网站 (linuxcool.com)</a></p>
+<h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>man</td>
+<td>使用帮助</td>
+</tr>
+<tr>
+<td>info</td>
+<td>使用帮助</td>
+</tr>
+<tr>
+<td>help</td>
+<td>使用帮助</td>
+</tr>
+</tbody></table>
+<h3 id="man"><a href="#man" class="headerlink" title="man"></a>man</h3><p>manual的缩写，操作说明的意思，使用这个命令就可以查看想要查看的命令的使用方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">man [需要查看的命令]</span><br><span class="line">man ls</span><br></pre></td></tr></table></figure>
+
+<p>在man page里，第一行会出现指令加数字，如：  “DATE（1）”， 常见的几个数字的意义是这样的：</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>使用者在shell环境中可以操作的指令或可可执行文件</td>
+</tr>
+<tr>
+<td>2</td>
+<td>系统核心可调用的函数与工具等</td>
+</tr>
+<tr>
+<td>3</td>
+<td>一些常用的函数（function）与函数库（library），大部分为C的函数库（libc）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>设备文件的说明，通常在/dev下的文件</td>
+</tr>
+<tr>
+<td>5</td>
+<td>配置文件或者是某些文件的格式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>游戏（games）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>惯例与协定等，例如Linux文件系统、网络协定、ASCII code等等的说明</td>
+</tr>
+<tr>
+<td>8</td>
+<td>系统管理员可用的管理指令</td>
+</tr>
+<tr>
+<td>9</td>
+<td>跟kernel有关的文件</td>
+</tr>
+</tbody></table>
+<p><font color='red'>tips：</font>1，5，8 比较常用</p>
+<img data-src="https://gitee.com/codeyunzhou/images/raw/master/linux/202203181518631.png" style="zoom:67%;" />
+
+<p>man内容分块：</p>
+<table>
+<thead>
+<tr>
+<th>NAME</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SYNOPSIS</td>
+<td>命令语法</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td>
+<td>命令描述</td>
+</tr>
+<tr>
+<td>MANUAL SECTIONS</td>
+<td>手册章节</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>参数</td>
+</tr>
+<tr>
+<td>CAT PAGES</td>
+<td>cat页</td>
+</tr>
+<tr>
+<td>HTML PAGES</td>
+<td>html页面</td>
+</tr>
+<tr>
+<td>SEARCH PATH FOR MANUAL PAGES</td>
+<td>搜索路径手册页</td>
+</tr>
+<tr>
+<td>ENVIRONMENT</td>
+<td>环境</td>
+</tr>
+<tr>
+<td>BUGS</td>
+<td>已知bug</td>
+</tr>
+<tr>
+<td>TIPS</td>
+<td>提示</td>
+</tr>
+<tr>
+<td>AUTHOR</td>
+<td>作者</td>
+</tr>
+<tr>
+<td>SEE ALSO</td>
+<td>其他参考</td>
+</tr>
+</tbody></table>
+<p>操作：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/123</td>
+<td>向上查找”123”</td>
+</tr>
+<tr>
+<td>?123</td>
+<td>向下查找”123”</td>
+</tr>
+<tr>
+<td>n or u</td>
+<td>u查看上一个结果，n查看下一个结果</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出 man page</td>
+</tr>
+</tbody></table>
+<h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><p>read Info documents。man和info都可以查询命令用法或者是文件的格式，但是man是一次全部显示出来了。info就分成一页一页的，一个node(结点)一个node的显示</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info [需要查看的命令]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>空格</td>
+<td>向下翻页</td>
+</tr>
+<tr>
+<td>enter</td>
+<td>进入光标指向node</td>
+</tr>
+<tr>
+<td>n</td>
+<td>下一个node</td>
+</tr>
+<tr>
+<td>p</td>
+<td>上一个node</td>
+</tr>
+<tr>
+<td>b</td>
+<td>到开始</td>
+</tr>
+<tr>
+<td>e</td>
+<td>到末尾</td>
+</tr>
+<tr>
+<td>?</td>
+<td>命令一览表</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出</td>
+</tr>
+</tbody></table>
+<h3 id="shoudown-reboot"><a href="#shoudown-reboot" class="headerlink" title="shoudown/reboot"></a>shoudown/reboot</h3><p>在 Linux 下面，由于每个程序 （或者 说是服务） 都是在在背景下执行的，因此，在你看不到的屏幕背后其实可能有相当多人同时 在你的主机上面工作。若不正常关机，则可能造成文件系统的毁损 （因为来不及将数据回写 到文件中，所以有些服务的文件会有问题)，</p>
+<p>可以通过一下命令查看系统状态：</p>
+<ul>
+<li>观察系统的使用状态，使用<code>who</code></li>
+<li>网络的连线状态，<code>netstat -a</code></li>
+<li>背景执行的程序，<code>ps -aux</code></li>
+</ul>
+<p>关机相关指令</p>
+<ul>
+<li>将数据同步写入硬盘中的指令： sync </li>
+<li>惯用的关机指令： shutdown </li>
+<li>重新开机，关机： reboot, halt, poweroff</li>
+</ul>
+<p><code>shutdown</code></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>当执行“shutdown -h 11:50”指令时，只要按+键就可以中断关机的指令</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>重新启动时不执行fsck</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>重新启动时执行fsck</td>
+</tr>
+<tr>
+<td>-h</td>
+<td>将系统关机</td>
+</tr>
+<tr>
+<td>-k</td>
+<td>只是送出信息给所有用户，但不会实际关机</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>不调用init程序进行关机，而由shutdown自己进行</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>shutdown之后重新启动</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>送出警告信息和删除信息之间要延迟多少秒</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 现在立即关机</span></span><br><span class="line">shutdown -h now</span><br><span class="line"><span class="comment">## 指定5分钟后关机，同时送出警告信息给登入用户</span></span><br><span class="line">shutdown +5 <span class="string">&quot;System will shutdown after 5 minutes&quot;</span> </span><br><span class="line"><span class="comment">## 于20：30g</span></span><br><span class="line">shutdown -h 20:30</span><br><span class="line"><span class="comment">## 重启服务器</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment">## 不会关机，只会发出警告信息</span></span><br><span class="line">shutdown -k now <span class="string">&#x27;This system will reboot&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h3><p>wget 命令用于在终端中下载网络文件，格式为“wget [参数] 下载地址”。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>后台下载模式</td>
+</tr>
+<tr>
+<td>-P</td>
+<td>下载到指定目录</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>最大尝试次数</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>断点续传</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>下载页面内所有资源，包括图片、视频等</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>递归下载</td>
+</tr>
+</tbody></table>
+<h3 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h3><p>ps 命令用于查看系统中的进程状态</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>显示所有进程（包括其他用户的进程）</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>用户以及其他详细信息</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>显示没有控制终端的进程</td>
+</tr>
+</tbody></table>
+<h3 id="top"><a href="#top" class="headerlink" title="top"></a>top</h3><p>top 命令用于动态地监视进程活动与系统负载等信息，能够动态地查看系统运维状态，完全将它看作 Linux 中的“强化版的 Windows 任务管理器”</p>
+<h3 id="pidof"><a href="#pidof" class="headerlink" title="pidof"></a>pidof</h3><p>pidof 命令用于查询某个指定服务进程的 PID 值，格式为“pidof [参数] [服务名称]”</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-s</td>
+<td>当系统中存在多个同名进程时，仅返回一个进程ID</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>仅返回当前正在运行且具有同一根目录的进程PID</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>返回指定运行脚本的shell进程PID</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>忽略具有指定进程ID的进程</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pidof -s crond</span><br></pre></td></tr></table></figure>
+
+<h3 id="kill"><a href="#kill" class="headerlink" title="kill"></a>kill</h3><p>kill 命令用于终止某个指定 PID 的服务进程。kill命令默认使用信号为15，用于结束进程或工作。如果进程或工作忽略此信号，则可以使用信号9，强制杀死进程或作业。</p>
+<h3 id="killall"><a href="#killall" class="headerlink" title="killall"></a>killall</h3><p>killall 命令用于终止某个指定名称的服务所对应的全部进程，复杂软件的服务程序会有多个进程协同为用户提供服务，如果逐个去结束这 些进程会比较麻烦，此时可以使用 killall 命令来批量结束某个服务程序带有的全部进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pidof sshd</span><br><span class="line">------------</span><br><span class="line">978953 978930 978929 978927 998</span><br><span class="line">killall sshd</span><br><span class="line">~~~https://www.linuxcool.com/)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="系统状态检测命令"><a href="#系统状态检测命令" class="headerlink" title="系统状态检测命令"></a>系统状态检测命令</h2><h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h3><p>获取网卡配置与网络状态等信息</p>
+<h3 id="uname"><a href="#uname" class="headerlink" title="uname"></a>uname</h3><p>查看系统内核与系统版本等信息</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>显示系统所有相关信息</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>显示计算机硬件架构</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>显示主机名称</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>显示内核发行版本号</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>显示内核名称</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>显示内核版本</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>显示主机处理器类型</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>显示操作系统名称</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>显示硬件平台</td>
+</tr>
+</tbody></table>
+<p>如果要查看当前系统版本的详细信息，则需要查看 <strong>redhat-release</strong> 文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/redhat-release </span><br></pre></td></tr></table></figure>
+
+<h3 id="uptime"><a href="#uptime" class="headerlink" title="uptime"></a>uptime</h3><p>以显示当前系统时间、系统已运行时间、启用终端数量以 及平均负载值等信息</p>
+<h3 id="free"><a href="#free" class="headerlink" title="free"></a>free</h3><p>显示当前系统中内存的使用量信息，格式为“free [-h]”</p>
+<h3 id="who"><a href="#who" class="headerlink" title="who"></a>who</h3><p>于查看当前登入主机的用户终端信息</p>
+<h3 id="last"><a href="#last" class="headerlink" title="last"></a>last</h3><p>查看所有系统的登录记录</p>
+<h3 id="history"><a href="#history" class="headerlink" title="history"></a>history</h3><p>于显示历史执行过的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">history</span> 20</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>!编码数字</code>可以再次执行命令</p>
+<h3 id="sosreport"><a href="#sosreport" class="headerlink" title="sosreport"></a>sosreport</h3><p>用于收集系统配置及架构信息并输出诊断文档，格式为 sosreport</p>
+<p>当 Linux 系统出现故障需要联系技术支持人员时，大多数时候都要先使用这个命令来简 单收集系统的运行状态和服务配置信息，以便让技术支持人员能够远程解决一些小问题，亦 或让他们能提前了解某些复杂问题</p>
+<p>归档报告保存在<code>/var/tmp</code>中</p>
+<h2 id="文本编辑"><a href="#文本编辑" class="headerlink" title="文本编辑"></a>文本编辑</h2><h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h3><p>查看纯文本文件，-n  显示行数（空行也编号）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n text.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="more"><a href="#more" class="headerlink" title="more"></a>more</h3><p>more 命令用于查看纯文本文件（内容较多的）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">more text.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>查看纯文本文件（内容较多的）。less的作用与more十分相似，不同点为less命令允许用户向前或向后浏览文件，而more命令只能向前浏览 。</p>
+<p>用less命令显示文件时，PageUp键向上翻页，PageDown键向下翻页，要退出less程序，应按Q键</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>置缓冲区的大小</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>当文件显示结束后，自动离开</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>强迫打开特殊文件，例如外围设备代号、目录和二进制文件</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>只标志最后搜索的关键词</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>忽略搜索时的大小写</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>显示类似more命令的百分比</td>
+</tr>
+<tr>
+<td>-N</td>
+<td>显示每行的行号</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>将less 输出的内容在指定文件中保存起来</td>
+</tr>
+<tr>
+<td>-Q</td>
+<td>不使用警告音</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>显示连续空行为一行</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>在单行显示较长的内容，而不换行显示</td>
+</tr>
+</tbody></table>
+<p>命令内部操作：</p>
+<ul>
+<li>b 向后翻一页</li>
+<li>d 向后翻半页</li>
+<li>h 显示帮助界面</li>
+<li>Q 退出less 命令</li>
+<li>u 向前滚动半页</li>
+<li>y 向前滚动一行</li>
+<li>空格键 滚动一页</li>
+<li>回车键 滚动一行</li>
+</ul>
+<h3 id="head"><a href="#head" class="headerlink" title="head"></a>head</h3><blockquote>
+<p>Linux就该这么学 - 刘遄</p>
+<p><a target="_blank" rel="noopener" href="https://www.linuxcool.com/">Linux命令大全(手册) – 真正好用的Linux命令在线查询网站 (linuxcool.com)</a></p>
+</blockquote>
 
     </div>
 
@@ -1440,7 +1920,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA-%E9%87%8D%E5%90%AF-%E6%B3%A8%E9%94%80"><span class="nav-text">关机&#x2F;重启&#x2F;注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E5%92%8C%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B"><span class="nav-text">系统信息和性能查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E5%88%86%E5%8C%BA"><span class="nav-text">磁盘和分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%A4%E6%88%B7%E5%92%8C%E2%BD%A4%E6%88%B7%E7%BB%84"><span class="nav-text">⽤户和⽤户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%B9%E7%BB%9C%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">⽹络和进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E2%BB%85%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-text">常⻅系统服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E5%92%8C%E2%BD%AC%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="nav-text">⽂件和⽬录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-text">⽂件查看和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%A7%A3%E5%8E%8B"><span class="nav-text">打包和解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">RPM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YUM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">YUM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DPKG%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">DPKG包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT%E8%BD%AF%E4%BB%B6%E2%BC%AF%E5%85%B7"><span class="nav-text">APT软件⼯具</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA-%E9%87%8D%E5%90%AF-%E6%B3%A8%E9%94%80"><span class="nav-text">关机&#x2F;重启&#x2F;注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E5%92%8C%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B"><span class="nav-text">系统信息和性能查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E5%88%86%E5%8C%BA"><span class="nav-text">磁盘和分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%A4%E6%88%B7%E5%92%8C%E2%BD%A4%E6%88%B7%E7%BB%84"><span class="nav-text">⽤户和⽤户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%B9%E7%BB%9C%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">⽹络和进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E2%BB%85%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-text">常⻅系统服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E5%92%8C%E2%BD%AC%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="nav-text">⽂件和⽬录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-text">⽂件查看和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%A7%A3%E5%8E%8B"><span class="nav-text">打包和解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">RPM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YUM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">YUM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DPKG%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">DPKG包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT%E8%BD%AF%E4%BB%B6%E2%BC%AF%E5%85%B7"><span class="nav-text">APT软件⼯具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%91%BD%E4%BB%A4"><span class="nav-text">2. 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8"><span class="nav-text">linux命令大全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man"><span class="nav-text">man</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info"><span class="nav-text">info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shoudown-reboot"><span class="nav-text">shoudown&#x2F;reboot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wget"><span class="nav-text">wget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ps"><span class="nav-text">ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pidof"><span class="nav-text">pidof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kill"><span class="nav-text">kill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#killall"><span class="nav-text">killall</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A3%80%E6%B5%8B%E5%91%BD%E4%BB%A4"><span class="nav-text">系统状态检测命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig"><span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uname"><span class="nav-text">uname</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uptime"><span class="nav-text">uptime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#free"><span class="nav-text">free</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#who"><span class="nav-text">who</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#last"><span class="nav-text">last</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-text">history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sosreport"><span class="nav-text">sosreport</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">文本编辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cat"><span class="nav-text">cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#more"><span class="nav-text">more</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#less"><span class="nav-text">less</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#head"><span class="nav-text">head</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -1456,7 +1936,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1469,7 +1949,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1491,7 +1971,7 @@
     <h3 class="widget-title">标签云</h3>
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/" rel="tag">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
@@ -1525,12 +2005,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">150k</span>
+    <span title="站点总字数">154k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:16</span>
+    <span title="站点阅读时长">2:20</span>
 </div>
 
 </br>

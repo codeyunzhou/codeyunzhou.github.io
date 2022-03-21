@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>gradle</title>
+    <url>/post/11/</url>
+    <content><![CDATA[<p>Gradle</p>
+]]></content>
+      <categories>
+        <category>项目构建</category>
+      </categories>
+      <tags>
+        <tag>gradle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>uml</title>
     <url>/post/10/</url>
     <content><![CDATA[<h1 id="UML类图"><a href="#UML类图" class="headerlink" title="UML类图"></a>UML类图</h1><p><a href="https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E5%BB%BA%E6%A8%A1%E8%AF%AD%E8%A8%80">UML</a> 是统一建模语言的简称，它是一种由一整套图表组成的标准化建模语言。UML用于帮助系统开发人员阐明，展示，构建和记录软件系统的产出。</p>
@@ -122,7 +134,13 @@
 <h3 id="3-3-Super-POM"><a href="#3-3-Super-POM" class="headerlink" title="3.3  Super POM"></a>3.3  Super POM</h3><p>所有的 POM 都继承自一个父 POM（无论是否显式定义了这个父 POM）。父 POM 也被称作 <strong>Super POM</strong>，它包含了一些可以被继承的默认设置。</p>
 <p>Maven 使用 effective pom（Super pom 加上工程自己的配置）来执行相关的目标，它帮助开发者在 pom.xml 中做尽可能少的配置，当然这些配置可以被方便的重写。</p>
 <p>查看 Super POM 默认配置的一个简单方法是执行以下命令：<code>mvn help:effective-pom</code></p>
-<h2 id="4-构建生命周期"><a href="#4-构建生命周期" class="headerlink" title="4. 构建生命周期"></a>4. 构建生命周期</h2><h3 id="4-1-Lifecycle和Phase"><a href="#4-1-Lifecycle和Phase" class="headerlink" title="4.1 Lifecycle和Phase"></a>4.1 Lifecycle和Phase</h3><p>这是 Maven 的主要生命周期，被用于构建应用。包括下面的 23 个阶段（phase）。</p>
+<h2 id="4-生命周期"><a href="#4-生命周期" class="headerlink" title="4. 生命周期"></a>4. 生命周期</h2><p>maven的实际执行单位是goal，一个或多个goal组成一个phase，而phase可组成lifecycle。在maven中有三个lifecycle：</p>
+<ul>
+<li>clean，负责project的清理</li>
+<li>default，负责project的构建</li>
+<li>site，负责产生project的文档</li>
+</ul>
+<h3 id="4-1-Lifecycle和Phase"><a href="#4-1-Lifecycle和Phase" class="headerlink" title="4.1 Lifecycle和Phase"></a>4.1 Lifecycle和Phase</h3><p>这是 Maven 的主要生命周期，被用于构建应用。包括下面的 23 个阶段（phase）。</p>
 <table>
 <thead>
 <tr>
@@ -443,8 +461,25 @@
 
 
 
+<h2 id="8-版本管理"><a href="#8-版本管理" class="headerlink" title="8. 版本管理"></a>8. 版本管理</h2><h3 id="8-1-版本冲突管理"><a href="#8-1-版本冲突管理" class="headerlink" title="8.1 版本冲突管理"></a>8.1 版本冲突管理</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">...</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>org.springframework.core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.5.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-security-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.5.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>org.springframework.core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
+<h3 id="8-2-最新版本检查"><a href="#8-2-最新版本检查" class="headerlink" title="8.2 最新版本检查"></a>8.2 最新版本检查</h3><p>更新函数式库</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mvn versions:display-dependency-updates</span><br></pre></td></tr></table></figure>
 
+<p>更新plugins</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mvn versions:display-plugin-updates</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-mvnw"><a href="#9-mvnw" class="headerlink" title="9. mvnw"></a>9. mvnw</h2><p><code>mvnw</code>是Maven Wrapper的缩写。因为我们安装Maven时，默认情况下，系统所有项目都会使用全局安装的这个Maven版本。但是，对于某些项目来说，它可能必须使用某个特定的Maven版本，这个时候，就可以使用Maven Wrapper，它可以负责给这个特定的项目安装指定版本的Maven，而其他项目不受影响</p>
+<p><strong>usage</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mvn wrapper:wrapper</span><br></pre></td></tr></table></figure>
+
+<p>执行成功后project会多mvnw<code>、</code>mvnw.cmd和<code>.mvn</code>目录，使用时把<code>mvn</code>替换成<code>mvnw</code>即可</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mvnw clean package</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-执行效率"><a href="#10-执行效率" class="headerlink" title="10. 执行效率"></a>10. 执行效率</h2><p>Maven 3 可以使用平行处理方式加速整个执行效率，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mvn -T 4 clean install # 以4个執行单元</span><br><span class="line">mvn -T 1C clean install # 每一CPU核心以1单元</span><br><span class="line">mvn -T 1.5C clean install # 每一CPU核心以1.5单元</span><br></pre></td></tr></table></figure>
+
+<p> -T 1C 参数较为合适</p>
 <blockquote>
 <p><a href="http://www.itbook.team/book/maven/">Maven中文手册 (itbook.team)</a></p>
 <p><a href="https://www.liaoxuefeng.com/wiki/1252599548343744/1255945359327200">Maven基础 - 廖雪峰的官方网站 (liaoxuefeng.com)</a></p>
@@ -4323,6 +4358,484 @@
 <td>清理缓存</td>
 </tr>
 </tbody></table>
+<h2 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h2><h3 id="linux命令大全"><a href="#linux命令大全" class="headerlink" title="linux命令大全"></a>linux命令大全</h3><p><a href="https://www.linuxcool.com/">Linux命令大全(手册) – 真正好用的Linux命令在线查询网站 (linuxcool.com)</a></p>
+<h3 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>man</td>
+<td>使用帮助</td>
+</tr>
+<tr>
+<td>info</td>
+<td>使用帮助</td>
+</tr>
+<tr>
+<td>help</td>
+<td>使用帮助</td>
+</tr>
+</tbody></table>
+<h3 id="man"><a href="#man" class="headerlink" title="man"></a>man</h3><p>manual的缩写，操作说明的意思，使用这个命令就可以查看想要查看的命令的使用方法</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">man [需要查看的命令]</span><br><span class="line">man ls</span><br></pre></td></tr></table></figure>
+
+<p>在man page里，第一行会出现指令加数字，如：  “DATE（1）”， 常见的几个数字的意义是这样的：</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>使用者在shell环境中可以操作的指令或可可执行文件</td>
+</tr>
+<tr>
+<td>2</td>
+<td>系统核心可调用的函数与工具等</td>
+</tr>
+<tr>
+<td>3</td>
+<td>一些常用的函数（function）与函数库（library），大部分为C的函数库（libc）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>设备文件的说明，通常在/dev下的文件</td>
+</tr>
+<tr>
+<td>5</td>
+<td>配置文件或者是某些文件的格式</td>
+</tr>
+<tr>
+<td>6</td>
+<td>游戏（games）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>惯例与协定等，例如Linux文件系统、网络协定、ASCII code等等的说明</td>
+</tr>
+<tr>
+<td>8</td>
+<td>系统管理员可用的管理指令</td>
+</tr>
+<tr>
+<td>9</td>
+<td>跟kernel有关的文件</td>
+</tr>
+</tbody></table>
+<p><font color='red'>tips：</font>1，5，8 比较常用</p>
+<img data-src="https://gitee.com/codeyunzhou/images/raw/master/linux/202203181518631.png" style="zoom:67%;" />
+
+<p>man内容分块：</p>
+<table>
+<thead>
+<tr>
+<th>NAME</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SYNOPSIS</td>
+<td>命令语法</td>
+</tr>
+<tr>
+<td>DESCRIPTION</td>
+<td>命令描述</td>
+</tr>
+<tr>
+<td>MANUAL SECTIONS</td>
+<td>手册章节</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>参数</td>
+</tr>
+<tr>
+<td>CAT PAGES</td>
+<td>cat页</td>
+</tr>
+<tr>
+<td>HTML PAGES</td>
+<td>html页面</td>
+</tr>
+<tr>
+<td>SEARCH PATH FOR MANUAL PAGES</td>
+<td>搜索路径手册页</td>
+</tr>
+<tr>
+<td>ENVIRONMENT</td>
+<td>环境</td>
+</tr>
+<tr>
+<td>BUGS</td>
+<td>已知bug</td>
+</tr>
+<tr>
+<td>TIPS</td>
+<td>提示</td>
+</tr>
+<tr>
+<td>AUTHOR</td>
+<td>作者</td>
+</tr>
+<tr>
+<td>SEE ALSO</td>
+<td>其他参考</td>
+</tr>
+</tbody></table>
+<p>操作：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/123</td>
+<td>向上查找”123”</td>
+</tr>
+<tr>
+<td>?123</td>
+<td>向下查找”123”</td>
+</tr>
+<tr>
+<td>n or u</td>
+<td>u查看上一个结果，n查看下一个结果</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出 man page</td>
+</tr>
+</tbody></table>
+<h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><p>read Info documents。man和info都可以查询命令用法或者是文件的格式，但是man是一次全部显示出来了。info就分成一页一页的，一个node(结点)一个node的显示</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">info [需要查看的命令]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>空格</td>
+<td>向下翻页</td>
+</tr>
+<tr>
+<td>enter</td>
+<td>进入光标指向node</td>
+</tr>
+<tr>
+<td>n</td>
+<td>下一个node</td>
+</tr>
+<tr>
+<td>p</td>
+<td>上一个node</td>
+</tr>
+<tr>
+<td>b</td>
+<td>到开始</td>
+</tr>
+<tr>
+<td>e</td>
+<td>到末尾</td>
+</tr>
+<tr>
+<td>?</td>
+<td>命令一览表</td>
+</tr>
+<tr>
+<td>q</td>
+<td>退出</td>
+</tr>
+</tbody></table>
+<h3 id="shoudown-reboot"><a href="#shoudown-reboot" class="headerlink" title="shoudown/reboot"></a>shoudown/reboot</h3><p>在 Linux 下面，由于每个程序 （或者 说是服务） 都是在在背景下执行的，因此，在你看不到的屏幕背后其实可能有相当多人同时 在你的主机上面工作。若不正常关机，则可能造成文件系统的毁损 （因为来不及将数据回写 到文件中，所以有些服务的文件会有问题)，</p>
+<p>可以通过一下命令查看系统状态：</p>
+<ul>
+<li>观察系统的使用状态，使用<code>who</code></li>
+<li>网络的连线状态，<code>netstat -a</code></li>
+<li>背景执行的程序，<code>ps -aux</code></li>
+</ul>
+<p>关机相关指令</p>
+<ul>
+<li>将数据同步写入硬盘中的指令： sync </li>
+<li>惯用的关机指令： shutdown </li>
+<li>重新开机，关机： reboot, halt, poweroff</li>
+</ul>
+<p><code>shutdown</code></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>当执行“shutdown -h 11:50”指令时，只要按+键就可以中断关机的指令</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>重新启动时不执行fsck</td>
+</tr>
+<tr>
+<td>-F</td>
+<td>重新启动时执行fsck</td>
+</tr>
+<tr>
+<td>-h</td>
+<td>将系统关机</td>
+</tr>
+<tr>
+<td>-k</td>
+<td>只是送出信息给所有用户，但不会实际关机</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>不调用init程序进行关机，而由shutdown自己进行</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>shutdown之后重新启动</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>送出警告信息和删除信息之间要延迟多少秒</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">## 现在立即关机</span></span><br><span class="line">shutdown -h now</span><br><span class="line"><span class="comment">## 指定5分钟后关机，同时送出警告信息给登入用户</span></span><br><span class="line">shutdown +5 <span class="string">&quot;System will shutdown after 5 minutes&quot;</span> </span><br><span class="line"><span class="comment">## 于20：30g</span></span><br><span class="line">shutdown -h 20:30</span><br><span class="line"><span class="comment">## 重启服务器</span></span><br><span class="line">shutdown -r now</span><br><span class="line"><span class="comment">## 不会关机，只会发出警告信息</span></span><br><span class="line">shutdown -k now <span class="string">&#x27;This system will reboot&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="wget"><a href="#wget" class="headerlink" title="wget"></a>wget</h3><p>wget 命令用于在终端中下载网络文件，格式为“wget [参数] 下载地址”。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>后台下载模式</td>
+</tr>
+<tr>
+<td>-P</td>
+<td>下载到指定目录</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>最大尝试次数</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>断点续传</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>下载页面内所有资源，包括图片、视频等</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>递归下载</td>
+</tr>
+</tbody></table>
+<h3 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h3><p>ps 命令用于查看系统中的进程状态</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>显示所有进程（包括其他用户的进程）</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>用户以及其他详细信息</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>显示没有控制终端的进程</td>
+</tr>
+</tbody></table>
+<h3 id="top"><a href="#top" class="headerlink" title="top"></a>top</h3><p>top 命令用于动态地监视进程活动与系统负载等信息，能够动态地查看系统运维状态，完全将它看作 Linux 中的“强化版的 Windows 任务管理器”</p>
+<h3 id="pidof"><a href="#pidof" class="headerlink" title="pidof"></a>pidof</h3><p>pidof 命令用于查询某个指定服务进程的 PID 值，格式为“pidof [参数] [服务名称]”</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-s</td>
+<td>当系统中存在多个同名进程时，仅返回一个进程ID</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>仅返回当前正在运行且具有同一根目录的进程PID</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>返回指定运行脚本的shell进程PID</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>忽略具有指定进程ID的进程</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pidof -s crond</span><br></pre></td></tr></table></figure>
+
+<h3 id="kill"><a href="#kill" class="headerlink" title="kill"></a>kill</h3><p>kill 命令用于终止某个指定 PID 的服务进程。kill命令默认使用信号为15，用于结束进程或工作。如果进程或工作忽略此信号，则可以使用信号9，强制杀死进程或作业。</p>
+<h3 id="killall"><a href="#killall" class="headerlink" title="killall"></a>killall</h3><p>killall 命令用于终止某个指定名称的服务所对应的全部进程，复杂软件的服务程序会有多个进程协同为用户提供服务，如果逐个去结束这 些进程会比较麻烦，此时可以使用 killall 命令来批量结束某个服务程序带有的全部进程</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pidof sshd</span><br><span class="line">------------</span><br><span class="line">978953 978930 978929 978927 998</span><br><span class="line">killall sshd</span><br><span class="line">~~~https://www.linuxcool.com/)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="系统状态检测命令"><a href="#系统状态检测命令" class="headerlink" title="系统状态检测命令"></a>系统状态检测命令</h2><h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h3><p>获取网卡配置与网络状态等信息</p>
+<h3 id="uname"><a href="#uname" class="headerlink" title="uname"></a>uname</h3><p>查看系统内核与系统版本等信息</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>显示系统所有相关信息</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>显示计算机硬件架构</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>显示主机名称</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>显示内核发行版本号</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>显示内核名称</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>显示内核版本</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>显示主机处理器类型</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>显示操作系统名称</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>显示硬件平台</td>
+</tr>
+</tbody></table>
+<p>如果要查看当前系统版本的详细信息，则需要查看 <strong>redhat-release</strong> 文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat /etc/redhat-release </span><br></pre></td></tr></table></figure>
+
+<h3 id="uptime"><a href="#uptime" class="headerlink" title="uptime"></a>uptime</h3><p>以显示当前系统时间、系统已运行时间、启用终端数量以 及平均负载值等信息</p>
+<h3 id="free"><a href="#free" class="headerlink" title="free"></a>free</h3><p>显示当前系统中内存的使用量信息，格式为“free [-h]”</p>
+<h3 id="who"><a href="#who" class="headerlink" title="who"></a>who</h3><p>于查看当前登入主机的用户终端信息</p>
+<h3 id="last"><a href="#last" class="headerlink" title="last"></a>last</h3><p>查看所有系统的登录记录</p>
+<h3 id="history"><a href="#history" class="headerlink" title="history"></a>history</h3><p>于显示历史执行过的命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">history</span> 20</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>!编码数字</code>可以再次执行命令</p>
+<h3 id="sosreport"><a href="#sosreport" class="headerlink" title="sosreport"></a>sosreport</h3><p>用于收集系统配置及架构信息并输出诊断文档，格式为 sosreport</p>
+<p>当 Linux 系统出现故障需要联系技术支持人员时，大多数时候都要先使用这个命令来简 单收集系统的运行状态和服务配置信息，以便让技术支持人员能够远程解决一些小问题，亦 或让他们能提前了解某些复杂问题</p>
+<p>归档报告保存在<code>/var/tmp</code>中</p>
+<h2 id="文本编辑"><a href="#文本编辑" class="headerlink" title="文本编辑"></a>文本编辑</h2><h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h3><p>查看纯文本文件，-n  显示行数（空行也编号）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cat -n text.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="more"><a href="#more" class="headerlink" title="more"></a>more</h3><p>more 命令用于查看纯文本文件（内容较多的）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">more text.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>查看纯文本文件（内容较多的）。less的作用与more十分相似，不同点为less命令允许用户向前或向后浏览文件，而more命令只能向前浏览 。</p>
+<p>用less命令显示文件时，PageUp键向上翻页，PageDown键向下翻页，要退出less程序，应按Q键</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>置缓冲区的大小</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>当文件显示结束后，自动离开</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>强迫打开特殊文件，例如外围设备代号、目录和二进制文件</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>只标志最后搜索的关键词</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>忽略搜索时的大小写</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>显示类似more命令的百分比</td>
+</tr>
+<tr>
+<td>-N</td>
+<td>显示每行的行号</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>将less 输出的内容在指定文件中保存起来</td>
+</tr>
+<tr>
+<td>-Q</td>
+<td>不使用警告音</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>显示连续空行为一行</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>在单行显示较长的内容，而不换行显示</td>
+</tr>
+</tbody></table>
+<p>命令内部操作：</p>
+<ul>
+<li>b 向后翻一页</li>
+<li>d 向后翻半页</li>
+<li>h 显示帮助界面</li>
+<li>Q 退出less 命令</li>
+<li>u 向前滚动半页</li>
+<li>y 向前滚动一行</li>
+<li>空格键 滚动一页</li>
+<li>回车键 滚动一行</li>
+</ul>
+<h3 id="head"><a href="#head" class="headerlink" title="head"></a>head</h3><blockquote>
+<p>Linux就该这么学 - 刘遄</p>
+<p><a href="https://www.linuxcool.com/">Linux命令大全(手册) – 真正好用的Linux命令在线查询网站 (linuxcool.com)</a></p>
+</blockquote>
 ]]></content>
       <categories>
         <category>linux</category>
