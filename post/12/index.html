@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.qiyunzhou.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#11a3fc","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Nginx1.基本概念Nginx（发音同“engine X”）是异步框架的网页服务器，也可以用作反向代理、负载平衡器和HTTP缓存。该软件由俄罗斯程序员伊戈尔·赛索耶夫（Игорь Сысоев）开发并于2004年首次公开发布[6]。2011年成立同名公司以提供支持服务 1.1 正向代理正向代理是一个位于客户端和目标服务器之间的代理服务器(中间服务器)。为了从原始服务器取得内容，客户端向代理服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx">
+<meta property="og:url" content="http://www.qiyunzhou.top/post/12/index.html">
+<meta property="og:site_name" content="云州的博客">
+<meta property="og:description" content="Nginx1.基本概念Nginx（发音同“engine X”）是异步框架的网页服务器，也可以用作反向代理、负载平衡器和HTTP缓存。该软件由俄罗斯程序员伊戈尔·赛索耶夫（Игорь Сысоев）开发并于2004年首次公开发布[6]。2011年成立同名公司以提供支持服务 1.1 正向代理正向代理是一个位于客户端和目标服务器之间的代理服务器(中间服务器)。为了从原始服务器取得内容，客户端向代理服务器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cdn.qiyunzhou.top/img/305504-20161112124853014-1532060796.png">
+<meta property="og:image" content="http://cdn.qiyunzhou.top/img/305504-20161112124341280-1435223816.png">
+<meta property="article:published_time" content="2022-03-26T02:56:50.000Z">
+<meta property="article:modified_time" content="2022-03-29T14:59:44.523Z">
+<meta property="article:author" content="yunzhou">
+<meta property="article:tag" content="nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cdn.qiyunzhou.top/img/305504-20161112124853014-1532060796.png">
+
+<link rel="canonical" href="http://www.qiyunzhou.top/post/12/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>nginx | 云州的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  
+   <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+   <script type="text/javascript" src="/js/anime.js"></script> 
+   <script type="text/javascript" src="/js/fireworks.js"></script>
+  
+  <script src="/live2d-widget/autoload.js"></script>
+  
+  <div class="container use-motion">
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">云州的博客</h1>
+      <span class="logo-line-after">我们都是星尘</span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-words">
+
+    <a href="/words/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>一言</a>
+
+  </li>
+        <li class="menu-item menu-item-links">
+
+    <a href="/links/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.qiyunzhou.top/post/12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/boy.jpg">
+      <meta itemprop="name" content="yunzhou">
+      <meta itemprop="description" content="看呐！那朵云好像一朵云">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云州的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nginx
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-26 10:56:50" itemprop="dateCreated datePublished" datetime="2022-03-26T10:56:50+08:00">2022-03-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-29 22:59:44" itemprop="dateModified" datetime="2022-03-29T22:59:44+08:00">2022-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h1><h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1.基本概念"></a>1.基本概念</h2><p><strong>Nginx</strong>（发音同“engine X”）是异步框架的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E9%A0%81%E4%BC%BA%E6%9C%8D%E5%99%A8">网页服务器</a>，也可以用作<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86">反向代理</a>、<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1">负载平衡器</a>和<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/HTTP%E7%BC%93%E5%AD%98">HTTP缓存</a>。该软件由俄罗斯程序员<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BC%8A%E6%88%88%E7%88%BE%C2%B7%E8%B3%BD%E7%B4%A2%E8%80%B6%E5%A4%AB">伊戈尔·赛索耶夫</a>（Игорь Сысоев）开发并于2004年首次公开发布[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Nginx#cite_note-Mobily-6">6]</a>。2011年成立同名公司以提供支持服务</p>
+<h3 id="1-1-正向代理"><a href="#1-1-正向代理" class="headerlink" title="1.1 正向代理"></a>1.1 正向代理</h3><p>正向代理是一个位于客户端和目标服务器之间的代理服务器(中间服务器)。为了从原始服务器取得内容，客户端向代理服务器发送一个请求，并且指定目标服务器，之后代理向目标服务器转交并且将获得的内容返回给客户端。正向代理的情况下客户端必须要进行一些特别的设置才能使用</p>
+<p><img data-src="http://cdn.qiyunzhou.top/img/305504-20161112124853014-1532060796.png"></p>
+<h3 id="1-2-反向代理"><a href="#1-2-反向代理" class="headerlink" title="1.2 反向代理"></a>1.2 反向代理</h3><p>反向代理正好相反。对于客户端来说，反向代理就好像目标服务器。并且客户端不需要进行任何设置。客户端向反向代理发送请求，接着反向代理判断请求走向何处，并将请求转交给客户端，使得这些内容就好似他自己一样，一次客户端并不会感知到反向代理后面的服务，也因此不需要客户端做任何设置，只需要把反向代理服务器当成真正的服务器就好了。</p>
+<p><img data-src="http://cdn.qiyunzhou.top/img/305504-20161112124341280-1435223816.png"></p>
+<h2 id="2-安装nginx"><a href="#2-安装nginx" class="headerlink" title="2.安装nginx"></a>2.安装nginx</h2><h3 id="2-1yum安装"><a href="#2-1yum安装" class="headerlink" title="2.1yum安装"></a>2.1yum安装</h3><p>EPEL 仓库中有 Nginx 的安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install epel-release</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">sudo yum install nginx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>设置 Nginx 开机启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> nginx</span><br></pre></td></tr></table></figure>
+
+<p>打开 80（HTTP）和 443（HTTPS）端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --permanent --zone=public --add-service=http</span><br><span class="line">sudo firewall-cmd --permanent --zone=public --add-service=https</span><br><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start nginx</span><br></pre></td></tr></table></figure>
+
+<p>关闭</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -s stop</span><br><span class="line">systemctl stop nginx</span><br></pre></td></tr></table></figure>
+
+<p>安全退出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s quit</span><br></pre></td></tr></table></figure>
+
+<p>重载配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>查看nginx进程id</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -C nginx -o pid</span><br></pre></td></tr></table></figure>
+
+<p>查看yum安装的软件路径</p>
+<p>查找nginx的安装包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep nginx</span><br><span class="line">-------</span><br><span class="line">nginx-1.20.1-9.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+<p>查找安装包的安装路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ql nginx-1.20.1-9.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-2压缩包安装"><a href="#2-2压缩包安装" class="headerlink" title="2.2压缩包安装"></a>2.2压缩包安装</h3><p>在安装nginx前首先要确认系统中安装了<strong>gcc、pcre-devel、zlib-devel、openssl-devel</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc pcre-devel zlib-devel openssl openssl-devel</span><br></pre></td></tr></table></figure>
+
+<p>安装及编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入nginx目录</span></span><br><span class="line"><span class="built_in">cd</span> nginx-XXX.tar.gz</span><br><span class="line"><span class="comment"># 初始化</span></span><br><span class="line">./configure --prefix=/usr/<span class="built_in">local</span>/nginx-XXX.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<p>创建nginx日志文件夹</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir logs</span><br><span class="line">chmod 700 logs</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/nginx-XXX/sbin</span><br><span class="line">./nginx</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-nginx信号控制"><a href="#3-nginx信号控制" class="headerlink" title="3.nginx信号控制"></a>3.nginx信号控制</h2><p>Nginx默认采用的是多进程的方式来工作的，当将Nginx启动后，我们通过<code>ps -ef | grep nginx</code>命令可以查看到如下内容：</p>
+<p>Nginx后台进程中包含一个master进程和多个worker进程，master进程主要用来管理worker进程，包含接收外界的信息，并将接收到的信号发送给各个worker进程，监控worker进程的状态，当worker进程出现异常退出后，会自动重新启动新的worker进程。而worker进程则是专门用来处理用户请求的，各个worker进程之间是平等的并且相互独立，处理请求的机会也是一样的</p>
+<p>只需要通过给master进程发送信号就可以来控制Nginx</p>
+<p>要想操作Nginx的master进程，就需要获取到master进程的进程号ID</p>
+<ul>
+<li>通过<code>ps -ef | grep nginx</code></li>
+<li>nginx的<code>./configure</code>的配置参数中，有一个参数是<code>--pid-path=PATH</code>默认是<code>/usr/local/nginx/logs/nginx.pid</code>,所以可以通过查看该文件来获取nginx的master进程ID</li>
+</ul>
+<h3 id="3-1-信号"><a href="#3-1-信号" class="headerlink" title="3.1 信号"></a>3.1 信号</h3><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TERM/INT</td>
+<td>立即关闭整个服务</td>
+</tr>
+<tr>
+<td>QUIT</td>
+<td>“优雅”地关闭整个服务</td>
+</tr>
+<tr>
+<td>HUP</td>
+<td>重读配置文件并使用服务对新配置项生效</td>
+</tr>
+<tr>
+<td>USR1</td>
+<td>重新打开日志文件，可以用来进行日志切割</td>
+</tr>
+<tr>
+<td>USR2</td>
+<td>平滑升级到最新版的nginx</td>
+</tr>
+<tr>
+<td>WINCH</td>
+<td>所有子进程不在接收处理新连接，相当于给work进程发送QUIT指令</td>
+</tr>
+</tbody></table>
+<ol>
+<li>关闭nginx</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -TERM PID</span><br><span class="line"><span class="built_in">kill</span> -INT PID</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>发送QUIT信号给master进程，master进程会控制所有的work进程不再接收新的请求，等所有请求处理完后，在把进程都关闭掉。</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -QUIT PID</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>发送HUP信号给master进程，master进程会把控制旧的work进程不再接收新的请求，等处理完请求后将旧的work进程关闭掉，然后根据nginx的配置文件重新启动新的work进程</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -HUP PID</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-命令控制"><a href="#3-2-命令控制" class="headerlink" title="3.2 命令控制"></a>3.2 命令控制</h3><p>nginx的行为控制是通过-s参数来制定的，支持的值列表：</p>
+<ul>
+<li>stop 快速停止</li>
+<li>quit 优雅停止</li>
+<li>reload 重载配置文件</li>
+<li>reopen 滚动日志文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s quit</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-nginx-文件结构"><a href="#4-nginx-文件结构" class="headerlink" title="4. nginx 文件结构"></a>4. nginx 文件结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">...              #全局块</span><br><span class="line"></span><br><span class="line">events &#123;         #events块</span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http      #http块</span><br><span class="line">&#123;</span><br><span class="line">    ...   #http全局块</span><br><span class="line">    server        #server块</span><br><span class="line">    &#123; </span><br><span class="line">        ...       #server全局块</span><br><span class="line">        location [PATTERN]   #location块</span><br><span class="line">        &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">        location [PATTERN] </span><br><span class="line">        &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server</span><br><span class="line">    &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...     #http全局块</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>全局块</strong>：配置影响nginx全局的指令。一般有运行nginx服务器的用户组，nginx进程pid存放路径，日志存放路径，配置文件引入，允许生成worker process数等。</li>
+<li><strong>events块</strong>：配置影响nginx服务器或与用户的网络连接。有每个进程的最大连接数，选取哪种事件驱动模型处理连接请求，是否允许同时接受多个网路连接，开启多个网络连接序列化等。</li>
+<li><strong>http块</strong>：可以嵌套多个server，配置代理，缓存，日志定义等绝大多数功能和第三方模块的配置。如文件引入，mime-type定义，日志自定义，是否使用sendfile传输文件，连接超时时间，单连接请求数等。</li>
+<li><strong>server块</strong>：配置虚拟主机的相关参数，一个http中可以有多个server。</li>
+<li><strong>location块</strong>：配置请求的路由，以及各种页面的处理情况。</li>
+</ul>
+<p>demo</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">########### 每个指令必须有分号结束。#################</span><br><span class="line">#user administrator administrators;  #配置用户或者组，默认为nobody nobody。</span><br><span class="line">#worker_processes 2;  #允许生成的进程数，默认为1</span><br><span class="line">#pid /nginx/pid/nginx.pid;   #指定nginx进程运行文件存放地址</span><br><span class="line">error_log log/error.log debug;  #制定日志路径，级别。这个设置可以放入全局块，http块，server块，级别以此为：debug|info|notice|warn|error|crit|alert|emerg</span><br><span class="line">events &#123;</span><br><span class="line">    accept_mutex on;   #设置网路连接序列化，防止惊群现象发生，默认为on</span><br><span class="line">    multi_accept on;  #设置一个进程是否同时接受多个网络连接，默认为off</span><br><span class="line">    #use epoll;      #事件驱动模型，select|poll|kqueue|epoll|resig|/dev/poll|eventport</span><br><span class="line">    worker_connections  1024;    #最大连接数，默认为512</span><br><span class="line">&#125;</span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;   #文件扩展名与文件类型映射表</span><br><span class="line">    default_type  application/octet-stream; #默认文件类型，默认为text/plain</span><br><span class="line">    #access_log off; #取消服务日志    </span><br><span class="line">    log_format myFormat &#x27;$remote_addr–$remote_user [$time_local] $request $status $body_bytes_sent $http_referer $http_user_agent $http_x_forwarded_for&#x27;; #自定义格式</span><br><span class="line">    access_log log/access.log myFormat;  #combined为日志格式的默认值</span><br><span class="line">    sendfile on;   #允许sendfile方式传输文件，默认为off，可以在http块，server块，location块。</span><br><span class="line">    sendfile_max_chunk 100k;  #每个进程每次调用传输数量不能大于设定的值，默认为0，即不设上限。</span><br><span class="line">    keepalive_timeout 65;  #连接超时时间，默认为75s，可以在http，server，location块。</span><br><span class="line"></span><br><span class="line">    upstream mysvr &#123;   </span><br><span class="line">      server 127.0.0.1:7878;</span><br><span class="line">      server 192.168.10.121:3333 backup;  #热备</span><br><span class="line">    &#125;</span><br><span class="line">    error_page 404 https://www.baidu.com; #错误页</span><br><span class="line">    server &#123;</span><br><span class="line">        keepalive_requests 120; #单连接请求上限次数。</span><br><span class="line">        listen       4545;   #监听端口</span><br><span class="line">        server_name  127.0.0.1;   #监听地址       </span><br><span class="line">        location  ~*^.+$ &#123;       #请求的url过滤，正则匹配，~为区分大小写，~*为不区分大小写。</span><br><span class="line">           #root path;  #根目录</span><br><span class="line">           #index vv.txt;  #设置默认页</span><br><span class="line">           proxy_pass  http://mysvr;  #请求转向mysvr 定义的服务器列表</span><br><span class="line">           deny 127.0.0.1;  #拒绝的ip</span><br><span class="line">           allow 172.18.5.54; #允许的ip           </span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常见配置项</p>
+<ul>
+<li>1.$remote_addr 与 $http_x_forwarded_for 用以记录客户端的ip地址；</li>
+<li>2.$remote_user ：用来记录客户端用户名称；</li>
+<li>3.$time_local ： 用来记录访问时间与时区；</li>
+<li>4.$request ： 用来记录请求的url与http协议；</li>
+<li>5.$status ： 用来记录请求状态；成功是200；</li>
+<li>6.$body_bytes_s ent ：记录发送给客户端文件主体内容大小；</li>
+<li>7.$http_referer ：用来记录从那个页面链接访问过来的；</li>
+<li>8.$http_user_agent ：记录客户端浏览器的相关信息；</li>
+</ul>
+<h3 id="4-1-全局块"><a href="#4-1-全局块" class="headerlink" title="4.1 全局块"></a>4.1 全局块</h3><p><strong>user</strong>：用于配置运行Nginx服务器的worker进程的用户和用户组</p>
+<p><strong>worker_processes</strong>：用于配置Nginx生成工作进程的数量，这个是Nginx服务器实现并发处理服务的关键所在。理论上来说workder process的值越大，可以支持的并发处理量也越多，但事实上这个值的设定是需要受到来自服务器自身的限制，建议将该值和服务器CPU的内核数保存一致。</p>
+<p><strong>include</strong>:用来引入其他配置文件，使Nginx的配置更加灵活</p>
+<p>master_process：用来指定是否开启工作进程。</p>
+<p>daemon：设定Nginx是否以守护进程的方式启动。守护式进程是linux后台执行的一种服务进程，特点是独立于控制终端，不会随着终端关闭而停止。</p>
+<p>pid：用来配置Nginx当前master进程的进程号ID存储的文件路径。默认为:/usr/local/nginx/logs/nginx.pid</p>
+<p>error_log：用来配置Nginx的错误日志存放路径。默认值 ：error_log logs/error.log error。位置 ：全局块、http、server、location</p>
+<h3 id="4-2-events块"><a href="#4-2-events块" class="headerlink" title="4.2 events块"></a>4.2 events块</h3><p>accept_mutex：用来设置Nginx网络连接序列化<br>这个配置主要可以用来解决常说的”惊群”问题。大致意思是在某一个时刻，客户端发来一个请求连接，Nginx后台是以多进程的工作模式，也就是说有多个worker进程会被同时唤醒，但是最终只会有一个进程可以获取到连接，如果每次唤醒的进程数目太多，就会影响Nginx的整体性能。如果将上述值设置为on(开启状态)，将会对多个Nginx进程接收连接进行序列号，一个个来唤醒接收，就防止了多个进程对连接的争抢。<br><font color='red'>tips:</font>惊群现象：一个网路连接到来，多个睡眠的进程被同时叫醒，但只有一个进程能获得链接，这样会影响系统性能。</p>
+<p>multi_accept:用来设置是否允许同时接收多个网络连接。如果multi_accept被禁止了，nginx一个工作进程只能同时接受一个新的连接。否则，一个工作进程可以同时接受所有的新连接</p>
+<p>worker_connections：用来配置单个worker进程最大的连接数<br>这里的连接数不仅仅包括和前端用户建立的连接数，而是包括所有可能的连接数。另外，number值不能大于操作系统支持打开的最大文件句柄数量</p>
+<p>use:用来设置Nginx服务器选择哪种事件驱动来处理网络消息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">events&#123;</span><br><span class="line">	accept_mutex on;</span><br><span class="line">	multi_accept on;</span><br><span class="line">	worker_commections 1024;</span><br><span class="line">	use epoll;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-http块"><a href="#4-3-http块" class="headerlink" title="4.3 http块"></a>4.3 http块</h3><p>include mime.types：把mime.types文件中MIMT类型与相关类型文件的文件后缀名的对应关系加入到当前的配置文件中</p>
+<p>default_type:用来配置Nginx响应前端请求默认的MIME类型。</p>
+<p><strong>usage</strong></p>
+<p>有些时候请求某些接口的时候需要返回指定的文本字符串或者json字符串，如果逻辑非常简单或者干脆是固定的字符串，那么可以使用nginx快速实现，这样就不用编写程序响应请求了，可以减少服务器资源占用并且响应性能非常快</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location /get_text &#123;</span><br><span class="line">	#这里也可以设置成text/plain</span><br><span class="line">    default_type text/html;</span><br><span class="line">    return 200 &quot;This is nginx&#x27;s text&quot;;</span><br><span class="line">&#125;</span><br><span class="line">location /get_json&#123;</span><br><span class="line">    default_type application/json;</span><br><span class="line">    return 200 &#x27;&#123;&quot;name&quot;:&quot;TOM&quot;,&quot;age&quot;:18&#125;&#x27;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-1-自定义服务日志"><a href="#4-3-1-自定义服务日志" class="headerlink" title="4.3.1 自定义服务日志"></a>4.3.1 自定义服务日志</h4><p>Nginx中日志的类型分access.log、error.log。</p>
+<p>access.log:用来记录用户所有的访问请求。</p>
+<p>error.log:记录nginx本身运行时的错误信息，不会记录用户的访问请求。</p>
+<p>Nginx服务器支持对服务日志的格式、大小、输出等进行设置，需要使用到两个指令，分别是<code>access_log</code>和<code>log_format</code>指令。</p>
+<p>access_log</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>access_log path[format[buffer=size]]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>access_log logs/access.log combined;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td><code>http</code>, <code>server</code>, <code>location</code></td>
+</tr>
+</tbody></table>
+<p>log_format</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>log_format name [escape=default|json|none] string….;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认值</td>
+<td>log_format combined “…”;</td>
+</tr>
+<tr>
+<td>位置</td>
+<td>http</td>
+</tr>
+</tbody></table>
+<h3 id="4-4-其他配置指令"><a href="#4-4-其他配置指令" class="headerlink" title="4.4 其他配置指令"></a>4.4 其他配置指令</h3><p>sendfile:用来设置Nginx服务器是否使用sendfile()传输文件，该属性可以大大提高Nginx处理静态资源的性能</p>
+<p>keepalive_timeout:用来设置长连接的超时时间</p>
+<p>HTTP是一种无状态协议，客户端向服务端发送一个TCP请求，服务端响应完毕后断开连接。<br>如何客户端向服务端发送多个请求，每个请求都需要重新创建一次连接，效率相对来说比较多，使用keepalive模式，可以告诉服务器端在处理完一个请求后保持这个TCP连接的打开状态，若接收到来自这个客户端的其他请求，服务端就会利用这个未被关闭的连接，而不需要重新创建一个新连接，提升效率，但是这个连接也不能一直保持，这样的话，连接如果过多，也会是服务端的性能下降，这个时候就需要我们进行设置其的超时时间。</p>
+<h2 id="5-静态资源"><a href="#5-静态资源" class="headerlink" title="5. 静态资源"></a>5. 静态资源</h2><h3 id="5-1-概述"><a href="#5-1-概述" class="headerlink" title="5.1 概述"></a>5.1 概述</h3><p>静态资源即指在服务器端真实存在并且能直接拿来展示的一些文件，比如常见的html页面、css文件、js文件、图 片、视频等资源；<br>动态资源即指在服务器端真实存在但是要想获取需要经过一定的业务逻辑处理，根据不同的条件展示在页面不同这 一部分内容</p>
+<p>Nginx处理静态资源的内容，我们需要考虑下面这几个问题:</p>
+<p>（1）静态资源的配置指令<br>（2）静态资源的配置优化<br>（3）静态资源的压缩配置指令<br>（4）静态资源的缓存处理<br>（5）静态资源的访问控制，包括跨域问题和防盗链问题</p>
+<h3 id="5-2-静态资源的配置指令"><a href="#5-2-静态资源的配置指令" class="headerlink" title="5.2 静态资源的配置指令"></a>5.2 静态资源的配置指令</h3><h4 id="5-2-1-server块"><a href="#5-2-1-server块" class="headerlink" title="5.2.1 server块"></a>5.2.1 server块</h4><p>listen：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">listen 127.0.0.1:8000 default_server; // listen localhost:8000 监听指定的IP和端口</span><br><span class="line">listen 127.0.0.1;	监听指定IP的所有端口</span><br><span class="line">listen 8000;	监听指定端口上的连接</span><br><span class="line">listen *:8000;	监听指定端口上的连接</span><br></pre></td></tr></table></figure>
+
+<p><strong>default_server</strong>属性是标识符，用来将此虚拟主机设置成默认主机。所谓的默认主机指的是如果没有匹配到对应的address:port，则会默认执行的。如果不指定默认使用的是第一个server。</p>
+<p>server_name：用来设置虚拟主机服务名称</p>
+<p>server_name的配置方式有三种，分别是：</p>
+<ul>
+<li>精确匹配</li>
+<li>通配符匹配</li>
+<li>正则表达式匹配</li>
+</ul>
+<p>精确匹配：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.baidu.com;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通配符匹配：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name *.baidu.com;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正则表达式匹配：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name ~^www\.(\w+)\.com$;</span><br><span class="line">        default_type text/plain;</span><br><span class="line">        return 200 $1  $2 ..;</span><br><span class="line">&#125;</span><br><span class="line">注意 ~后面不能加空格，括号可以取值</span><br></pre></td></tr></table></figure>
+
+<p>常见的正则表达式</p>
+<table>
+<thead>
+<tr>
+<th>代码</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>^</td>
+<td>匹配搜索字符串开始位置</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配搜索字符串结束位置</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符\n之外的任何单个字符</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转义字符，将下一个字符标记为特殊字符</td>
+</tr>
+<tr>
+<td>[xyz]</td>
+<td>字符集，与任意一个指定字符匹配</td>
+</tr>
+<tr>
+<td>[a-z]</td>
+<td>字符范围，匹配指定范围内的任何字符</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>与以下任意字符匹配 A-Z a-z 0-9 和下划线,等效于[A-Za-z0-9_]</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>数字字符匹配，等效于[0-9]</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>正好匹配n次</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>至少匹配n次</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>匹配至少n次至多m次</td>
+</tr>
+<tr>
+<td>*</td>
+<td>零次或多次，等效于{0,}</td>
+</tr>
+<tr>
+<td>+</td>
+<td>一次或多次，等效于{1,}</td>
+</tr>
+<tr>
+<td>?</td>
+<td>零次或一次，等效于{0,1}</td>
+</tr>
+</tbody></table>
+<p>匹配执行顺序</p>
+<p>由于server_name指令支持通配符和正则表达式，因此在包含多个虚拟主机的配置文件中，可能会出现一个名称被多个虚拟主机的server_name匹配成功，server的匹配顺序：</p>
+<ul>
+<li>准确匹配server_name</li>
+<li>通配符在开始时匹配server_name</li>
+<li>通配符在结束时匹配server_name</li>
+<li>正则表达式匹配server_name</li>
+<li>被默认的default_server处理，如果没有指定默认找第一个server</li>
+</ul>
+<h4 id="5-2-2-location块"><a href="#5-2-2-location块" class="headerlink" title="5.2.2 location块"></a>5.2.2 location块</h4><p>匹配命令</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><code>=</code></strong></td>
+<td>用于<strong>标准 URI</strong> 前，要求请求字符串与其精准匹配，成功则立即处理，nginx停止搜索其他匹配。</td>
+</tr>
+<tr>
+<td><strong><code>^~</code></strong></td>
+<td>用于<strong>标准 URI</strong> 前，并要求一旦匹配到就会立即处理，不再去匹配其他的那些个正则 URI，一般用来匹配目录</td>
+</tr>
+<tr>
+<td><strong><code>~</code></strong></td>
+<td>用于<strong>正则 URI</strong> 前，表示 URI 包含正则表达式， <strong>区分</strong>大小写</td>
+</tr>
+<tr>
+<td><strong><code>~\*</code></strong></td>
+<td>用于<strong>正则 URI</strong> 前， 表示 URI 包含正则表达式， <strong>不区分</strong>大小写</td>
+</tr>
+<tr>
+<td><strong><code>@</code></strong></td>
+<td>@ 定义一个命名的 location，用于内部定向</td>
+</tr>
+</tbody></table>
+<p>匹配顺序</p>
+<p>nginx有两层指令来匹配请求 URI 。第一个层次是 server 指令，它通过域名、ip 和端口来做第一层级匹配，当找到匹配的 server 后就进入此 server 的 location 匹配。</p>
+<p>请求URI 会按如下规则进行匹配：</p>
+<ol>
+<li>先精准匹配 <strong><code>=</code></strong> ，精准匹配成功则会立即停止其他类型匹配；</li>
+<li>没有精准匹配成功时，进行前缀匹配。先查找带有 <strong><code>^~</code></strong> 的前缀匹配，带有 <strong><code>^~</code></strong> 的前缀匹配成功则立即停止其他类型匹配，普通前缀匹配（不带参数 <strong><code>^~</code></strong> ）成功则会暂存，继续查找正则匹配；</li>
+<li><strong><code>=</code></strong> 和 <strong><code>^~</code></strong> 均未匹配成功前提下，查找正则匹配 <strong><code>~</code></strong> 和 <strong><code>~\*</code></strong> 。当同时有多个正则匹配时，按其在配置文件中出现的先后顺序优先匹配，命中则立即停止其他类型匹配；</li>
+<li>所有正则匹配均未成功时，返回步骤 2 中暂存的普通前缀匹配（不带参数 <strong><code>^~</code></strong> ）结果</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. location =    # 精准匹配</span><br><span class="line">2. location ^~   # 带参前缀匹配</span><br><span class="line">3. location ~    # 正则匹配（区分大小写）</span><br><span class="line">4. location ~*   # 正则匹配（不区分大小写）</span><br><span class="line">5. location /a   # 普通前缀匹配，优先级低于带参数前缀匹配。</span><br><span class="line">6. location /    # 任何没有匹配成功的，都会匹配这里处理</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022315733">一文理清 nginx 中的 location 配置（系列一） - SegmentFault 思否</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/nginx-setup-intro.html">Nginx 配置详解 | 菜鸟教程 (runoob.com)</a></p>
+<p><a target="_blank" rel="noopener" href="http://shouce.jb51.net/nginx-doc/index-2.html">Nginx 中文官方文档 (jb51.net)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ov41187bq?spm_id_from=333.337.search-card.all.click">黑马程序员Nginx教程，Java进阶从0到1学会Nginx分布式框架_哔哩哔哩_bilibili</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/post/11/" rel="prev" title="gradle">
+      <i class="fa fa-chevron-left"></i> gradle
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx"><span class="nav-text">Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-text">1.基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">1.1 正向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="nav-text">1.2 反向代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85nginx"><span class="nav-text">2.安装nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1yum%E5%AE%89%E8%A3%85"><span class="nav-text">2.1yum安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E5%8E%8B%E7%BC%A9%E5%8C%85%E5%AE%89%E8%A3%85"><span class="nav-text">2.2压缩包安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-nginx%E4%BF%A1%E5%8F%B7%E6%8E%A7%E5%88%B6"><span class="nav-text">3.nginx信号控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E4%BF%A1%E5%8F%B7"><span class="nav-text">3.1 信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%91%BD%E4%BB%A4%E6%8E%A7%E5%88%B6"><span class="nav-text">3.2 命令控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-nginx-%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="nav-text">4. nginx 文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%85%A8%E5%B1%80%E5%9D%97"><span class="nav-text">4.1 全局块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-events%E5%9D%97"><span class="nav-text">4.2 events块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-http%E5%9D%97"><span class="nav-text">4.3 http块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-1-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E6%97%A5%E5%BF%97"><span class="nav-text">4.3.1 自定义服务日志</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE%E6%8C%87%E4%BB%A4"><span class="nav-text">4.4 其他配置指令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90"><span class="nav-text">5. 静态资源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%A6%82%E8%BF%B0"><span class="nav-text">5.1 概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E7%9A%84%E9%85%8D%E7%BD%AE%E6%8C%87%E4%BB%A4"><span class="nav-text">5.2 静态资源的配置指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-1-server%E5%9D%97"><span class="nav-text">5.2.1 server块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-location%E5%9D%97"><span class="nav-text">5.2.2 location块</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yunzhou"
+      src="/uploads/boy.jpg">
+  <p class="site-author-name" itemprop="name">yunzhou</p>
+  <div class="site-description" itemprop="description">看呐！那朵云好像一朵云</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codeyunzhou" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codeyunzhou" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:15086314018@163.com" title="E-Mail → mailto:15086314018@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/" rel="tag">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yunzhou</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">190k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:53</span>
+</div>
+
+</br>
+<a target="_blank" rel="noopener" href="http://beian.miit.gov.cn/">黔ICP备20001576号-1</a>
+</br>
+<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=52052202522527" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/uploads/beian.png" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">贵公网安备 52052202522527号</p></a>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

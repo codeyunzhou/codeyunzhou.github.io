@@ -24,27 +24,27 @@
   <meta name="description" content="看呐！那朵云好像一朵云">
 <meta property="og:type" content="website">
 <meta property="og:title" content="云州的博客">
-<meta property="og:url" content="http://www.qiyunzhou.top/page/2/index.html">
+<meta property="og:url" content="http://www.qiyunzhou.top/categories/nginx/index.html">
 <meta property="og:site_name" content="云州的博客">
 <meta property="og:description" content="看呐！那朵云好像一朵云">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="yunzhou">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://www.qiyunzhou.top/page/2/">
+<link rel="canonical" href="http://www.qiyunzhou.top/categories/nginx/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
+    isHome : false,
     isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>云州的博客</title>
+  <title>分类: nginx | 云州的博客</title>
   
 
 
@@ -197,282 +197,52 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content category">
             
-      
+
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.qiyunzhou.top/post/1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/boy.jpg">
-      <meta itemprop="name" content="yunzhou">
-      <meta itemprop="description" content="看呐！那朵云好像一朵云">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="云州的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/post/1/" class="post-title-link" itemprop="url">linux常用命令</a>
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <h2 class="collection-header">nginx
+          <small>分类</small>
         </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-07-09 11:15:47" itemprop="dateCreated datePublished" datetime="2021-07-09T11:15:47+08:00">2021-07-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-28 21:22:13" itemprop="dateModified" datetime="2022-03-28T21:22:13+08:00">2022-03-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>20k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>18 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+      </div>
 
       
-          <h2 id="关机-重启-注销"><a href="#关机-重启-注销" class="headerlink" title="关机/重启/注销"></a>关机/重启/注销</h2><table>
-<thead>
-<tr>
-<th>常用命令</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>shutdown-h now</td>
-<td>即刻关机</td>
-</tr>
-<tr>
-<td>shutdown-h 10</td>
-<td>10分钟后关机</td>
-</tr>
-<tr>
-<td>shutdown-h 11: 00</td>
-<td>11:00关机</td>
-</tr>
-<tr>
-<td>shutdown-h +10</td>
-<td>预定时间关机(10分钟后)</td>
-</tr>
-<tr>
-<td>shutdown-c</td>
-<td>取消指定时间关机</td>
-</tr>
-<tr>
-<td>shutdown-r now</td>
-<td>重启</td>
-</tr>
-<tr>
-<td>shutdown-r 10</td>
-<td>10分钟之后重启</td>
-</tr>
-<tr>
-<td>shutdown-r 11-00</td>
-<td>定时重启</td>
-</tr>
-<tr>
-<td>reboot</td>
-<td>重启</td>
-</tr>
-<tr>
-<td>init 6</td>
-<td>重启</td>
-</tr>
-<tr>
-<td>init 0</td>
-<td>立刻关机</td>
-</tr>
-<tr>
-<td>telinit 0</td>
-<td>关机</td>
-</tr>
-<tr>
-<td>poweroff</td>
-<td>⽴刻关机</td>
-</tr>
-<tr>
-<td>halt</td>
-<td>关机</td>
-</tr>
-<tr>
-<td>sync</td>
-<td>buff数据同步到磁盘</td>
-</tr>
-<tr>
-<td>logout</td>
-<td>退出登录Shell</td>
-</tr>
-</tbody></table>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/post/1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+    <div class="collection-year">
+      <span class="collection-header">2022</span>
     </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2022-03-26T10:56:50+08:00"
+              content="2022-03-26">
+          03-26
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/post/12/" itemprop="url">
+            <span itemprop="name">nginx</span>
+          </a>
+      </div>
+
+    </header>
   </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.qiyunzhou.top/post/0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/boy.jpg">
-      <meta itemprop="name" content="yunzhou">
-      <meta itemprop="description" content="看呐！那朵云好像一朵云">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="云州的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/post/0/" class="post-title-link" itemprop="url">css</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-20 10:56:36" itemprop="dateCreated datePublished" datetime="2021-06-20T10:56:36+08:00">2021-06-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-25 20:50:51" itemprop="dateModified" datetime="2022-03-25T20:50:51+08:00">2022-03-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>43k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>39 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h1><h2 id="CSS规范"><a href="#CSS规范" class="headerlink" title="CSS规范"></a>CSS规范</h2><h3 id="1-CSS属性书写顺序"><a href="#1-CSS属性书写顺序" class="headerlink" title="1.CSS属性书写顺序"></a>1.CSS属性书写顺序</h3><p>建议遵循以下顺序：</p>
-<ol>
-<li><strong>布局定位属性</strong>：display / position / float / clear / visibility / overflow（建议 display 第一个写，毕竟关系到模式）</li>
-<li><strong>自身属性</strong>：width / height / margin / padding / border / background</li>
-<li><strong>文本属性</strong>：color / font / text-decoration / text-align / vertical-align / white- space / break-word</li>
-<li><strong>其他属性（CSS3）</strong>：content / cursor / border-radius / box-shadow / text-shadow / background:linear-gradient …</li>
-</ol>
-<p><strong>举例：</strong></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.css</span> &#123;</span><br><span class="line">   <span class="attribute">display</span>: block;</span><br><span class="line">   <span class="attribute">position</span>: relative;</span><br><span class="line">   <span class="attribute">float</span>: left;</span><br><span class="line">   <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">   <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">   <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span><br><span class="line">   <span class="attribute">padding</span>: <span class="number">20px</span> <span class="number">0</span>;</span><br><span class="line">   <span class="attribute">font-family</span>: Arial, <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, sans-serif;</span><br><span class="line">   <span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line">   <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,.<span class="number">5</span>);</span><br><span class="line">   <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/post/0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
+  </div>
   
   
   
 
-
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
 
 
 

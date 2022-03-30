@@ -29,8 +29,9 @@
 <meta property="og:description" content="关机&#x2F;重启&#x2F;注销   常用命令 作用    shutdown-h now 即刻关机   shutdown-h 10 10分钟后关机   shutdown-h 11: 00 11:00关机   shutdown-h +10 预定时间关机(10分钟后)   shutdown-c 取消指定时间关机   shutdown-r now 重启   shutdown-r 10 10分钟之后重启   shutdo">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://gitee.com/codeyunzhou/images/raw/master/linux/202203181518631.png">
+<meta property="og:image" content="https://gitee.com/codeyunzhou/images/raw/master/linux/202203230946232.jpg">
 <meta property="article:published_time" content="2021-07-09T03:15:47.000Z">
-<meta property="article:modified_time" content="2022-03-21T14:58:56.886Z">
+<meta property="article:modified_time" content="2022-03-28T13:22:13.476Z">
 <meta property="article:author" content="yunzhou">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -239,7 +240,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-21 22:58:56" itemprop="dateModified" datetime="2022-03-21T22:58:56+08:00">2022-03-21</time>
+                <time title="修改时间：2022-03-28 21:22:13" itemprop="dateModified" datetime="2022-03-28T21:22:13+08:00">2022-03-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -257,14 +258,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>9.3k</span>
+              <span>20k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
+              <span>18 分钟</span>
             </span>
 
         </div>
@@ -1701,6 +1702,10 @@
 
 
 
+
+
+
+
 <h2 id="系统状态检测命令"><a href="#系统状态检测命令" class="headerlink" title="系统状态检测命令"></a>系统状态检测命令</h2><h3 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h3><p>获取网卡配置与网络状态等信息</p>
 <h3 id="uname"><a href="#uname" class="headerlink" title="uname"></a>uname</h3><p>查看系统内核与系统版本等信息</p>
 <table>
@@ -1761,6 +1766,55 @@
 <h3 id="sosreport"><a href="#sosreport" class="headerlink" title="sosreport"></a>sosreport</h3><p>用于收集系统配置及架构信息并输出诊断文档，格式为 sosreport</p>
 <p>当 Linux 系统出现故障需要联系技术支持人员时，大多数时候都要先使用这个命令来简 单收集系统的运行状态和服务配置信息，以便让技术支持人员能够远程解决一些小问题，亦 或让他们能提前了解某些复杂问题</p>
 <p>归档报告保存在<code>/var/tmp</code>中</p>
+<h3 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h3><p>lsof命令用于查看进程开打的文件，打开文件的进程，进程打开的端口(TCP、UDP)。找回/恢复删除的文件。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>列出打开文件存在的进程</td>
+</tr>
+<tr>
+<td>-c &lt;进程名&gt;</td>
+<td>列出指定进程所打开的文件</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>列出GID号进程详情</td>
+</tr>
+<tr>
+<td>-d &lt;文件号&gt;</td>
+<td>列出占用该文件号的进程</td>
+</tr>
+<tr>
+<td>+d &lt;目录&gt;</td>
+<td>列出目录下被打开的文件</td>
+</tr>
+<tr>
+<td>+D &lt;目录&gt;</td>
+<td>递归列出目录下被打开的文件</td>
+</tr>
+<tr>
+<td>-n &lt;目录&gt;</td>
+<td>列出使用NFS的文件</td>
+</tr>
+<tr>
+<td>-i &lt;条件&gt;</td>
+<td>列出符合条件的进程</td>
+</tr>
+<tr>
+<td>-p &lt;进程号&gt;</td>
+<td>列出指定进程号所打开的文件</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>列出UID号进程详情</td>
+</tr>
+</tbody></table>
 <h2 id="文本编辑"><a href="#文本编辑" class="headerlink" title="文本编辑"></a>文本编辑</h2><h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h3><p>查看纯文本文件，-n  显示行数（空行也编号）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat -n text.txt</span><br></pre></td></tr></table></figure>
 
@@ -1768,7 +1822,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">more text.txt</span><br></pre></td></tr></table></figure>
 
 <h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>查看纯文本文件（内容较多的）。less的作用与more十分相似，不同点为less命令允许用户向前或向后浏览文件，而more命令只能向前浏览 。</p>
-<p>用less命令显示文件时，PageUp键向上翻页，PageDown键向下翻页，要退出less程序，应按Q键</p>
+<p>用less命令显示文件时，PageUp键向上翻页，PageDown键向下翻页，要退出less程序，使用q键。在less内部使用<code>/</code>可以来进行查找</p>
 <table>
 <thead>
 <tr>
@@ -1832,7 +1886,1240 @@
 <li>空格键 滚动一页</li>
 <li>回车键 滚动一行</li>
 </ul>
-<h3 id="head"><a href="#head" class="headerlink" title="head"></a>head</h3><blockquote>
+<h3 id="head"><a href="#head" class="headerlink" title="head"></a>head</h3><p>head 命令用于查看纯文本文档的前 N 行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">查看前10行</span><br><span class="line">head -n10 test.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="tail"><a href="#tail" class="headerlink" title="tail"></a>tail</h3><p>tail 命令用于查看纯文本文档的后 N 行或持续刷新内容</p>
+<h3 id="tr"><a href="#tr" class="headerlink" title="tr"></a>tr</h3><p>tr 命令用于替换文本文件中的字符，格式为“tr [原始字符] [目标字符]”</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>选定字符串1中字符集的补集，即反选字符串1的补集</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>删除字符串1中出现的所有字符</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>删除所有重复出现的字符序列，只保留一个</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 大小字母的转换</span></span><br><span class="line">tr <span class="string">&quot;[a-z]&quot;</span> <span class="string">&quot;[A-Z]&quot;</span> &lt;test.txt</span><br><span class="line"><span class="comment"># 删除file_1中的小写字母</span></span><br><span class="line">tr -d <span class="string">&quot;[a-z]&quot;</span> &lt;test.txt</span><br><span class="line"><span class="comment"># 压缩重复的空白行</span></span><br><span class="line">tr -s <span class="string">&quot;[\n]&quot;</span> &lt;test.txt</span><br><span class="line"><span class="comment"># 转换一个文件的内容，并将转换的结果输出到另一个文件</span></span><br><span class="line">tr <span class="string">&quot;[a-z]&quot;</span> <span class="string">&quot;[A-Z]&quot;</span> &lt;test.txt &gt;new.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h3><p>wc 命令用于统计指定文本的行数、字数、字节数</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-l</td>
+<td>只显示行数</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>只显示单词数</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>只显示字节数</td>
+</tr>
+</tbody></table>
+<p>在 Linux 系统中，passwd 是用于保存系统账户信息的文件，要统计当前系统中有多少个 用户，可以使用下面的命令来进行查询</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wc -l /etc/passw</span><br><span class="line">-----------</span><br><span class="line">33 /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h3><p>stat 命令用于查看文件的具体存储信息和时间等信息，会显示出 文件的三种时间状态（已加粗）：Access、Modify、Change。</p>
+<p><code>stat test.txt</code></p>
+<h3 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h3><p>命令用于按“列”提取文本字符</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>以字节为单位进行分割 ,仅显示行中指定直接范围的内容</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>以字符为单位进行分割 , 仅显示行中指定范围的字符</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>自定义分隔符，默认为制表符”TAB”</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>显示指定字段的内容 , 与-d一起使用</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>取消分割多字节字符</td>
+</tr>
+<tr>
+<td>–complement</td>
+<td>补足被选择的字节、字符或字段</td>
+</tr>
+<tr>
+<td>–out-delimiter</td>
+<td>指定输出内容是的字段分割符</td>
+</tr>
+</tbody></table>
+<p>试提取出 passwd 文件中的用户名信息， 以：分割提取第一列</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cut -d: -f1 /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="diff"><a href="#diff" class="headerlink" title="diff"></a>diff</h3><p>比较多个文本文件的差异</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>diff预设只会逐行比较文本文件</td>
+</tr>
+<tr>
+<td>-b</td>
+<td>不检查空格字符的不同</td>
+</tr>
+<tr>
+<td>-y</td>
+<td>以并列的方式显示文件的异同之处</td>
+</tr>
+<tr>
+<td>–left-column</td>
+<td>在使用-y参数时，若两个文件某一行内容相同，则仅在左侧的栏位显示该行内容</td>
+</tr>
+<tr>
+<td>–suppress-common-lines</td>
+<td>在使用-y参数时，仅显示不同之处</td>
+</tr>
+</tbody></table>
+<h2 id="文件目录管理"><a href="#文件目录管理" class="headerlink" title="文件目录管理"></a>文件目录管理</h2><h3 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h3><p>创建空白文件或设置文件的时间</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>改变档案的读取时间记录</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>改变档案的修改时间记录</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>使用参考档的时间记录，与 –file 的效果一样</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>不创建新文件</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>设定时间与日期，可以使用各种不同的格式</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>设定档案的时间记录，格式与 date 命令相同</td>
+</tr>
+</tbody></table>
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><p>用于创建空白的目录</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-p</td>
+<td>递归创建多级目录</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>建立目录的同时设置目录的权限</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>设置安全上下文</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>显示目录的创建过程</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建多个目录</span></span><br><span class="line">mkdir dir1 dir2 dir3</span><br><span class="line"><span class="comment">#递归创建目录</span></span><br><span class="line">mkdir -p linuxcool/dir	</span><br><span class="line"><span class="comment">#设置文件属主有读、写和执行权限，其他人无权访问</span></span><br><span class="line">mkdir -m 700 /usr/linuxcool/dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h3><p>复制文件或目录</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>若目标文件已存在，则会直接覆盖原文件</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>若目标文件已存在，则会询问是否覆盖</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>保留源文件或目录的所有属性</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>递归复制文件和目录</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>当复制符号连接时，把目标文件或目录也建立为符号连接，并指向与源文件或目录连接的原始文件或目录</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>对源文件建立硬连接，而非复制文件</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>对源文件建立符号连接，而非复制文件</td>
+</tr>
+<tr>
+<td>-b</td>
+<td>覆盖已存在的文件目标前将目标文件备份</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>详细显示cp命令执行的操作过程</td>
+</tr>
+<tr>
+<td>-a</td>
+<td>等价于“dpr”选项</td>
+</tr>
+</tbody></table>
+<h3 id="mv"><a href="#mv" class="headerlink" title="mv"></a>mv</h3><p>剪切文件或将文件重命名</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-i</td>
+<td>若存在同名文件，则向用户询问是否覆盖</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>覆盖已有文件时，不进行任何提示</td>
+</tr>
+<tr>
+<td>-b</td>
+<td>当文件存在时，覆盖前为其创建一个备份</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>当源文件比目标文件新，或者目标文件不存在时，才执行移动此操作</td>
+</tr>
+</tbody></table>
+<h3 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h3><p>dd 命令用于按照指定大小和个数的数据块来复制文件或转换文件</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>if</td>
+<td>输入的文件名称</td>
+</tr>
+<tr>
+<td>of</td>
+<td>输出的文件名称</td>
+</tr>
+<tr>
+<td>bs</td>
+<td>设置每个“块”的大小</td>
+</tr>
+<tr>
+<td>count</td>
+<td>设置要复制“块”的个数</td>
+</tr>
+</tbody></table>
+<p><font color='red'>tips</font>:Linux 系统中有一个名为/dev/zero 的设备文件，这个文件不会占用系统存储空间，但却可以提供无穷无尽的数据，永远都输出0，因此可以使用它作为 dd 命令的输入文件，来生成一个指定大小的文件</p>
+<p>从zero设备中创建一个10K大小（bs决定每次读写1024字节，count定义读写次数为10次），但内容全为0的文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/zero of=file count=10 bs=1024</span><br></pre></td></tr></table></figure>
+
+<p>dd 命令的功能也绝不仅限于复制文件这么简单。如果您想把光驱设备中的光盘制作成 iso 格 式的镜像文件，在 Windows 系统中需要借助于第三方软件才能做到，但在 Linux 系统中可以直接 使用 dd 命令来压制出光盘镜像文件，将它编程一个可立即使用的 iso 镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/cdrom of=RHEL-server-7.0-x86_64-LinuxProbe.Com.iso </span><br></pre></td></tr></table></figure>
+
+<h3 id="file"><a href="#file" class="headerlink" title="file"></a>file</h3><p>file 命令用于查看文件的类型，<code>file tt.txt test.txt</code></p>
+<h2 id="打包压缩与搜索"><a href="#打包压缩与搜索" class="headerlink" title="打包压缩与搜索"></a>打包压缩与搜索</h2><h3 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h3><p>tar 命令用于对文件进行打包压缩或解压， Linux 系统中，常见的文件格式比较多，其中主要使用的是.tar 或.tar.gz 或.tar.bz2 格式</p>
+<p>-f 参数特别重要，它必须放到 参数的最后一位，代表要压缩或解压的软件包名称</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>创建压缩文件</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>解开压缩文件</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>查看压缩包内有哪些文件</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>用</td>
+</tr>
+<tr>
+<td>-j</td>
+<td>用</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>显示压缩或解压的过程</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>目标文件名</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>保留原始的权限与属性</td>
+</tr>
+<tr>
+<td>-P</td>
+<td>使用绝对路径来压缩</td>
+</tr>
+<tr>
+<td>-C</td>
+<td>指定解压到的目录</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#打包压缩</span></span><br><span class="line">“tar -czvf 压缩包名称.tar.gz 要打包的目录</span><br><span class="line"><span class="comment">#解压</span></span><br><span class="line">tar -xzvf 压缩包名称.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h3 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h3><p>grep是“global search regular expression and print out the line”的简称，意思是全面搜索正则表达式。grep 命令用于在文本中执行关键词搜索，并显示匹配的结果</p>
+<p>grep命令的选项用于对搜索过程的补充，而其命令的模式十分灵活，可以是变量、字符串、正则表达式。需要注意的是：一当模式中包含了空格，务必要用双引号将其引起来。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>将可执行文件（binary）当作文本文件（text）来搜索</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>仅显示找到的行数</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>忽略大小写</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>显示行号</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>反向选择—仅列出没有“关键词”的行</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>匹配整词</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep zwx file_* /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><p>find 命令用于按照指定条件来查找文件，格式为“find [查找路径] 寻找条件 操作”</p>
+<p>在 Linux 系统中，搜索工作一般都是通过 find 命令来完成的，它可以使用不同的文件特性作 为寻找条件（如文件名、大小、修改时间、权限等信息）</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-name</td>
+<td>匹配名称</td>
+</tr>
+<tr>
+<td>-perm</td>
+<td>匹配权限（mode</td>
+</tr>
+<tr>
+<td>-user</td>
+<td>匹配所有者</td>
+</tr>
+<tr>
+<td>-group</td>
+<td>匹配所有组</td>
+</tr>
+<tr>
+<td>-mtime</td>
+<td>-n</td>
+</tr>
+<tr>
+<td>-atime</td>
+<td>-n</td>
+</tr>
+<tr>
+<td>-ctime</td>
+<td>-n</td>
+</tr>
+<tr>
+<td>-nouser</td>
+<td>匹配无所有者的文件</td>
+</tr>
+<tr>
+<td>-nogroup</td>
+<td>匹配无所有组的文件</td>
+</tr>
+<tr>
+<td>-newer</td>
+<td>f1</td>
+</tr>
+<tr>
+<td>–type</td>
+<td>b/d/c/p/l/f</td>
+</tr>
+<tr>
+<td>-size</td>
+<td>匹配文件的大小（+50KB</td>
+</tr>
+<tr>
+<td>-prune</td>
+<td>忽略某个目录</td>
+</tr>
+<tr>
+<td>-exec …… {};</td>
+<td>后面可跟用于进一步处理搜索结果的命令</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#获取以host开头的文件列表</span></span><br><span class="line">find /etc -name <span class="string">&#x27;host*&#x27;</span> -<span class="built_in">print</span></span><br></pre></td></tr></table></figure>
+
+<p>-exec。这个参数用于把 find 命令搜索到的结果交 由紧随其后的命令作进一步处理</p>
+<p>在整个文件系统中找出所有归属于 linuxprobe 用户的文件并复制到 /root/findresults 目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -user linuxprobe -<span class="built_in">exec</span> cp -a &#123;&#125; /root/findresults/ \;</span><br></pre></td></tr></table></figure>
+
+<p>其中的{}表示 find 命令搜索出的每一个文 件，并且命令的结尾必须是“;”</p>
+<h2 id="用户-组管理"><a href="#用户-组管理" class="headerlink" title="用户/组管理"></a>用户/组管理</h2><h3 id="用户列表"><a href="#用户列表" class="headerlink" title="用户列表"></a>用户列表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="组列表"><a href="#组列表" class="headerlink" title="组列表"></a>组列表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/group</span><br></pre></td></tr></table></figure>
+
+<h3 id="密码列表"><a href="#密码列表" class="headerlink" title="密码列表"></a>密码列表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/shadow</span><br></pre></td></tr></table></figure>
+
+<h3 id="useradd"><a href="#useradd" class="headerlink" title="useradd"></a>useradd</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>添加备注文字</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>用户终止日期，日期的格式为YYYY-MM-DD</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>指定用户对应的用户组</td>
+</tr>
+<tr>
+<td>-G</td>
+<td>定义此用户为多个不同组的成员</td>
+</tr>
+</tbody></table>
+<h3 id="passwd"><a href="#passwd" class="headerlink" title="passwd"></a>passwd</h3><p>passwd命令用于设置用户的认证信息，包括用户密码、账户锁定、密码失效等。直接运行passwd命令修改当前的用户密码，对其他用户的密码操作需要管理员权限</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-d</td>
+<td>删除密码</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>锁定用户密码，无法被用户自行修改</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>解开已锁定用户密码，允许用户自行修改</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>密码立即过期，下次登陆强制修改密码</td>
+</tr>
+<tr>
+<td>-k</td>
+<td>保留即将过期的用户在期满后能仍能使用</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>查询密码状态</td>
+</tr>
+</tbody></table>
+<h3 id="userdel"><a href="#userdel" class="headerlink" title="userdel"></a>userdel</h3><p>userdel命令用于删除指定的用户及与该用户相关的文件，英文全称即“user delete”。其实userdel命令实际上是修改了系统的用户账号文件 /etc/passwd、/etc/shadow以及/etc/group文件。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>强制删除用户账号</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>删除用户主目录及其中的任何文件</td>
+</tr>
+</tbody></table>
+<h3 id="id"><a href="#id" class="headerlink" title="id"></a>id</h3><p>id命令可以显示真实有效的用户ID(UID)和组ID(GID)。UID 是对一个用户的单一身份标识。组ID（GID）则对应多个UID</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-g</td>
+<td>显示用户所属群组的ID</td>
+</tr>
+<tr>
+<td>-G</td>
+<td>显示用户所属附加群组的ID</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>显示用户，所属群组或附加群组的名称</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>显示实际ID</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>显示用户ID</td>
+</tr>
+</tbody></table>
+<h3 id="whoami"><a href="#whoami" class="headerlink" title="whoami"></a>whoami</h3><p>查看当前用户</p>
+<h3 id="groupadd"><a href="#groupadd" class="headerlink" title="groupadd"></a>groupadd</h3><p>新建工作组</p>
+<h3 id="groupdel"><a href="#groupdel" class="headerlink" title="groupdel"></a>groupdel</h3><p>删除组</p>
+<h3 id="usermod"><a href="#usermod" class="headerlink" title="usermod"></a>usermod</h3><p>usermod命令用于修改用户账号</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c&lt;备注&gt;</td>
+<td>修改用户账号的备注文字</td>
+</tr>
+<tr>
+<td>-d&lt;登入目录&gt;</td>
+<td>修改用户登入时的目录</td>
+</tr>
+<tr>
+<td>-e&lt;有效期限&gt;</td>
+<td>修改账号的有效期限</td>
+</tr>
+<tr>
+<td>-f&lt;缓冲天数&gt;</td>
+<td>修改在密码过期后多少天即关闭该账号</td>
+</tr>
+<tr>
+<td>-g&lt;群组&gt;</td>
+<td>修改用户所属的群组</td>
+</tr>
+<tr>
+<td>-G&lt;群组&gt;</td>
+<td>修改用户所属的附加群组</td>
+</tr>
+<tr>
+<td>-l&lt;账号名称&gt;</td>
+<td>修改用户账号名称</td>
+</tr>
+<tr>
+<td>-L</td>
+<td>锁定用户密码，使密码无效</td>
+</tr>
+<tr>
+<td>-u&lt;uid&gt;</td>
+<td>修改用户ID</td>
+</tr>
+<tr>
+<td>-U</td>
+<td>解除密码锁定</td>
+</tr>
+</tbody></table>
+<h2 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h2><h3 id="chgrp"><a href="#chgrp" class="headerlink" title="chgrp"></a>chgrp</h3><p>chgrp是英语单词“change group”的缩写，命令的作用和其中文释义一样，为用于变更文件或目录的所属群组。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>效果类似”-v”参数，但仅回报更改的部分</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>不显示错误信息</td>
+</tr>
+<tr>
+<td>-h</td>
+<td>对符号连接的文件作修改，而不更动其他任何相关文件</td>
+</tr>
+<tr>
+<td>-R</td>
+<td>递归处理，将指定目录下的所有文件及子目录一并处理</td>
+</tr>
+</tbody></table>
+<h2 id="系统管理"><a href="#系统管理" class="headerlink" title="系统管理"></a>系统管理</h2><h3 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h3><p>如果提示：<code>Unit firewalld.service could not be found.</code> 说明防火墙没有安装，需要安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install firewalld firewall-config</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">service firewalld restart 重启</span><br><span class="line">service firewalld start 开启</span><br><span class="line">service firewalld stop 关闭</span><br><span class="line"></span><br><span class="line">systemctl stop firewalld      关闭运行的防火墙，系统重新启动后，防火墙将重新打开</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld   永久关闭防火墙，，系统重新启动后，防火墙依然关闭</span><br></pre></td></tr></table></figure>
+
+<p>防火墙状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --state</span><br><span class="line">systemctl status firewalld</span><br></pre></td></tr></table></figure>
+
+<h4 id="firewall-cmd"><a href="#firewall-cmd" class="headerlink" title="firewall-cmd"></a>firewall-cmd</h4><p>防火墙管理器。firewall-cmd提供了一个动态管理的防火墙，支持网络/防火墙区域来定义网络连接或接口的信任级别。它支持IPv4、IPv6防火墙设置和以太网网桥，并将运行时和永久配置选项分开。它还支持服务或应用程序直接添加防火墙规则的接口</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>–state</td>
+<td>显示当前服务运行状态</td>
+</tr>
+<tr>
+<td>–zone=public –list-ports</td>
+<td>查看所有打开运行的端口</td>
+</tr>
+<tr>
+<td>–reload</td>
+<td>不重启立即加载</td>
+</tr>
+<tr>
+<td>–list-all</td>
+<td>查看防火墙规则</td>
+</tr>
+<tr>
+<td>–list-ports</td>
+<td>查看已经开放的端口</td>
+</tr>
+<tr>
+<td>–list-all-zones</td>
+<td>查看区域信息情况</td>
+</tr>
+<tr>
+<td>–panic-on</td>
+<td>拒绝所有包</td>
+</tr>
+<tr>
+<td>–panic-off</td>
+<td>取消拒绝状态</td>
+</tr>
+<tr>
+<td>–query-panic</td>
+<td>查看是否拒绝</td>
+</tr>
+</tbody></table>
+<h4 id="防火墙-amp-端口"><a href="#防火墙-amp-端口" class="headerlink" title="防火墙&amp;端口"></a>防火墙&amp;端口</h4><p>查看已经开放的端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">irewall-cmd --list-ports</span><br></pre></td></tr></table></figure>
+
+<p>开启端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#打开单个端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=80/tcp --permanent</span><br><span class="line"><span class="comment">#打开多个端口</span></span><br><span class="line">firewall-cmd --zone=public --add-port=20000-29999/tcp --permanent</span><br><span class="line"><span class="comment">#重启防火墙</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"></span><br><span class="line">命令含义：</span><br><span class="line">–zone <span class="comment">#作用域</span></span><br><span class="line">–add-port=80/tcp <span class="comment">#添加端口，格式为：端口/通讯协议</span></span><br><span class="line">–permanent <span class="comment">#永久生效，没有此参数重启后失效</span></span><br></pre></td></tr></table></figure>
+
+<p>查看端口是否打开</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --query-port=80/tcp</span><br></pre></td></tr></table></figure>
+
+<p>查看开启端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --list-ports</span><br></pre></td></tr></table></figure>
+
+<p>关闭端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --remove-port=80/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h3><h2 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h2><p>输入重定向是指把文件导入到命令中，而输出重定向则是指把原本要输出到屏幕的数据信息写入到指定文件中。输出重定向分为了标准输出重定向和错误输出重定向两种不同的技术，以及清空写入与追加写入两种模式</p>
+<ul>
+<li>标准输入重定向（STDIN，文件描述符为 0）：默认从键盘输入，也可从其他文件或命 令中输入</li>
+<li>标准输出重定向（STDOUT，文件描述符为 1）：默认输出到屏幕</li>
+<li>错误输出重定向（STDERR，文件描述符为 2）：默认输出到屏幕</li>
+</ul>
+<p>输入重定向中用到的符号及其作用</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>命令 &lt; 文件</td>
+<td>将文件作为命令的标准输入</td>
+</tr>
+<tr>
+<td>命令 &lt;&lt; 分界符</td>
+<td>从标准输入中读入，直到遇见分界符才停止</td>
+</tr>
+<tr>
+<td>命令 &lt; 文件 1 &gt; 文件 2</td>
+<td>将文件 1 作为命令的标准输入并将标准输出到文件 2</td>
+</tr>
+</tbody></table>
+<p>输出重定向中用到的符号及其作用</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>命令 &gt; 文件</td>
+<td>将标准输出重定向到一个文件中（清空原有文件的数据）</td>
+</tr>
+<tr>
+<td>命令 2&gt; 文件</td>
+<td>将错误输出重定向到一个文件中（清空原有文件的数据）</td>
+</tr>
+<tr>
+<td>命令 &gt;&gt; 文件</td>
+<td>将标准输出重定向到一个文件中（追加到原有内容的后面）</td>
+</tr>
+<tr>
+<td>命令 2&gt;&gt; 文件</td>
+<td>将错误输出重定向到一个文件中（追加到原有内容的后面）</td>
+</tr>
+<tr>
+<td>命令 &gt;&gt; 文件 2&gt;&amp;1  或 命令 &amp;&gt;&gt; 文件</td>
+<td>将标准输出与错误输出共同写入到文件中（追加到原有内容的 后面）</td>
+</tr>
+</tbody></table>
+<p>对于重定向中的标准输出模式，可以省略文件描述符 1 不写，而错误输出模式的文件描述符 2 是必须要写的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls -l linuxprobe &gt; /root/stderr.txt</span><br><span class="line">ls -l linuxprobe 2&gt; /root/stderr.txt</span><br></pre></td></tr></table></figure>
+
+<p>使用输入重定向把 readme.txt 文件导入给 wc -l 命令，统计一下文件中的内容行数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wc -l &lt; readme.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="管道命令符"><a href="#管道命令符" class="headerlink" title="管道命令符"></a>管道命令符</h2><p>把前一个命令原本要输出到屏幕的数据当作是后一个命令的标准输 入。其执行格式为“命令 A | 命令 B”</p>
+<p>使用输入重定向把 readme.txt 文件导入给 wc -l 命令，统计一下文件中的内容行数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep /sbin/nologin /etc/passwd | wc -l</span><br></pre></td></tr></table></figure>
+
+<p>发送邮件，直到输入分界符</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mail -s <span class="string">&quot;Readme&quot;</span> root@linuxprobe.com &lt;&lt; <span class="string">over</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="命令行的通配符"><a href="#命令行的通配符" class="headerlink" title="命令行的通配符"></a>命令行的通配符</h2><p>通配符就是通用的匹配信息的符号，比如星号（*）代 表匹配零个或多个字符，问号（?）代表匹配单个字符，中括号内加上数字[0-9]代表匹配 0～9 之间的单个数字的字符，而中括号内加上字母[abc]则是代表匹配 a、b、c 三个字符中的任意 一个字符</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls -l /dev/vda*</span><br><span class="line">ls -l /dev/vda[0-9]</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用的转义字符"><a href="#常用的转义字符" class="headerlink" title="常用的转义字符"></a>常用的转义字符</h2><ul>
+<li>反斜杠（\）：使反斜杠后面的一个变量变为单纯的字符串</li>
+<li>单引号（’’）：转义其中所有的变量为单纯的字符串</li>
+<li>双引号（””）：保留其中的变量属性，不进行转义处理</li>
+<li>反引号（``）：把其中的命令执行后返回结果</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PRICE=5</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;price is \$<span class="variable">$PRICE</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> `uname -a`</span><br></pre></td></tr></table></figure>
+
+<h2 id="重要的环境变量"><a href="#重要的环境变量" class="headerlink" title="重要的环境变量"></a>重要的环境变量</h2><table>
+<thead>
+<tr>
+<th>变量名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HOME</td>
+<td>用户的主目录（即家目录）</td>
+</tr>
+<tr>
+<td>SHELL</td>
+<td>用户在使用的</td>
+</tr>
+<tr>
+<td>HISTSIZE</td>
+<td>输出的历史命令记录条数</td>
+</tr>
+<tr>
+<td>HISTFILESIZE</td>
+<td>保存的历史命令记录条数</td>
+</tr>
+<tr>
+<td>MAIL</td>
+<td>邮件保存路径</td>
+</tr>
+<tr>
+<td>LANG</td>
+<td>系统语言、语系名称</td>
+</tr>
+<tr>
+<td>RANDOM</td>
+<td>生成一个随机数字</td>
+</tr>
+<tr>
+<td>PS1</td>
+<td>Bash</td>
+</tr>
+<tr>
+<td>PATH</td>
+<td>定义解释器搜索用户执行命令的路径</td>
+</tr>
+<tr>
+<td>EDITOR</td>
+<td>用户默认的文本编辑器</td>
+</tr>
+</tbody></table>
+<p>可以使用 export 命令将其提升为全局变量，这样其他用户也可以使用它</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR=/home/workdir</span><br><span class="line"><span class="built_in">export</span> WORKDIR</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p><img data-src="https://gitee.com/codeyunzhou/images/raw/master/linux/202203230946232.jpg"></p>
+<p>vim模式：</p>
+<ul>
+<li>命令模式</li>
+<li>编辑模式</li>
+<li>末行模式</li>
+</ul>
+<p>vim打开方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim 文件路径						作用：打开指定的文件</span><br><span class="line">vim  +数字  文件的路径			       作用：打开指定的文件，并且将光标移动到指定行</span><br><span class="line">vim  +/关键词  文件的路径			  作用：打开指定的文件，并且高亮显示关键词</span><br><span class="line">vim 文件路径1 文件路径2 文件路径3       作用：同时打开多个文件</span><br></pre></td></tr></table></figure>
+
+<p>命令模式</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>shift + 6</td>
+<td>光标移动到行首</td>
+</tr>
+<tr>
+<td>shift + 4</td>
+<td>光标移动到行尾</td>
+</tr>
+<tr>
+<td>gg</td>
+<td>光标移动到首行</td>
+</tr>
+<tr>
+<td>G</td>
+<td>光标移动到末行</td>
+</tr>
+<tr>
+<td>yy</td>
+<td>复制光标所在行，在想要粘贴的地方按下p键</td>
+</tr>
+<tr>
+<td>数字yy</td>
+<td>以光标所在行为准（包含当前行），向下复制指定的行数，粘贴p键</td>
+</tr>
+<tr>
+<td>ctrl + v（可视块）或V（可视行）或v（可视）</td>
+<td>方向键选择，y键复制，p键粘贴</td>
+</tr>
+<tr>
+<td>dd</td>
+<td>剪切/删除光标所在行，p键粘贴</td>
+</tr>
+<tr>
+<td>数字dd</td>
+<td>以光标所在行为准（包含当前行），向下删除指定的行数，粘贴p键</td>
+</tr>
+<tr>
+<td>ctrl + v（可视块）或V（可视行）或v（可视）</td>
+<td>按下D表示删除选中行，d表示删选中块</td>
+</tr>
+<tr>
+<td>ctrl + r</td>
+<td>恢复</td>
+</tr>
+<tr>
+<td>n</td>
+<td>显示搜索命令定位到的下一个字符串</td>
+</tr>
+<tr>
+<td>N</td>
+<td>显示搜索命令定位到的上一个字符串</td>
+</tr>
+<tr>
+<td>u（undo）</td>
+<td>撤销上一步的操作</td>
+</tr>
+<tr>
+<td>p</td>
+<td>将之前删除（dd）或复制（yy）过的数据粘贴到光标后面</td>
+</tr>
+<tr>
+<td>数字G</td>
+<td>将光标移动到指定的行</td>
+</tr>
+</tbody></table>
+<p>异常</p>
+<p>在 Linux 下的 vim 编辑过程中，由于某种原因异常退出正在编辑的文件，再次编辑该文件时，会出现如下提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*.swp”already exists！</span><br></pre></td></tr></table></figure>
+
+<p>原因：使用vim编辑文件实际是先copy一份临时文件并映射到内存给你编辑， 编辑的是临时文件， 当执行：w后才保存临时文件到原文件，执行：q后才删除临时文件。<br>每次启动检索式否有临时文件， 有则询问如何处理，就会出现如上情景。</p>
+<p>执行以下命令：找到临时文件，然后删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ll -a //显示隐藏文件</span><br><span class="line">rm .*.swp //删除隐藏文件</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="末行模式"><a href="#末行模式" class="headerlink" title="末行模式"></a>末行模式</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:w</td>
+<td>保存</td>
+</tr>
+<tr>
+<td>:q</td>
+<td>退出</td>
+</tr>
+<tr>
+<td>:q!</td>
+<td>强制退出（放弃对文档的修改内容）</td>
+</tr>
+<tr>
+<td>:wq!</td>
+<td>强制保存退出</td>
+</tr>
+<tr>
+<td>:set nu</td>
+<td>显示行号</td>
+</tr>
+<tr>
+<td>:set nonu</td>
+<td>不显示行号</td>
+</tr>
+<tr>
+<td>:命令</td>
+<td>执行该命令</td>
+</tr>
+<tr>
+<td>:整数</td>
+<td>跳转到该行</td>
+</tr>
+<tr>
+<td>:s/one/two</td>
+<td>将当前光标所在行的第一个</td>
+</tr>
+<tr>
+<td>:s/one/two/g</td>
+<td>将当前光标所在行的所有</td>
+</tr>
+<tr>
+<td>:%s/one/two/g</td>
+<td>将全文中的所有</td>
+</tr>
+<tr>
+<td>?字符串</td>
+<td>在文本中从下至上搜索该字符串</td>
+</tr>
+<tr>
+<td>/字符串</td>
+<td>在文本中从上至下搜索该字符串</td>
+</tr>
+</tbody></table>
+<h2 id="配置主机名称"><a href="#配置主机名称" class="headerlink" title="配置主机名称"></a>配置主机名称</h2><p>修改<code>/etc/hostname</code>文件中的内容</p>
+<h2 id="配置网卡信息"><a href="#配置网卡信息" class="headerlink" title="配置网卡信息"></a>配置网卡信息</h2><p>由于每台设备的硬件及架构是不一样的，网卡默认名称可能有差别</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc//etc/sysconfig/network-scripts/ifcfg-eth0</span><br></pre></td></tr></table></figure>
+
+<h2 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h2><h3 id="接收用户参数"><a href="#接收用户参数" class="headerlink" title="接收用户参数"></a>接收用户参数</h3><p>变量之间可以使用空格间隔。$0 对应的是当前 Shell 脚本程序的名称，$#对应的是总共 有几个参数，$*对应的是所有位置的参数值，$?对应的是显示上一次命令的执行返回值，而 $1、$2、$3……则分别对应着第 N 个位置的参数值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">echo &quot;当前脚本名称$0&quot;</span><br><span class="line">echo &quot;总共有$#个参数,分别是$*&quot;</span><br><span class="line">echo &quot;第一个$1,第三个$3&quot;</span><br><span class="line"></span><br><span class="line">sh example.sh one two three</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="测试语句"><a href="#测试语句" class="headerlink" title="测试语句"></a>测试语句</h3><p>测试语句格式： [ 条件表达式 ]。（两边各有一个空格）</p>
+<p>按照测试对象来划分，条件测试语句可以分为 4 种：</p>
+<ul>
+<li>文件测试语句</li>
+<li>逻辑测试语句</li>
+<li>整数值比较语句</li>
+<li>字符串比较语句</li>
+</ul>
+<p>文件测试所用的参数</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-d</td>
+<td>测试文件是否为目录类型</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>测试文件是否存在</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>判断是否为一般文件</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>测试当前用户是否有权限读取</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>测试当前用户是否有权限写入</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>测试当前用户是否有权限执行</td>
+</tr>
+</tbody></table>
+<p>逻辑运算符：</p>
+<ul>
+<li>&amp;&amp; 当前面的命令执行成功后才会执行它后面的命令</li>
+<li>|| 当前面的命令执行失败后才会执行它后面的命令</li>
+<li>! 把条件测 试中的判断结果取相反值</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ !-d /etc/fstab ] &amp;&amp; echo &quot;exist&quot; || echo &quot;no exist&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="整数比较运算符"><a href="#整数比较运算符" class="headerlink" title="整数比较运算符"></a>整数比较运算符</h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-eq</td>
+<td>是否等于</td>
+</tr>
+<tr>
+<td>-ne</td>
+<td>是否不等于</td>
+</tr>
+<tr>
+<td>-gt</td>
+<td>是否大于</td>
+</tr>
+<tr>
+<td>-lt</td>
+<td>是否小于</td>
+</tr>
+<tr>
+<td>-le</td>
+<td>是否等于或小于</td>
+</tr>
+<tr>
+<td>-ge</td>
+<td>是否大于或等于</td>
+</tr>
+</tbody></table>
+<h3 id="字符串比较运算符"><a href="#字符串比较运算符" class="headerlink" title="字符串比较运算符"></a>字符串比较运算符</h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>=</td>
+<td>比较字符串内容是否相同</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>比较字符串内容是否不同</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>判断字符串内容是否为空</td>
+</tr>
+</tbody></table>
+<h3 id="流程控制语句"><a href="#流程控制语句" class="headerlink" title="流程控制语句"></a>流程控制语句</h3><h4 id="if-条件测试语句"><a href="#if-条件测试语句" class="headerlink" title="if 条件测试语句"></a>if 条件测试语句</h4><p>if 条件语句的单分支结构由 if、then、fi 关键词组成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if 条件测试操作</span><br><span class="line">	then 命令序列</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">DIR=&quot;/tmp/dev&quot;</span><br><span class="line">if [ ! -e $DIR ]</span><br><span class="line">then</span><br><span class="line">echo &quot;$DIR&quot;</span><br><span class="line">mkdir -p $DIR</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>if 条件语句的双分支结构由 if、then、else、fi 关键词组成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if 条件测试操作</span><br><span class="line">	then 命令序列1</span><br><span class="line">	else 命令序列2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">DIR=&quot;/tmp/dev/dd.txt&quot;</span><br><span class="line">if [ -e $DIR ]</span><br><span class="line">then</span><br><span class="line">echo &quot;exist&quot;</span><br><span class="line">else</span><br><span class="line">echo &quot;no exist&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>if 条件语句的多分支结构由 if、then、else、elif、fi 关键词组成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if 条件测试操作1</span><br><span class="line">	then 命令序列1</span><br><span class="line">elif 条件测试操作2</span><br><span class="line">	then 命令序列2</span><br><span class="line">else </span><br><span class="line">	命令序列3</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="for-条件循环语句"><a href="#for-条件循环语句" class="headerlink" title="for 条件循环语句"></a>for 条件循环语句</h4><p>for 循环语句允许脚本一次性读取多个信息，然后逐一对信息进行操作处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for 变量名 in 取值列表</span><br><span class="line">do</span><br><span class="line">	命令序列</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">for UNAME in `cat /tmp/user.txt`</span><br><span class="line">do</span><br><span class="line">echo $UNAME</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<h4 id="while"><a href="#while" class="headerlink" title="while"></a>while</h4><p>while 条件循环语句是一种让脚本根据某些条件来重复执行命令的语句，它的循环结构往 往在执行前并不确定最终执行的次数，完全不同于 for 循环语句中有目标、有范围的使用场景。 while 循环语句通过判断条件测试的真假来决定是否继续执行命令，若条件为真就继续执行， 为假就结束循环</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">while 条件测试操作</span><br><span class="line">do</span><br><span class="line">	命令序列</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">PRICE=$(expr $RANDOM % 10)</span><br><span class="line">TIMES=0</span><br><span class="line">echo &quot;猜数，0-之间&quot;</span><br><span class="line">while true</span><br><span class="line">do</span><br><span class="line">read -p &quot;输入一个数字&quot; INT</span><br><span class="line">let TIMES++</span><br><span class="line">if [ $INT -eq $PRICE ];then</span><br><span class="line">echo &quot;正确&quot;</span><br><span class="line">echo &quot;总共猜了$TIMES次&quot;</span><br><span class="line">exit 0</span><br><span class="line">elif [ $INT -gt $PRICE ];then</span><br><span class="line">echo &quot;大了&quot;</span><br><span class="line">else</span><br><span class="line">echo &quot;小了&quot;</span><br><span class="line">fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<h4 id="case-条件测试语句"><a href="#case-条件测试语句" class="headerlink" title="case 条件测试语句"></a>case 条件测试语句</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">read -p &quot;请输入字符：&quot; KEY</span><br><span class="line">case &quot;$KEY&quot; in</span><br><span class="line">[a-z]|[A-Z])</span><br><span class="line">echo &quot;输入的是字母&quot;</span><br><span class="line">;;</span><br><span class="line">[0-9])</span><br><span class="line">echo &quot;输入的是数字&quot;</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line">echo &quot;输入的是其他&quot;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<h3 id="计划任务服务程序"><a href="#计划任务服务程序" class="headerlink" title="计划任务服务程序"></a>计划任务服务程序</h3><p>计划任务分为一次性计划任务与长期性计划任务</p>
+<p>一次性计划任务只执行一次，一般用于满足临时的工作需求。我们可以用 at 命令实现这种功能，只需要写成“at 时间”的形式就可以</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;hello&quot;</span> &gt;&gt; ./tt.txt | at now+1 minute</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-l</td>
+<td>查看系统中的等待作业（等效于atq命令)</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>删除系统中的等待作业(等效于atrm命令)</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>打印任务的内容</td>
+</tr>
+<tr>
+<td>-q</td>
+<td>使用指定的列队</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>将指定文件提交等待作业</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>以时间的形式提交运行作业</td>
+</tr>
+</tbody></table>
+<p>周期任务，crontab</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-e</td>
+<td>编辑该用户的计时器设置</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>列出该用户的计时器设置</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>删除该用户的计时器设置</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>指定要设定计时器的用户名称</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minute   hour   day   month   week   command   </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>minute： 表示分钟，可以是从0到59之间的任何整数。</li>
+<li>hour：表示小时，可以是从0到23之间的任何整数。</li>
+<li>day：表示日期，可以是从1到31之间的任何整数。</li>
+<li>month：表示月份，可以是从1到12之间的任何整数。</li>
+<li>week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。</li>
+<li>command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。</li>
+</ul>
+<p>在以上各个字段中，还可以使用以下特殊字符：</p>
+<ul>
+<li>星号（*）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。</li>
+<li>逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”</li>
+<li>中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”</li>
+<li>正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如*/10，如果用在minute字段，表示每十分钟执行一次。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#每1分钟执行一次command</span><br><span class="line">* * * * * command</span><br><span class="line">#每小时的第3和第15分钟执行</span><br><span class="line">3,15 * * * * command</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<blockquote>
 <p>Linux就该这么学 - 刘遄</p>
 <p><a target="_blank" rel="noopener" href="https://www.linuxcool.com/">Linux命令大全(手册) – 真正好用的Linux命令在线查询网站 (linuxcool.com)</a></p>
 </blockquote>
@@ -1920,7 +3207,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA-%E9%87%8D%E5%90%AF-%E6%B3%A8%E9%94%80"><span class="nav-text">关机&#x2F;重启&#x2F;注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E5%92%8C%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B"><span class="nav-text">系统信息和性能查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E5%88%86%E5%8C%BA"><span class="nav-text">磁盘和分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%A4%E6%88%B7%E5%92%8C%E2%BD%A4%E6%88%B7%E7%BB%84"><span class="nav-text">⽤户和⽤户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%B9%E7%BB%9C%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">⽹络和进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E2%BB%85%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-text">常⻅系统服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E5%92%8C%E2%BD%AC%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="nav-text">⽂件和⽬录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-text">⽂件查看和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%A7%A3%E5%8E%8B"><span class="nav-text">打包和解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">RPM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YUM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">YUM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DPKG%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">DPKG包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT%E8%BD%AF%E4%BB%B6%E2%BC%AF%E5%85%B7"><span class="nav-text">APT软件⼯具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%91%BD%E4%BB%A4"><span class="nav-text">2. 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8"><span class="nav-text">linux命令大全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man"><span class="nav-text">man</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info"><span class="nav-text">info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shoudown-reboot"><span class="nav-text">shoudown&#x2F;reboot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wget"><span class="nav-text">wget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ps"><span class="nav-text">ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pidof"><span class="nav-text">pidof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kill"><span class="nav-text">kill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#killall"><span class="nav-text">killall</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A3%80%E6%B5%8B%E5%91%BD%E4%BB%A4"><span class="nav-text">系统状态检测命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig"><span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uname"><span class="nav-text">uname</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uptime"><span class="nav-text">uptime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#free"><span class="nav-text">free</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#who"><span class="nav-text">who</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#last"><span class="nav-text">last</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-text">history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sosreport"><span class="nav-text">sosreport</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">文本编辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cat"><span class="nav-text">cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#more"><span class="nav-text">more</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#less"><span class="nav-text">less</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#head"><span class="nav-text">head</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA-%E9%87%8D%E5%90%AF-%E6%B3%A8%E9%94%80"><span class="nav-text">关机&#x2F;重启&#x2F;注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E5%92%8C%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B"><span class="nav-text">系统信息和性能查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E5%88%86%E5%8C%BA"><span class="nav-text">磁盘和分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%A4%E6%88%B7%E5%92%8C%E2%BD%A4%E6%88%B7%E7%BB%84"><span class="nav-text">⽤户和⽤户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%B9%E7%BB%9C%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">⽹络和进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E2%BB%85%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-text">常⻅系统服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E5%92%8C%E2%BD%AC%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="nav-text">⽂件和⽬录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-text">⽂件查看和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%A7%A3%E5%8E%8B"><span class="nav-text">打包和解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">RPM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YUM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">YUM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DPKG%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">DPKG包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT%E8%BD%AF%E4%BB%B6%E2%BC%AF%E5%85%B7"><span class="nav-text">APT软件⼯具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%91%BD%E4%BB%A4"><span class="nav-text">2. 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8"><span class="nav-text">linux命令大全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man"><span class="nav-text">man</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info"><span class="nav-text">info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shoudown-reboot"><span class="nav-text">shoudown&#x2F;reboot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wget"><span class="nav-text">wget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ps"><span class="nav-text">ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pidof"><span class="nav-text">pidof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kill"><span class="nav-text">kill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#killall"><span class="nav-text">killall</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A3%80%E6%B5%8B%E5%91%BD%E4%BB%A4"><span class="nav-text">系统状态检测命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig"><span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uname"><span class="nav-text">uname</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uptime"><span class="nav-text">uptime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#free"><span class="nav-text">free</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#who"><span class="nav-text">who</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#last"><span class="nav-text">last</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-text">history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sosreport"><span class="nav-text">sosreport</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lsof"><span class="nav-text">lsof</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">文本编辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cat"><span class="nav-text">cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#more"><span class="nav-text">more</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#less"><span class="nav-text">less</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#head"><span class="nav-text">head</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tail"><span class="nav-text">tail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tr"><span class="nav-text">tr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wc"><span class="nav-text">wc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stat"><span class="nav-text">stat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cut"><span class="nav-text">cut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#diff"><span class="nav-text">diff</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86"><span class="nav-text">文件目录管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#touch"><span class="nav-text">touch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mkdir"><span class="nav-text">mkdir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cp"><span class="nav-text">cp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mv"><span class="nav-text">mv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dd"><span class="nav-text">dd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#file"><span class="nav-text">file</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%8E%8B%E7%BC%A9%E4%B8%8E%E6%90%9C%E7%B4%A2"><span class="nav-text">打包压缩与搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tar"><span class="nav-text">tar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grep"><span class="nav-text">grep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find"><span class="nav-text">find</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7-%E7%BB%84%E7%AE%A1%E7%90%86"><span class="nav-text">用户&#x2F;组管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8"><span class="nav-text">用户列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%88%97%E8%A1%A8"><span class="nav-text">组列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%88%97%E8%A1%A8"><span class="nav-text">密码列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useradd"><span class="nav-text">useradd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#passwd"><span class="nav-text">passwd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#userdel"><span class="nav-text">userdel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-text">id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whoami"><span class="nav-text">whoami</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupadd"><span class="nav-text">groupadd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupdel"><span class="nav-text">groupdel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#usermod"><span class="nav-text">usermod</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-text">文件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chgrp"><span class="nav-text">chgrp</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86"><span class="nav-text">系统管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-text">防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#firewall-cmd"><span class="nav-text">firewall-cmd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99-amp-%E7%AB%AF%E5%8F%A3"><span class="nav-text">防火墙&amp;端口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl"><span class="nav-text">systemctl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-text">输入输出重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E5%91%BD%E4%BB%A4%E7%AC%A6"><span class="nav-text">管道命令符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="nav-text">命令行的通配符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="nav-text">常用的转义字符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">重要的环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim"><span class="nav-text">vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0"><span class="nav-text">配置主机名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%E4%BF%A1%E6%81%AF"><span class="nav-text">配置网卡信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC"><span class="nav-text">shell脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0"><span class="nav-text">接收用户参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">测试语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">整数比较运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">字符串比较运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="nav-text">流程控制语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#if-%E6%9D%A1%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">if 条件测试语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#for-%E6%9D%A1%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="nav-text">for 条件循环语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#while"><span class="nav-text">while</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#case-%E6%9D%A1%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">case 条件测试语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F"><span class="nav-text">计划任务服务程序</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -1936,27 +3223,27 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/qiyunzhou" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;qiyunzhou" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/codeyunzhou" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codeyunzhou" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:15086314018@163.com" title="E-Mail → mailto:15086314018@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
@@ -1971,7 +3258,7 @@
     <h3 class="widget-title">标签云</h3>
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/" rel="tag">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/" rel="tag">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
@@ -2005,12 +3292,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">154k</span>
+    <span title="站点总字数">190k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:20</span>
+    <span title="站点阅读时长">2:53</span>
 </div>
 
 </br>
