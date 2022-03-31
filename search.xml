@@ -4324,11 +4324,11 @@
 </tr>
 <tr>
 <td>-z</td>
-<td>用</td>
+<td>通过gzip指令压缩/解压缩文件，文件名最好为*.tar.gz</td>
 </tr>
 <tr>
 <td>-j</td>
-<td>用</td>
+<td>通过bzip2指令压缩/解压缩文件，文件名最好为*.tar.bz2</td>
 </tr>
 <tr>
 <td>-v</td>
@@ -9365,7 +9365,33 @@
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	root /usr/local/nginx/html;</span><br><span class="line">	index index.html index.htm;</span><br><span class="line">&#125;</span><br><span class="line">访问该location的时候，可以通过 http://ip:port/，地址后面如果不添加任何内容，则默认依次访问index.html和index.htm，找到第一个来进行返回</span><br></pre></td></tr></table></figure>
 
 <p><strong>error_page指令</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">	error_page 404 /50x.html;</span><br><span class="line">	error_page 500 502 503 504 /50x.html;</span><br><span class="line">	location =/50x.html&#123;</span><br><span class="line">		root html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#指定具体跳转的地址</span><br><span class="line">server &#123;</span><br><span class="line">	error_page 404 http://www.itcast.cn;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#指定重定向地址</span><br><span class="line">server&#123;</span><br><span class="line">	error_page 404 /50x.html;</span><br><span class="line">	error_page 500 502 503 504 /50x.html;</span><br><span class="line">	location =/50x.html&#123;</span><br><span class="line">		root html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#使用location的@</span><br><span class="line">server&#123;</span><br><span class="line">	error_page 404 @jump_to_error;</span><br><span class="line">	location @jump_to_error &#123;</span><br><span class="line">		default_type text/plain;</span><br><span class="line">		return 404 &#x27;Not Found Page...&#x27;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-3-静态资源优化配置"><a href="#5-2-3-静态资源优化配置" class="headerlink" title="5.2.3 静态资源优化配置"></a>5.2.3 静态资源优化配置</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sendfile on;</span><br><span class="line">tcp_nopush on;</span><br><span class="line">tcp_nodeplay on;</span><br></pre></td></tr></table></figure>
+
+<p>sendﬁle，用来开启高效的文件传输模式。</p>
+<p>tcp_nopush：该指令必须在sendfile打开的状态下才会生效，主要是用来提升网络包的传输’效率’</p>
+<p>tcp_nodelay：该指令必须在keep-alive连接开启的情况下才生效，来提高网络包传输的’实时性’</p>
+<p>sendfile可以开启高效的文件传输模式，tcp_nopush开启可以确保在发送到客户端之前数据包已经充分“填满”， 这大大减少了网络开销，并加快了文件发送的速度。 然后，当它到达最后一个可能因为没有“填满”而暂停的数据包时，Nginx会忽略tcp_nopush参数， 然后，tcp_nodelay强制套接字发送数据</p>
+<h4 id="5-2-4-静态资源压缩"><a href="#5-2-4-静态资源压缩" class="headerlink" title="5.2.4 静态资源压缩"></a>5.2.4 静态资源压缩</h4><p>HttpGzip模块：这个模块支持在线实时压缩输出数据流</p>
+<p>gzip指令：该指令用于开启或者关闭gzip功能</p>
+<p>gzip_types指令：该指令可以根据响应页的MIME类型选择性地开启Gzip压缩功能</p>
+<p>gzip_comp_level指令：该指令用于设置Gzip压缩程度，级别从1-9,1表示压缩程度最低，压缩效率最高</p>
+<p>gzip_vary指令：该指令用于设置使用Gzip进行压缩发送是否携带“Vary:Accept-Encoding”头域的响应头部。主要是告诉接收方，所发送的数据经过了Gzip压缩处理</p>
+<p>gzip_buffers指令：该指令用于处理请求压缩的缓冲区数量和大小。</p>
+<p>gzip_disable指令：针对不同种类客户端发起的请求，可以选择性地开启和关闭Gzip功能。</p>
+<p>gzip_http_version指令：针对不同的HTTP协议版本，可以选择性地开启和关闭Gzip功能。</p>
+<p>gzip_min_length指令：该指令针对传输数据的大小，可以选择性地开启和关闭Gzip功能</p>
+<p>gzip_proxied指令：该指令设置是否对服务端返回的结果进行Gzip压缩。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gzip on;  			  #开启gzip功能</span><br><span class="line">gzip_types *;		  #压缩源文件类型,根据具体的访问资源类型设定</span><br><span class="line">gzip_comp_level 6;	  #gzip压缩级别</span><br><span class="line">gzip_min_length 1024; #进行压缩响应页面的最小长度,content-length</span><br><span class="line">gzip_buffers 4 16K;	  #缓存空间大小</span><br><span class="line">gzip_http_version 1.1; #指定压缩响应所需要的最低HTTP请求版本</span><br><span class="line">gzip_vary  on;		  #往头信息中添加压缩标识</span><br><span class="line">gzip_disable &quot;MSIE [1-6]\.&quot;; #对IE6以下的版本都不进行压缩</span><br><span class="line">gzip_proxied  off； #nginx作为反向代理压缩服务端返回数据的条件</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
 
 
 
