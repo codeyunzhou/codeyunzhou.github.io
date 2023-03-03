@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://gitee.com/codeyunzhou/images/raw/master/linux/202203181518631.png">
 <meta property="og:image" content="https://gitee.com/codeyunzhou/images/raw/master/linux/202203230946232.jpg">
 <meta property="article:published_time" content="2021-07-09T03:15:47.000Z">
-<meta property="article:modified_time" content="2022-03-31T13:21:12.619Z">
+<meta property="article:modified_time" content="2022-04-02T12:56:22.788Z">
 <meta property="article:author" content="yunzhou">
 <meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary">
@@ -240,7 +240,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-31 21:21:12" itemprop="dateModified" datetime="2022-03-31T21:21:12+08:00">2022-03-31</time>
+                <time title="修改时间：2022-04-02 20:56:22" itemprop="dateModified" datetime="2022-04-02T20:56:22+08:00">2022-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -258,14 +258,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>20k</span>
+              <span>22k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>18 分钟</span>
+              <span>20 分钟</span>
             </span>
 
         </div>
@@ -2175,6 +2175,176 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dd <span class="keyword">if</span>=/dev/cdrom of=RHEL-server-7.0-x86_64-LinuxProbe.Com.iso </span><br></pre></td></tr></table></figure>
 
 <h3 id="file"><a href="#file" class="headerlink" title="file"></a>file</h3><p>file 命令用于查看文件的类型，<code>file tt.txt test.txt</code></p>
+<h2 id="文件-文件名搜寻"><a href="#文件-文件名搜寻" class="headerlink" title="文件/文件名搜寻"></a>文件/文件名搜寻</h2><p>一般我们都是先使用 whereis 或者是 locate 来检查，如 果真的找不到了，才以 find 来搜寻。因为 whereis 只找系统中某些特定目录下 面的文件而已，locate 则是利用数据库来搜寻文件名</p>
+<h3 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-b</td>
+<td>查找二进制程序或命令</td>
+</tr>
+<tr>
+<td>-B</td>
+<td>从指定目录下 查找二进制程序或命令</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>查找man手册文件</td>
+</tr>
+<tr>
+<td>-M</td>
+<td>从指定目录下 查找man手册文件</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>只查找源代码文件</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>从指定目录下 查找源代码文件</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>以列出 whereis 会去查询的几个主要目录</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whereis -b ln</span><br><span class="line">whereis -l</span><br></pre></td></tr></table></figure>
+
+<h3 id="locate-updatedb"><a href="#locate-updatedb" class="headerlink" title="locate/updatedb"></a>locate/updatedb</h3><p>locate命令其实是find -name的另一种写法，但是要比后者快得多，原因在于它不搜索具体目录，而是搜索一个数据库/var/lib/locatedb，值得注意的是：版本不同，会有所不同。有的版本位置是 /var/lib/mlocate/mlocatedb </p>
+<p>Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，先使用<strong>updatedb</strong>命令，手动更新数据库</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-i</td>
+<td>忽略大小写的差异；</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>不输出文件名，仅计算找到的文件数量</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>仅输出几行的意思，例如输出五行则是 -l 5</td>
+</tr>
+<tr>
+<td>-S</td>
+<td>输出locate 所使用的数据库文件的相关信息，包括该数据库纪录的文件/目录数量等</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>后面可接正则表达式的显示方式</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">locate -l5 passwd</span><br></pre></td></tr></table></figure>
+
+<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-name</td>
+<td>按名称查找</td>
+</tr>
+<tr>
+<td>-size</td>
+<td>按大小查找</td>
+</tr>
+<tr>
+<td>-user</td>
+<td>按属性查找</td>
+</tr>
+<tr>
+<td>-type</td>
+<td>按类型查找</td>
+</tr>
+<tr>
+<td>-iname</td>
+<td>忽略大小写</td>
+</tr>
+</tbody></table>
+<p>查看/etc目录下面所有的.conf结尾的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /etc -name *.conf</span><br></pre></td></tr></table></figure>
+
+<p><strong>时间参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>atime</td>
+<td>访问时间</td>
+</tr>
+<tr>
+<td>ctime</td>
+<td>变化时间</td>
+</tr>
+<tr>
+<td>mtime</td>
+<td>修改时间</td>
+</tr>
+<tr>
+<td>newer file</td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-mtime n ：n 为数字，意义为在 n 天之前的“一天之内”被更动过内容的文件；</span><br><span class="line">-mtime +n ：列出在 n 天之前（不含 n 天本身）被更动过内容的文件文件名； </span><br><span class="line">-mtime -n ：列出在 n 天之内（含 n 天本身）被更动过内容的文件文件名。 </span><br><span class="line">-newer file ：file 为一个存在的文件，列出比 file 还要新的文件文件名</span><br></pre></td></tr></table></figure>
+
+<p>将过去系统上面 24 小时内有更动过内容 （mtime） 的文件列出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#0 代表目前的时间</span></span><br><span class="line">find / -mtime 0</span><br><span class="line"><span class="comment">#三天前的24小时内</span></span><br><span class="line">find / -mtime 3</span><br></pre></td></tr></table></figure>
+
+<p>寻找 /etc 下面的文件，如果文件日期比 /etc/passwd 新就列出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /etc -newer /etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用者/群组参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>uid n</td>
+<td>n 为数字，这个数字是使用者的帐号 ID</td>
+</tr>
+<tr>
+<td>gid n</td>
+<td>n 为数字，这个数字是群组名称的 ID</td>
+</tr>
+<tr>
+<td>user name</td>
+<td>name 为使用者帐号名称</td>
+</tr>
+<tr>
+<td>group name</td>
+<td>name 为群组名称</td>
+</tr>
+<tr>
+<td>nouser</td>
+<td>寻找文件的拥有者不存在 /etc/passwd 的人</td>
+</tr>
+<tr>
+<td>nogroup</td>
+<td>寻找文件的拥有群组不存在于 /etc/group 的文件</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /home -user <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="打包压缩与搜索"><a href="#打包压缩与搜索" class="headerlink" title="打包压缩与搜索"></a>打包压缩与搜索</h2><h3 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h3><p>tar 命令用于对文件进行打包压缩或解压， Linux 系统中，常见的文件格式比较多，其中主要使用的是.tar 或.tar.gz 或.tar.bz2 格式</p>
 <p>-f 参数特别重要，它必须放到 参数的最后一位，代表要压缩或解压的软件包名称</p>
 <table>
@@ -2263,7 +2433,7 @@
 </tbody></table>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep zwx file_* /etc/hosts</span><br></pre></td></tr></table></figure>
 
-<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><p>find 命令用于按照指定条件来查找文件，格式为“find [查找路径] 寻找条件 操作”</p>
+<h3 id="find-1"><a href="#find-1" class="headerlink" title="find"></a>find</h3><p>find 命令用于按照指定条件来查找文件，格式为“find [查找路径] 寻找条件 操作”</p>
 <p>在 Linux 系统中，搜索工作一般都是通过 find 命令来完成的，它可以使用不同的文件特性作 为寻找条件（如文件名、大小、修改时间、权限等信息）</p>
 <table>
 <thead>
@@ -2592,7 +2762,45 @@
 
 
 
-<h3 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h3><h2 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h2><p>输入重定向是指把文件导入到命令中，而输出重定向则是指把原本要输出到屏幕的数据信息写入到指定文件中。输出重定向分为了标准输出重定向和错误输出重定向两种不同的技术，以及清空写入与追加写入两种模式</p>
+<h3 id="systemctl"><a href="#systemctl" class="headerlink" title="systemctl"></a>systemctl</h3><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h3><p>curl命令是一个利用URL规则在shell终端命令行下工作的文件传输工具；它支持文件的上传和下载</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-O</td>
+<td>把输出写到该文件中，保留远程文件的文件名</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>通过服务端配置的用户名和密码授权访问</td>
+</tr>
+</tbody></table>
+<p>参数将服务器回应保存成文件，并将 URL 的最后部分当作文件名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url -O https://www.example.com/foo/bar.html</span><br></pre></td></tr></table></figure>
+
+<p>访问需要授权的页面时，可通过-u选项提供用户名和密码进行授权：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -u root https://www.linuxprobe.com/</span><br></pre></td></tr></table></figure>
+
+<h3 id="telnet"><a href="#telnet" class="headerlink" title="telnet"></a>telnet</h3><p>执行telnet指令开启终端机阶段作业，并登入远端主机。 telnet命令可以帮助你从这台路由器远程登陆到远端开启了telnet服务的设备，包括路由器、交换机、linux服务器等，并且配置当前路由器的telnet服务</p>
+<p>登录远程主机：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet 192.168.0.7</span><br></pre></td></tr></table></figure>
+
+<p>连接本地主机，端口号为23：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet localhost23</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h2 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h2><p>输入重定向是指把文件导入到命令中，而输出重定向则是指把原本要输出到屏幕的数据信息写入到指定文件中。输出重定向分为了标准输出重定向和错误输出重定向两种不同的技术，以及清空写入与追加写入两种模式</p>
 <ul>
 <li>标准输入重定向（STDIN，文件描述符为 0）：默认从键盘输入，也可从其他文件或命 令中输入</li>
 <li>标准输出重定向（STDOUT，文件描述符为 1）：默认输出到屏幕</li>
@@ -3207,7 +3415,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA-%E9%87%8D%E5%90%AF-%E6%B3%A8%E9%94%80"><span class="nav-text">关机&#x2F;重启&#x2F;注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E5%92%8C%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B"><span class="nav-text">系统信息和性能查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E5%88%86%E5%8C%BA"><span class="nav-text">磁盘和分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%A4%E6%88%B7%E5%92%8C%E2%BD%A4%E6%88%B7%E7%BB%84"><span class="nav-text">⽤户和⽤户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%B9%E7%BB%9C%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">⽹络和进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E2%BB%85%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-text">常⻅系统服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E5%92%8C%E2%BD%AC%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="nav-text">⽂件和⽬录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-text">⽂件查看和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%A7%A3%E5%8E%8B"><span class="nav-text">打包和解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">RPM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YUM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">YUM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DPKG%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">DPKG包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT%E8%BD%AF%E4%BB%B6%E2%BC%AF%E5%85%B7"><span class="nav-text">APT软件⼯具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%91%BD%E4%BB%A4"><span class="nav-text">2. 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8"><span class="nav-text">linux命令大全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man"><span class="nav-text">man</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info"><span class="nav-text">info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shoudown-reboot"><span class="nav-text">shoudown&#x2F;reboot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wget"><span class="nav-text">wget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ps"><span class="nav-text">ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pidof"><span class="nav-text">pidof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kill"><span class="nav-text">kill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#killall"><span class="nav-text">killall</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A3%80%E6%B5%8B%E5%91%BD%E4%BB%A4"><span class="nav-text">系统状态检测命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig"><span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uname"><span class="nav-text">uname</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uptime"><span class="nav-text">uptime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#free"><span class="nav-text">free</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#who"><span class="nav-text">who</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#last"><span class="nav-text">last</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-text">history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sosreport"><span class="nav-text">sosreport</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lsof"><span class="nav-text">lsof</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">文本编辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cat"><span class="nav-text">cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#more"><span class="nav-text">more</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#less"><span class="nav-text">less</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#head"><span class="nav-text">head</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tail"><span class="nav-text">tail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tr"><span class="nav-text">tr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wc"><span class="nav-text">wc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stat"><span class="nav-text">stat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cut"><span class="nav-text">cut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#diff"><span class="nav-text">diff</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86"><span class="nav-text">文件目录管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#touch"><span class="nav-text">touch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mkdir"><span class="nav-text">mkdir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cp"><span class="nav-text">cp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mv"><span class="nav-text">mv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dd"><span class="nav-text">dd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#file"><span class="nav-text">file</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%8E%8B%E7%BC%A9%E4%B8%8E%E6%90%9C%E7%B4%A2"><span class="nav-text">打包压缩与搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tar"><span class="nav-text">tar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grep"><span class="nav-text">grep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find"><span class="nav-text">find</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7-%E7%BB%84%E7%AE%A1%E7%90%86"><span class="nav-text">用户&#x2F;组管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8"><span class="nav-text">用户列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%88%97%E8%A1%A8"><span class="nav-text">组列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%88%97%E8%A1%A8"><span class="nav-text">密码列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useradd"><span class="nav-text">useradd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#passwd"><span class="nav-text">passwd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#userdel"><span class="nav-text">userdel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-text">id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whoami"><span class="nav-text">whoami</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupadd"><span class="nav-text">groupadd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupdel"><span class="nav-text">groupdel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#usermod"><span class="nav-text">usermod</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-text">文件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chgrp"><span class="nav-text">chgrp</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86"><span class="nav-text">系统管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-text">防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#firewall-cmd"><span class="nav-text">firewall-cmd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99-amp-%E7%AB%AF%E5%8F%A3"><span class="nav-text">防火墙&amp;端口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl"><span class="nav-text">systemctl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-text">输入输出重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E5%91%BD%E4%BB%A4%E7%AC%A6"><span class="nav-text">管道命令符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="nav-text">命令行的通配符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="nav-text">常用的转义字符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">重要的环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim"><span class="nav-text">vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0"><span class="nav-text">配置主机名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%E4%BF%A1%E6%81%AF"><span class="nav-text">配置网卡信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC"><span class="nav-text">shell脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0"><span class="nav-text">接收用户参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">测试语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">整数比较运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">字符串比较运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="nav-text">流程控制语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#if-%E6%9D%A1%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">if 条件测试语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#for-%E6%9D%A1%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="nav-text">for 条件循环语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#while"><span class="nav-text">while</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#case-%E6%9D%A1%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">case 条件测试语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F"><span class="nav-text">计划任务服务程序</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA-%E9%87%8D%E5%90%AF-%E6%B3%A8%E9%94%80"><span class="nav-text">关机&#x2F;重启&#x2F;注销</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BF%A1%E6%81%AF%E5%92%8C%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B"><span class="nav-text">系统信息和性能查看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E5%92%8C%E5%88%86%E5%8C%BA"><span class="nav-text">磁盘和分区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%A4%E6%88%B7%E5%92%8C%E2%BD%A4%E6%88%B7%E7%BB%84"><span class="nav-text">⽤户和⽤户组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%B9%E7%BB%9C%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-text">⽹络和进程管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E2%BB%85%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E5%91%BD%E4%BB%A4"><span class="nav-text">常⻅系统服务命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E5%92%8C%E2%BD%AC%E5%BD%95%E6%93%8D%E4%BD%9C"><span class="nav-text">⽂件和⽬录操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E2%BD%82%E4%BB%B6%E6%9F%A5%E7%9C%8B%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-text">⽂件查看和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%92%8C%E8%A7%A3%E5%8E%8B"><span class="nav-text">打包和解压</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">RPM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YUM%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">YUM包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DPKG%E5%8C%85%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-text">DPKG包管理命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT%E8%BD%AF%E4%BB%B6%E2%BC%AF%E5%85%B7"><span class="nav-text">APT软件⼯具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%91%BD%E4%BB%A4"><span class="nav-text">2. 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8"><span class="nav-text">linux命令大全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#man"><span class="nav-text">man</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#info"><span class="nav-text">info</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shoudown-reboot"><span class="nav-text">shoudown&#x2F;reboot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wget"><span class="nav-text">wget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ps"><span class="nav-text">ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top"><span class="nav-text">top</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pidof"><span class="nav-text">pidof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kill"><span class="nav-text">kill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#killall"><span class="nav-text">killall</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8A%B6%E6%80%81%E6%A3%80%E6%B5%8B%E5%91%BD%E4%BB%A4"><span class="nav-text">系统状态检测命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig"><span class="nav-text">ifconfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uname"><span class="nav-text">uname</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#uptime"><span class="nav-text">uptime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#free"><span class="nav-text">free</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#who"><span class="nav-text">who</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#last"><span class="nav-text">last</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history"><span class="nav-text">history</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sosreport"><span class="nav-text">sosreport</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lsof"><span class="nav-text">lsof</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91"><span class="nav-text">文本编辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cat"><span class="nav-text">cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#more"><span class="nav-text">more</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#less"><span class="nav-text">less</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#head"><span class="nav-text">head</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tail"><span class="nav-text">tail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tr"><span class="nav-text">tr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wc"><span class="nav-text">wc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stat"><span class="nav-text">stat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cut"><span class="nav-text">cut</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#diff"><span class="nav-text">diff</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86"><span class="nav-text">文件目录管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#touch"><span class="nav-text">touch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mkdir"><span class="nav-text">mkdir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cp"><span class="nav-text">cp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mv"><span class="nav-text">mv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dd"><span class="nav-text">dd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#file"><span class="nav-text">file</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6-%E6%96%87%E4%BB%B6%E5%90%8D%E6%90%9C%E5%AF%BB"><span class="nav-text">文件&#x2F;文件名搜寻</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#whereis"><span class="nav-text">whereis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#locate-updatedb"><span class="nav-text">locate&#x2F;updatedb</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find"><span class="nav-text">find</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E5%8E%8B%E7%BC%A9%E4%B8%8E%E6%90%9C%E7%B4%A2"><span class="nav-text">打包压缩与搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tar"><span class="nav-text">tar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grep"><span class="nav-text">grep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find-1"><span class="nav-text">find</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7-%E7%BB%84%E7%AE%A1%E7%90%86"><span class="nav-text">用户&#x2F;组管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8"><span class="nav-text">用户列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%88%97%E8%A1%A8"><span class="nav-text">组列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%88%97%E8%A1%A8"><span class="nav-text">密码列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useradd"><span class="nav-text">useradd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#passwd"><span class="nav-text">passwd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#userdel"><span class="nav-text">userdel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-text">id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whoami"><span class="nav-text">whoami</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupadd"><span class="nav-text">groupadd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupdel"><span class="nav-text">groupdel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#usermod"><span class="nav-text">usermod</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-text">文件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chgrp"><span class="nav-text">chgrp</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86"><span class="nav-text">系统管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-text">防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#firewall-cmd"><span class="nav-text">firewall-cmd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99-amp-%E7%AB%AF%E5%8F%A3"><span class="nav-text">防火墙&amp;端口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemctl"><span class="nav-text">systemctl</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-text">其他</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#curl"><span class="nav-text">curl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#telnet"><span class="nav-text">telnet</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-text">输入输出重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E5%91%BD%E4%BB%A4%E7%AC%A6"><span class="nav-text">管道命令符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="nav-text">命令行的通配符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="nav-text">常用的转义字符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-text">重要的环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vim"><span class="nav-text">vim</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AB%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="nav-text">末行模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D%E7%A7%B0"><span class="nav-text">配置主机名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1%E4%BF%A1%E6%81%AF"><span class="nav-text">配置网卡信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC"><span class="nav-text">shell脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0"><span class="nav-text">接收用户参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">测试语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">整数比较运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-text">字符串比较运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="nav-text">流程控制语句</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#if-%E6%9D%A1%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">if 条件测试语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#for-%E6%9D%A1%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="nav-text">for 条件循环语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#while"><span class="nav-text">while</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#case-%E6%9D%A1%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%AF%AD%E5%8F%A5"><span class="nav-text">case 条件测试语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F"><span class="nav-text">计划任务服务程序</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -3223,7 +3431,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3236,7 +3444,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -3258,7 +3466,7 @@
     <h3 class="widget-title">标签云</h3>
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gradle/" rel="tag">gradle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/" rel="tag">Java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Oracle/" rel="tag">Oracle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RocketMQ/" rel="tag">RocketMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/" rel="tag">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/html/" rel="tag">html</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/uml/" rel="tag">uml</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%90%8E%E5%8F%B0/" rel="tag">后台</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag">定时任务</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
@@ -3283,7 +3491,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -3292,12 +3500,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">192k</span>
+    <span title="站点总字数">194k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:55</span>
+    <span title="站点阅读时长">2:56</span>
 </div>
 
 </br>
